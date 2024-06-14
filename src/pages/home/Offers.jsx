@@ -139,10 +139,10 @@ export default function Offers() {
             ))}
           </div>
         ) : (
-          <div className="slider-container p-2 mt-5">
+          <div className="slider-container p-2 mt-5 ">
             <Slider {...settings}>
               {data.map((offer, index) => (
-                <div key={index} className="lg:max-w-[250px] ">
+                <div key={index} className=" ">
                   <img
                     src={offer.image}
                     alt={offer.title}

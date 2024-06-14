@@ -152,7 +152,7 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="w-[98%] mx-auto px-6 py-3  bg-primary text-white ">
+    <div className="w-[98%] mx-auto px-6 py-3  bg-primary text-white sticky top-0 z-10 ">
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center w-[10%] lg:w-[15%]">
         <Logo />
