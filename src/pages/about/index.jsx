@@ -57,6 +57,7 @@ const data = [
     ],
   },
 ];
+
 export default function About() {
   return (
     <>
@@ -82,90 +83,36 @@ export default function About() {
           key={index}
           className="w-[97%] mx-auto bg-[#D5D5DC] p-5 mt-4 rounded-lg lg:max-h-[300px] mb-2 "
         >
-          {window.innerWidth >= 960 ?
-            (index === 0 || index === 2 ? (
-              <div className="flex flex-col lg:flex-row gap-5">
-                <div className="w-full lg:w-1/2">
-                  <img
-                    src={about.image}
-                    alt={about.title}
-                    className="w-full h-3/4"
-                  />
-                </div>
-                <div className="w-full lg:w-1/2 flex flex-col items-start gap-3 p-5">
-                  <h2 className="lg:text-[20px] font-[700] text-primary text-left">
-                    {about.title}{" "}
-                  </h2>
-                  <p className="lg:text-[20px] font-[400] text-primary text-left">
-                    {about.paragraph}
-                  </p>
+          <div
+            className={`flex flex-col lg:flex-row gap-5 ${
+              index % 2 === 0 ? "lg:flex-row-reverse" : ""
+            }`}
+          >
+            <div className="w-full lg:w-1/2">
+              <img
+                src={about.image}
+                alt={about.title}
+                className="w-full h-3/4"
+              />
+            </div>
+            <div className="w-full lg:w-1/2 flex flex-col items-start gap-3 p-5">
+              <h2 className="lg:text-[20px] font-[700] text-primary text-left">
+                {about.title}
+              </h2>
+              <p className="lg:text-[20px] font-[400] text-primary text-left">
+                {about.paragraph}
+              </p>
 
-                  {about.features.map((feature, i) => (
-                    <li
-                      key={i}
-                      className="lg:text-[20px] font-[400] text-primary text-left leading-3"
-                    >
-                      {feature}
-                    </li>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col lg:flex-row gap-5">
-                <div className="w-full lg:w-1/2 flex flex-col items-start gap-3 p-5">
-                  <h2 className="lg:text-[20px] font-[700] text-primary text-left">
-                    {about.title}{" "}
-                  </h2>
-                  <p className="lg:text-[20px] font-[400] text-primary text-left">
-                    {about.paragraph}
-                  </p>
-
-                  {about.features.map((feature, i) => (
-                    <li
-                      key={i}
-                      className="lg:text-[20px] font-[400] text-primary text-left leading-3"
-                    >
-                      {feature}
-                    </li>
-                  ))}
-                </div>
-
-                <div className="w-full lg:w-1/2">
-                  <img
-                    src={about.image}
-                    alt={about.title}
-                    className="w-full h-3/4"
-                  />
-                </div>
-              </div>
-            )):(
-                <div className="flex flex-col lg:flex-row gap-5">
-                <div className="w-full lg:w-1/2">
-                  <img
-                    src={about.image}
-                    alt={about.title}
-                    className="w-full h-3/4"
-                  />
-                </div>
-                <div className="w-full lg:w-1/2 flex flex-col items-start gap-3 p-5">
-                  <h2 className="lg:text-[20px] font-[700] text-primary text-left">
-                    {about.title}{" "}
-                  </h2>
-                  <p className="lg:text-[20px] font-[400] text-primary text-left">
-                    {about.paragraph}
-                  </p>
-
-                  {about.features.map((feature, i) => (
-                    <li
-                      key={i}
-                      className="lg:text-[20px] font-[400] text-primary text-left leading-3"
-                    >
-                      {feature}
-                    </li>
-                  ))}
-                </div>
-              </div>
-            )}
+              {about.features.map((feature, i) => (
+                <li
+                  key={i}
+                  className="lg:text-[20px] font-[400] text-primary text-left leading-3"
+                >
+                  {feature}
+                </li>
+              ))}
+            </div>
+          </div>
         </div>
       ))}
 
@@ -175,43 +122,3 @@ export default function About() {
     </>
   );
 }
-
-{
-  /* <div className="w-[97%] mx-auto bg-[#D5D5DC] p-5 mt-4 rounded-lg lg:max-h-[300px] mb-2 ">
-<div className="flex flex-col lg:flex-row gap-5">
-  <div className="w-full lg:w-1/2">
-    <img src={about1} alt="" className="w-full h-3/4" />
-  </div>
-  <div className="w-full lg:w-1/2 flex flex-col items-start gap-3 p-5">
-    <h2 className="lg:text-[20px] font-[700] text-primary text-left">
-      CV Writing
-    </h2>
-    <p className="lg:text-[20px] font-[400] text-primary text-left">
-      A well-crafted CV can make all the difference in landing your
-      dream job. We tailor your CV to highlight your strengths and
-      experiences, ensuring it stands out. Our services include:
-    </p>
-    <li className="lg:text-[20px] font-[400] text-primary text-left leading-3">
-      Personalized Consultation
-    </li>
-    <li className="lg:text-[20px] font-[400] text-primary text-left leading-3">
-      Professional Formatting{" "}
-    </li>
-    <li className="lg:text-[20px] font-[400] text-primary text-left leading-3">
-      {" "}
-      Industry-Specific Focus
-    </li>
-    <li className="lg:text-[20px] font-[400] text-primary text-left leading-3">
-      {" "}
-      Content Enhancement
-    </li>
-  </div>
-
- 
-</div>
-</div> */
-}
-
-// so i want u to form data for four cards using the current data
-
-// the cards i want the first and 3 card to be like this but the secind and fourth i want the text div on the left and the image in the right
