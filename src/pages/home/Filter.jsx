@@ -12,36 +12,24 @@ export default function Filter() {
           placeholder="Search for job title, industry, keyword..."
         />
         <div className="bg-[#2C2F4E] p-4 w-full flex flex-col lg:flex-row gap-3 justify-around items-center ">
-          <div className="flex items-center lg:justify-between gap-4 lg:overflow-x-hidden w-full lg:w-[80%] overflow-x-scroll ">
-            {" "}
-            <select className="py-3 px-5">
-              <option value="">Select</option>
+          <div className="flex items-center lg:justify-between gap-4 lg:overflow-x-hidden w-full lg:w-[70%] mx-auto overflow-x-scroll ">
+            
+            <select className="py-3 px-5 w-full  rounded-lg bg-gray-200">
+              <option value="">Select job location</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              
+            </select>
+            <select className="py-3 px-5 w-full rounded-lg bg-gray-200">
+              <option value="">Select job type</option>
               <option value="">1</option>
               <option value="">2</option>
             </select>
-            <select className="py-3 px-5">
-              <option value="">Select</option>
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
-            <select className="py-3 px-5">
-              <option value="">Select</option>
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
-            <select className="py-3 px-5">
-              <option value="">Select</option>
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
-            <select className="py-3 px-5">
-              <option value="">Select</option>
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
-          </div>
-          <div className="">
-            <CustomButton text={"Search"} link={"#"} />
+            <div className="w-full">
+              <button className="py-2 px-4  font-medium text-white  text-center border-[#ACD4FF] hover:bg-blue-500 rounded-lg border-2 w-full bg-primary ">
+                Search
+              </button>{" "}
+            </div>
           </div>
         </div>
       </div>

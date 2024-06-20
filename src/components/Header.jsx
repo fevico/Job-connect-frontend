@@ -32,7 +32,7 @@ function NavList() {
         className="p-1 font-medium "
       >
         <Link
-          to="#"
+          to="/"
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Home
@@ -101,7 +101,7 @@ function NavList() {
         className="p-1 font-medium "
       >
         <Link
-          to="#"
+          to="/about"
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           About Us
