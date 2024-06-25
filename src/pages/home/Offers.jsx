@@ -3,7 +3,7 @@ import offers1 from "@/assets/images/offers1.png";
 import offers2 from "@/assets/images/offers2.png";
 import offers3 from "@/assets/images/offers3.png";
 import offers4 from "@/assets/images/offers4.png";
-import CustomButton from "../../components/CustomButton";
+import CustomButton from "@/components/CustomButton";
 import Slider from "react-slick";
 
 const data = [

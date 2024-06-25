@@ -116,7 +116,7 @@ function NavList() {
         className="p-1 font-medium "
       >
         <Link
-          to="#"
+          to="/contact"
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Contact Us

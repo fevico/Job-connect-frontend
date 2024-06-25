@@ -36,19 +36,19 @@ export default function Footer() {
           </div>
           <div className="flex items-center justify-between gap-4 w-full lg:w-[30%] mx-auto lg:mx-0">
             <Link
-              to=""
+              to="/about"
               className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
             >
               About Us
             </Link>
             <Link
-              to=""
+              to="/privacy"
               className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              to=""
+              to="/terms"
               className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
             >
               Terms & Conditions

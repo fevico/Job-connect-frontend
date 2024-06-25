@@ -1,5 +1,4 @@
 import React from "react";
-import hero from "@/assets/images/hero.gif";
 import Filter from "./Filter";
 
 export default function Hero() {

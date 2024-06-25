@@ -1,5 +1,5 @@
 import React from "react";
-import CustomButton from "../../components/CustomButton";
+import { Link } from "react-router-dom";
 
 export default function Filter() {
   return (
@@ -25,11 +25,11 @@ export default function Filter() {
               <option value="">1</option>
               <option value="">2</option>
             </select>
-            <div className="w-full">
-              <button className="py-2 px-4  font-medium text-white  text-center border-[#ACD4FF] hover:bg-blue-500 rounded-lg border-2 w-full bg-primary ">
+            {/* <div className="w-full"> */}
+              <Link to="/search" className="w-full py-2 px-4  font-medium text-white  text-center border-[#ACD4FF] hover:bg-blue-500 rounded-lg border-2 bg-primary ">
                 Search
-              </button>{" "}
-            </div>
+              </Link>
+            {/* </div> */}
           </div>
         </div>
       </div>

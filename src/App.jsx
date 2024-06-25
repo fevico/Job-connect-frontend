@@ -6,15 +6,27 @@ import "../node_modules/slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Home from "./pages/home";
-import About from "./pages/about";
+import About from "./pages/About";
+import Search from "./pages/Search";
+import Contact from "./pages/Contact";
+import JobDetails from "./pages/JobDetails";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/about" element={<About />} />
+          <Route index element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/job" element={<JobDetails />} />
+
+          {/* <Route path="/job/:jobId" element={<JobDetails />} /> */}
         </Route>
       </Routes>
       <ToastContainer

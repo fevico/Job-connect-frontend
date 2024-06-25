@@ -7,6 +7,7 @@ import hero from "@/assets/images/hero.gif";
 export default function Layout() {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const isJobDetailsPage = location.pathname === "/job";
 
   return (
     <>
@@ -18,7 +19,7 @@ export default function Layout() {
             className="w-full h-full object-cover filter blur-sm fixed"
           />
         )}
-        <div className={`absolute flex flex-col items-center text-center pt-3 w-full ${isHomePage ? "" : "bg-white"}`}>
+        <div className={`absolute flex flex-col items-center text-center pt-3 w-full ${isHomePage ? "" : isJobDetailsPage ? "bg-[#EAEAEA]" : "bg-white"}`}>
           <Header />
           <div className="w-full overflow-hidden min-h-screen">
             <Outlet />

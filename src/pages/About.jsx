@@ -1,11 +1,11 @@
 import React from "react";
-import Breadcrumb from "../../components/Breadcrumb";
-import about from "../../assets/images/about.png";
-import about1 from "../../assets/images/about1.png";
-import about2 from "../../assets/images/about2.png";
-import about3 from "../../assets/images/about3.png";
-import about4 from "../../assets/images/about4.png";
-import CustomButton from "../../components/CustomButton";
+import Breadcrumb from "@/components/Breadcrumb";
+import about from "@/assets/images/about.png";
+import about1 from "@/assets/images/about1.png";
+import about2 from "@/assets/images/about2.png";
+import about3 from "@/assets/images/about3.png";
+import about4 from "@/assets/images/about4.png";
+import CustomButton from "@/components/CustomButton";
 
 const data = [
   {
