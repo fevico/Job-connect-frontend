@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import JobDetails from "./pages/JobDetails";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import AllJobs from "./pages/AllJobs";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/job" element={<JobDetails />} />
+          <Route path="/all-jobs" element={<AllJobs />} />
 
           {/* <Route path="/job/:jobId" element={<JobDetails />} /> */}
         </Route>

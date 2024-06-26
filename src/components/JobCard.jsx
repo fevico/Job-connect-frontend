@@ -13,7 +13,7 @@ export default function JobCard({ title, company, salary, jobType, location, pos
           <p className="">{jobType} | {location}</p>
           <p className="text-xs text-red-500">{postedTime}</p>
         </div>
-        <CustomButton text={"APPLY NOW"} link={link} />
+        <CustomButton text={"VIEW DETAILS"} link={link} />
       </div>
     </div>
   );

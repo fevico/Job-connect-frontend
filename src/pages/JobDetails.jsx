@@ -1,20 +1,100 @@
 import React from "react";
 import CustomButton from "@/components/CustomButton";
-import { FaEnvelope, FaFacebook, FaFacebookMessenger, FaLink, FaWhatsapp } from "react-icons/fa";
-import job from "@/assets/images/job.png"
+import {
+  FaEnvelope,
+  FaFacebook,
+  FaFacebookMessenger,
+  FaLink,
+  FaWhatsapp,
+} from "react-icons/fa";
+import job from "@/assets/images/job.png";
+import mark from "@/assets/images/mark.png";
 import { Link } from "react-router-dom";
-import { BsArrow90DegLeft } from "react-icons/bs";
-import { BiArrowFromBottom } from "react-icons/bi";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
+import { Helmet } from "react-helmet";
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+import { ImCancelCircle } from "react-icons/im";
 
-
-export default function JobDetails() {
+export function ApplySuccess({ open, setOpen, handleOpen }) {
   return (
     <>
+      <Dialog open={open} handler={handleOpen}>
+        <DialogBody className="flex flex-col pb-0">
+          <div className="flex items-center justify-end">
+            <ImCancelCircle
+              onClick={handleOpen}
+              className="text-primary w-5 h-5 cursor-pointer"
+            />
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <img src={mark} alt="" className="w-[10%]" />
+            <h2 className="font-bold text-[16px] lg:text-[30px] leading-9 text-primary">
+              Congratulations!!!
+            </h2>
+            <h2 className="text-primary">
+              Your application has been successfully submitted
+            </h2>
+            <div className="p-3 bg-[#DEEEFF] w-[95%] lg:w-[70%] rounded-t-md mt-5">
+              <h2 className="text-left text-primary font-bold lg:text-lg">
+                WHAT'S NEXT?
+              </h2>
+              <li className="text-primary">
+                You will receive an email confirmation shortly with the details
+                of your application.
+              </li>
+              <li className="text-primary">
+                You can check the status of your application anytime by logging
+                into your account on our website.
+              </li>
+              <li className="text-primary">
+                If the employer is interested, they will contact you directly
+                via email or through our messaging system on the website.
+              </li>
+              <div className="flex flex-col items-center justify-center gap-2 w-full mt-3">
+                <CustomButton link={"/"} text={"VIEW ACTIVE JOBS"} />
+              </div>
+            </div>
+          </div>
+        </DialogBody>
+      </Dialog>
+    </>
+  );
+}
+
+export default function JobDetails() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => setOpen(!open);
+
+  const handleApply = async (e) => {
+    e.preventDefault();
+    try {
+      setOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Job Details - JobKonnectaNG</title>
+        <meta name="description" content="Job Details - JobKonnectaNG" />
+        <meta name="keywords" content="Job Details, JobKonnectaNG" />
+        <meta name="author" content="JobKonnectaNG" />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
       <div className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative">
         {" "}
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
-         <PiArrowBendUpLeftBold className="text-primary" /> UIUX Designer | Apply at Creative Solutions Inc.
+          <PiArrowBendUpLeftBold className="text-primary" /> UIUX Designer |
+          Apply at Creative Solutions Inc.
         </h1>
       </div>
       <div className="shadow-md relative w-full max-w-[95%] lg:max-w-[90%] mx-auto transform translate-y-[-1%] bg-white">
@@ -34,32 +114,41 @@ export default function JobDetails() {
               </p>
             </div>
             <div className="flex flex-col items-left gap-2 w-[40%] lg:w-[25%]">
-              {" "}
-              <CustomButton link={""} text={"Apply Now"} />
+              <CustomButton onClick={handleApply} text={"Apply Now"} />
               <p className="text-left text-sm text-[#001F3F80]/50">
                 share this job:
               </p>
-              <div className="flex items-center gap-3 justify-around ">
-                <Link to="#" className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer">
-                  
+              <div className="grid grid-cols-3 lg:grid-cols-5 items-center gap-3 justify-around ">
+                <Link
+                  to="#"
+                  className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
+                >
                   <FaLink className="" />
                 </Link>
-                <Link to="#" className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer">
-                  
+                <Link
+                  to="#"
+                  className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
+                >
                   <FaFacebookMessenger className="" />
                 </Link>
-                <Link to="#" className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer">
-                  
+                <Link
+                  to="#"
+                  className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
+                >
                   <FaEnvelope className="" />
                 </Link>
 
-                <Link to="#" className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer">
-                  
+                <Link
+                  to="#"
+                  className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
+                >
                   <FaWhatsapp className="" />
                 </Link>
 
-                <Link to="#" className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer">
-                  
+                <Link
+                  to="#"
+                  className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
+                >
                   <FaFacebook className="" />
                 </Link>
               </div>
@@ -212,6 +301,7 @@ export default function JobDetails() {
           </p>
         </div>
       </div>
+      <ApplySuccess handleOpen={handleOpen} open={open} setOpen={setOpen} />
     </>
   );
 }

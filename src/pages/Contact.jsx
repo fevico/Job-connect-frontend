@@ -2,10 +2,20 @@ import React from "react";
 import { BiPhone } from "react-icons/bi";
 import { BsEnvelope, BsPhone } from "react-icons/bs";
 import CustomButton from "@/components/CustomButton";
+import { Helmet } from "react-helmet";
 
 export default function Contact() {
   return (
     <>
+    <Helmet>
+    <title>Contact Us - JobKonnectaNG</title>
+    <meta name="description" content="Contact Us - JobKonnectaNG" />
+    <meta name="keywords" content="contact, us, jobkonnecta, ng" />
+    <meta name="author" content="JobKonnectaNG" />
+    <meta name="robots" content="index, follow" />
+    
+
+    </Helmet>
       <div className="flex flex-col lg:flex-row  gap-4 ">
         <div className="flex flex-col w-full lg:w-[40%]  p-3 ">
           <h2 className="text-primary font-[800] text-[20px] lg:text-[32px] mt-5 lg:mt-[100px] text-left lg:pl-[50px]">

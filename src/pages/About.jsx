@@ -6,6 +6,7 @@ import about2 from "@/assets/images/about2.png";
 import about3 from "@/assets/images/about3.png";
 import about4 from "@/assets/images/about4.png";
 import CustomButton from "@/components/CustomButton";
+import { Helmet } from "react-helmet";
 
 const data = [
   {
@@ -61,6 +62,14 @@ const data = [
 export default function About() {
   return (
     <>
+      <Helmet>
+        <title>About Us - JobKonnectaNG</title>
+        <meta name="description" content="About Us - JobKonnectaNG" />
+        <meta name="keywords" content="About Us, JobKonnectaNG" />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="JobKonnectaNG" />
+      </Helmet>
+
       <Breadcrumb
         title1={"Want to Know More About Us"}
         title2={"Get to know us more"}

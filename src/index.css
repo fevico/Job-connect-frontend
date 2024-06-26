@@ -24,3 +24,17 @@ body {
 
 .slick-list {margin: 0 -5px;}
 .slick-slide>div {padding: 0 10px;}
+
+/* Add this CSS to your stylesheet */
+.custom-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.custom-list li::before {
+  content: "- "; /* This is a horizontal dash */
+  color: #000; /* You can change the color if you like */
+  font-weight: bold; /* You can make it bold if you like */
+  margin-right: 5px; /* Adjust spacing as needed */
+}
+
