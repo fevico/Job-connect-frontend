@@ -47,7 +47,7 @@ function NavList() {
         className="p-1 font-medium "
       >
         <Link
-          to="#"
+          to="all-jobs"
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Job Listing
@@ -125,12 +125,13 @@ function NavList() {
       <hr className="bg-primary lg:hidden" />
 
       {/* <span className="lg:mt-0 my-1 bg-red-500"> */}
-        <CustomButton text={"Post Jobs"} link={"#"} />
+      <CustomButton text={"Post Jobs"} link={"#"} />
       {/* </span> */}
       <hr className="bg-primary lg:hidden" />
 
       {/* <span className="lg:mt-0 my-1"> */}
-        <CustomButton text={"SignUp/Login"} link={"#"} />
+      <CustomButton text={"Login"} link={"#"} />
+      <CustomButton text={"Signup"} link={"signup/home"} />
       {/* </span> */}
       <hr className="bg-primary lg:hidden" />
     </ul>
@@ -154,8 +155,8 @@ export default function Header() {
   return (
     <div className="w-[98%] mx-auto px-6 py-3  bg-primary text-white sticky top-0 z-10 ">
       <div className="flex items-center justify-between">
-        <div className="flex items-center justify-center w-[10%] lg:w-[15%]">
-        <Logo />
+        <div className="flex items-center justify-center w-[30%] h-[30px] lg:h-auto lg:w-[15%]">
+          <Logo />
         </div>
         <div className="hidden lg:block w-[85%]">
           <NavList />

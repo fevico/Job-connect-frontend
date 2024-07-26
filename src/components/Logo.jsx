@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 export default function Logo() {
   return (
     <>
-      <Link to="/" className="rounded-full bg-white  p-3">
-        <img src={logo} alt="" className="" />
-      </Link>
+      <div className="w-full lg:h-[60px] h-auto flex justify-center items-center">
+        <Link to="/">
+          <img src={logo} alt="Logo" className="h-full object-cover w-full" />
+        </Link>
+      </div>
     </>
   );
 }
