@@ -76,7 +76,7 @@ export default function RegAsJobSeeker() {
       const response = await axios.post('http://jobkonnecta.com/api/user/register', data, {
         headers: {
           'Content-Type': 'application/json',
-        },
+        }, 
       })
       toast.success("Registeration successful!");
       navigate('/login')
