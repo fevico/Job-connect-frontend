@@ -3,6 +3,7 @@ import CustomButton from "../../components/CustomButton";
 import { useLoginMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import axios from 'axios'
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -32,24 +33,31 @@ export default function Login() {
     };
 
     try {
-      await login(data).unwrap();
-      // Handle successful registration, e.g., redirect to a different page
+      const response = await axios.post('http://jobkonnecta.com/api/user/login', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      toast.success("Login successful!");
+      navigate('/')
+      console.log(response)
     } catch (err) {
       // Handle error
+      toast.error("Login failed");
       setErrors(err.data);
       console.error(err);
     }
   };
 
-  React.useEffect(() => {
-    if (isSuccess) {
-      toast.success("Login successful!");
-      navigate("/");
-    } else {
-      toast.error("Login failed");
-      setErrors(error);
-    }
-  }, [isSuccess, navigate]);
+  // React.useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success("Login successful!");
+  //     navigate("/");
+  //   } else {
+  //     toast.error("Login failed");
+  //     setErrors(error);
+  //   }
+  // }, [isSuccess, navigate]);
 
   return (
     <>

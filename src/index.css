@@ -38,3 +38,6 @@ body {
   margin-right: 5px; /* Adjust spacing as needed */
 }
 
+::-webkit-scrollbar{
+  display: none;
+}

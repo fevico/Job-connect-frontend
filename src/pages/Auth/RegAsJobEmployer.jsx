@@ -9,6 +9,7 @@ import { useRegisterMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'
 
 export default function RegAsJobSeeker() {
   const [country, setCountry] = useState("");
@@ -72,24 +73,31 @@ export default function RegAsJobSeeker() {
     };
 
     try {
-      await register(data).unwrap();
-      // Handle successful registration, e.g., redirect to a different page
+      const response = await axios.post('http://jobkonnecta.com/api/user/register', data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      toast.success("Registeration successful!");
+      navigate('/login')
+      console.log(response)
     } catch (err) {
       // Handle error
+      toast.error("Registeration failed");
       setErrors(err.data);
       console.error(err);
     }
   };
 
-  React.useEffect(() => {
-    if (isSuccess) {
-      toast.success("Register successful!");
-      navigate("/login");
-    } else {
-      toast.error("Register failed");
-      setErrors(error);
-    }
-  }, [isSuccess, navigate]);
+  // React.useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success("Register successful!");
+  //     navigate("/login");
+  //   } else {
+  //     toast.error("Register failed");
+  //     setErrors(error);
+  //   }
+  // }, [isSuccess, navigate]);
 
   return (
     <>
