@@ -8,6 +8,7 @@ import { BiUpload } from "react-icons/bi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function PostJobs() {
   const [country, setCountry] = useState("");
@@ -65,6 +66,8 @@ export default function PostJobs() {
       return;
     }
 
+    
+
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
@@ -80,9 +83,18 @@ export default function PostJobs() {
       jobType: selectedJobTypes,
     };
 
+    const token = localStorage.getItem('authToken')
+
     try {
-      await register(data).unwrap();
+      await axios.post('http://jobkonnecta.com/api/job/create', data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
       // Handle successful registration, e.g., redirect to a different page
+      toast.success('Job posted Successfully')
+      console.log(token)
     } catch (err) {
       // Handle error
       setErrors(err.data);

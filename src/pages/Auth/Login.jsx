@@ -28,18 +28,23 @@ export default function Login() {
 
     const data = {
       email: formData.get("email"),
-
       password: formData.get("password"),
     };
 
     try {
-      const response = await axios.post('http://jobkonnecta.com/api/user/login', data, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      toast.success("Login successful!");
-      navigate('/')
+      const response = await axios.post('http://jobkonnecta.com/api/user/login', data)
+      const role = localStorage.getItem('userRole')
+      const token = response.data;
+      localStorage.setItem('authToken', token);
+      console.log(response.role)
+      
+      if (role === 'employer') {
+        toast.success("Login successful!");
+        navigate('/dashboard')
+
+      } else {
+        navigate('/all-jobs')
+      }
       console.log(response)
     } catch (err) {
       // Handle error

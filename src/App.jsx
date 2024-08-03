@@ -27,6 +27,8 @@ import PostJobs from "./components/dashboard/PostJobs";
 import Applications from "./components/dashboard/Applications";
 import ActiveListings from "./components/dashboard/ActiveListings";
 
+import { Cookies } from "react-cookie";
+
 function App() {
   return (
     <>
