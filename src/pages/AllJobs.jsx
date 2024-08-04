@@ -5,11 +5,13 @@ import JobCard from "../components/JobCard";
 import axios from 'axios'
 // import { jobs } from "../DB/Data";
 import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom";
 
 export default function AllJobs() {
   const [visibleJobs, setVisibleJobs] = useState(10);
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [getJobs, setGetJobs] = useState([])
+  const navigate = useNavigate()
 
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
@@ -25,6 +27,10 @@ export default function AllJobs() {
   useEffect(() => {
     allJobs()
   }, []);
+
+  const handleJobClick = (id) => {
+    navigate(`/job/${id}`);
+  };
 
   return (
     <>
@@ -90,7 +96,7 @@ export default function AllJobs() {
               jobType={job.description}
               location={`${job.location.state}, ${job.location.country}`}
               postedTime={job.postedAt}
-              link={job.link}
+              onClick={() => handleJobClick(job._id)}
               id={job._id}
             />
           ))}

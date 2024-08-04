@@ -74,18 +74,16 @@ function NavList() {
         </Link>
         {openMenu && (
           <div
-            className="absolute top-8 left-0 py-2 bg-white shadow-lg rounded-lg w-[230px] 
-          
-          "
+            className="absolute top-8 left-0 py-2 bg-white shadow-lg rounded-lg w-[230px]"
           >
             <Link
-              className="px-4 py-2  hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
+              className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
               to=""
             >
               CV Writing
             </Link>
             <Link
-              className="px-4 py-2  hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
+              className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
               to="#"
             >
               LinkedIn Profile Optimization
@@ -124,15 +122,10 @@ function NavList() {
       </Typography>
       <hr className="bg-primary lg:hidden" />
 
-      {/* <span className="lg:mt-0 my-1 bg-red-500"> */}
       <CustomButton text={"Post Jobs"} link={"/login"} />
-      {/* </span> */}
       <hr className="bg-primary lg:hidden" />
-
-      {/* <span className="lg:mt-0 my-1"> */}
       <CustomButton text={"Login"} link={"/login"} />
       <CustomButton text={"Signup"} link={"signup/home"} />
-      {/* </span> */}
       <hr className="bg-primary lg:hidden" />
     </ul>
   );
@@ -153,7 +146,7 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="w-[98%] mx-auto px-6 py-3  bg-primary text-white sticky top-0 z-10 ">
+    <div className="w-[98%] mx-auto px-6 py-3 bg-primary text-white sticky top-0 z-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center w-[30%] h-[30px] lg:h-auto lg:w-[15%]">
           <Logo />
@@ -180,3 +173,4 @@ export default function Header() {
     </div>
   );
 }
+

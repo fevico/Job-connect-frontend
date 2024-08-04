@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import "../node_modules/slick-carousel/slick/slick.css";
 import "../node_modules/slick-carousel/slick/slick-theme.css";
@@ -26,31 +26,40 @@ import Dashboard from "./components/dashboard";
 import PostJobs from "./components/dashboard/PostJobs";
 import Applications from "./components/dashboard/Applications";
 import ActiveListings from "./components/dashboard/ActiveListings";
-
-import { Cookies } from "react-cookie";
+import LoggedInLayout from "./components/LoggedInLayout";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+// import { AuthProvider, useAuth } from './components/Session';
 
 function App() {
+  const timeout = 60 * 60 * 1000; // 60 minutes === 1 hour
+  const navigate = useNavigate()
+  setTimeout(() => {
+    toast.error("Session Timeout.")
+    navigate('/login')
+  }, timeout);
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+        </Route>
+
+        <Route path="/" element={<LoggedInLayout />}>
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/job" element={<JobDetails />} />
           <Route path="/all-jobs" element={<AllJobs />} />
           <Route path="/career-profile" element={<CareerProfile />} />
-
           <Route path="/signup/home" element={<SignUpHome />} />
           <Route path="/signup/jobseeker" element={<RegAsJobSeeker />} />
           <Route path="/signup/verify" element={<VerifyAccount />} />
           <Route path="/signup/employer" element={<RegAsJobEmployer />} />
-
-          {/* <Route path="/job/:jobId" element={<JobDetails />} /> */}
+          <Route path="/job/:id" element={<JobDetails />} />
         </Route>
+
         <Route path="/" element={<SpecialLayout />}>
           <Route path="/dashboard/employee" element={<Employee />} />
           <Route path="/dashboard/employer" element={<Employer />} />

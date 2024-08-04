@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import {
   FaEnvelope,
@@ -20,6 +20,8 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { ImCancelCircle } from "react-icons/im";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export function ApplySuccess({ open, setOpen, handleOpen }) {
   return (
@@ -57,7 +59,7 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
                 via email or through our messaging system on the website.
               </li>
               <div className="flex flex-col items-center justify-center gap-2 w-full mt-3">
-                <CustomButton link={"/"} text={"VIEW ACTIVE JOBS"} />
+                <CustomButton link={"/all-jobs"} text={"VIEW ACTIVE JOBS"} />
               </div>
             </div>
           </div>
@@ -68,13 +70,54 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
 }
 
 export default function JobDetails() {
-  const [open, setOpen] = React.useState(false);
+  const { id } = useParams();
+  const [open, setOpen] = useState(false);
+  const [getJobById, setGetJobById] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleOpen = () => setOpen(!open);
 
+  useEffect(() => {
+    const getJobDetails = async () => {
+      try {
+        const response = await axios.get(`http://jobkonnecta.com/api/job/job/${id}`);
+        setGetJobById(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getJobDetails();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!getJobById) {
+    return <div>No job found</div>;
+  }
+
   const handleApply = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('authToken');
     try {
+      const response = await axios.post('http://jobkonnecta.com/api/job/apply-job', {
+        id: getJobById._id
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.log('Response:', response);
       setOpen(true);
     } catch (error) {
       console.error(error);
@@ -90,11 +133,9 @@ export default function JobDetails() {
         <meta name="author" content="JobKonnectaNG" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      <div className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative">
-        {" "}
+      <div className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative" name={getJobById._id}>
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
-          <PiArrowBendUpLeftBold className="text-primary" /> UIUX Designer |
-          Apply at Creative Solutions Inc.
+          <PiArrowBendUpLeftBold className="text-primary" />
         </h1>
       </div>
       <div className="shadow-md relative w-full max-w-[95%] lg:max-w-[90%] mx-auto transform translate-y-[-1%] bg-white">
@@ -103,7 +144,7 @@ export default function JobDetails() {
             <div className="">
               <img src={job} alt="" className="rounded-full" />
               <h2 className="text-[16px] lg:text-[32px] font-extrabold text-primary text-left">
-                UI UX Designer
+                {getJobById.title}
               </h2>
               <p className=" text-primary text-left">Creative Solutions Inc.</p>
               <p className="flex items-center gap-2  text-primary text-left">
@@ -114,7 +155,7 @@ export default function JobDetails() {
               </p>
             </div>
             <div className="flex flex-col items-left gap-2 w-[40%] lg:w-[25%]">
-              <CustomButton onClick={handleApply} text={"Apply Now"} />
+              <CustomButton text={"Apply Now"} onClick={handleApply} />
               <p className="text-left text-sm text-[#001F3F80]/50">
                 share this job:
               </p>
@@ -137,14 +178,12 @@ export default function JobDetails() {
                 >
                   <FaEnvelope className="" />
                 </Link>
-
                 <Link
                   to="#"
                   className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
                 >
                   <FaWhatsapp className="" />
                 </Link>
-
                 <Link
                   to="#"
                   className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
@@ -156,7 +195,7 @@ export default function JobDetails() {
           </div>
         </div>
         <div className="flex flex-col gap-3 p-4">
-          <div className="p-3 lg:h-[50px] w  bg-[#D5D5DC]">
+          <div className="p-3 lg:h-[50px] w bg-[#D5D5DC]">
             <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
               Job Summary
             </h1>
@@ -178,13 +217,13 @@ export default function JobDetails() {
         </div>
 
         <div className="flex flex-col gap-3 p-4">
-          <div className="p-3 lg:h-[50px] w  bg-[#D5D5DC]">
+          <div className="p-3 lg:h-[50px] w bg-[#D5D5DC]">
             <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
               Job Details
             </h1>
           </div>
           <h1 className=" lg:text-[16px] text-left font-[600]">
-            Key Responsibilites:
+            Key Responsibilities:
           </h1>
           <div className="text-left">
             <li className="">
@@ -193,115 +232,81 @@ export default function JobDetails() {
               mockups optimized for a wide range of devices and interfaces.
             </li>
             <li className="">
-              Conduct user research and evaluate user feedback.
+              Conduct user research and evaluate user feedback to improve the
+              user experience continuously.
             </li>
             <li className="">
-              Establish and promote design guidelines, best practices, and
-              standards.
+              Collaborate with cross-functional teams to understand and
+              incorporate business and technical requirements into design
+              solutions.
             </li>
             <li className="">
-              Collaborate with product management and engineering to define and
-              implement innovative solutions for the product direction, visuals,
-              and experience.
+              Create and maintain design systems, ensuring consistency across
+              all digital products.
             </li>
             <li className="">
-              Execute all visual design stages from concept to final hand-off to
-              engineering.
-            </li>
-            <li className="">
-              Conceptualize original ideas that bring simplicity and
-              user-friendliness to complex design roadblocks.
+              Stay up-to-date with industry trends and best practices in UI/UX
+              design, and apply them to enhance our products.
             </li>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-3 p-4">
-          <div className="p-3 lg:h-[50px] w  bg-[#D5D5DC]">
-            <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
-              Job Requirements
-            </h1>
-          </div>
-          <h1 className=" lg:text-[16px] text-left font-[600]">
-            Requirements:
-          </h1>
-          <div className="text-left mb-4">
+          <h1 className=" lg:text-[16px] text-left font-[600]">Requirements:</h1>
+          <div className="text-left">
             <li className="">
-              {" "}
-              Proven UI/UX design experience with a strong portfolio.
-            </li>
-            <li className="">
-              Proficiency in design tools such as Sketch, Figma, Adobe XD, etc.
-            </li>
-            <li className="">
-              Solid experience in creating wireframes, storyboards, user flows,
-              process flows, and site maps.
-            </li>
-            <li className="">
-              Proficiency in HTML, CSS, and JavaScript for rapid prototyping
-              (optional but a plus).
-            </li>
-            <li className="">
-              Ability to solve problems creatively and effectively.
-            </li>
-            <li className="">
-              Up-to-date with the latest UI trends, techniques, and
-              technologies.
-            </li>
-            <li className="">
-              BS/MS in Human-Computer Interaction, Interaction Design, or a
+              Bachelor's degree in UI/UX Design, Interaction Design, or a
               related field.
             </li>
-          </div>
-
-          <div className="text-left mb-4">
             <li className="">
-              <strong>Minimum Qualification: </strong>
-              Degree{" "}
+              Proven experience as a UI/UX Designer with a strong portfolio of
+              design projects.
             </li>
             <li className="">
-              <strong>Experience Level: </strong>
-              Senior Level{" "}
+              Proficiency in design and prototyping tools such as Sketch, Adobe
+              XD, Figma, or similar.
             </li>
             <li className="">
-              <strong>Years of Experience: </strong>3 Years
+              Solid understanding of user-centered design principles and best
+              practices.
+            </li>
+            <li className="">
+              Strong communication and collaboration skills, with the ability to
+              present and justify design decisions effectively.
+            </li>
+            <li className="">
+              Knowledge of HTML/CSS and front-end development principles is a
+              plus.
             </li>
           </div>
         </div>
 
         <div className="flex flex-col gap-3 p-4">
-          <div className="p-3 lg:h-[50px] w  bg-[#D5D5DC]">
+          <div className="p-3 lg:h-[50px] w bg-[#D5D5DC]">
             <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
-              Job Benefits
+              Benefits
             </h1>
           </div>
-          <h1 className=" lg:text-[16px] text-left font-[600]">Benefits:</h1>
           <div className="text-left">
-            <li className="">Competitive salary and benefits package.</li>
-            <li className="">Health insurance.</li>
-            <li className="">Flexible working hours.</li>
             <li className="">
-              Opportunities for professional development and growth.
+              Competitive salary and performance-based bonuses.
             </li>
-            <li className="">Collaborative and creative work environment.</li>
-            <li className="">Remote work options available.</li>
+            <li className="">
+              Flexible working hours and remote work options.
+            </li>
+            <li className="">
+              Health and wellness benefits, including medical, dental, and
+              vision coverage.
+            </li>
+            <li className="">
+              Professional development opportunities and a supportive work
+              environment.
+            </li>
+            <li className="">
+              Exciting projects with diverse clients and industries.
+            </li>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-3 p-4">
-          <div className="p-3 lg:h-[50px] w  bg-[#D5D5DC]">
-            <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
-              About Company
-            </h1>
-          </div>
-          <p className="text-left">
-            Creative Solutions Inc. is a leading agency specializing in
-            innovative design and digital experiences. Our mission is to create
-            user-centric solutions that empower our clients and enhance their
-            digital presence.
-          </p>
         </div>
       </div>
-      <ApplySuccess handleOpen={handleOpen} open={open} setOpen={setOpen} />
+
+      <ApplySuccess open={open} setOpen={setOpen} handleOpen={handleOpen} />
     </>
   );
 }

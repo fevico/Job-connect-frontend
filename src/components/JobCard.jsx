@@ -1,7 +1,7 @@
 import React from "react";
 import CustomButton from "./CustomButton";
 
-export default function JobCard({ title, company, salary, jobType, location, postedTime, link, id }) {
+export default function JobCard({ title, company, salary, jobType, location, postedTime, onClick, id }) {
   return (
     <div className="border-[#001F3F]/40 border rounded-[30px] p-5 w-full" id={id}>
       <div className="flex flex-col lg:flex-row justify-between lg:items-center h-[180px] lg:h-[120px]">
@@ -13,7 +13,7 @@ export default function JobCard({ title, company, salary, jobType, location, pos
           <p className="">{jobType} | {location}</p>
           <p className="text-xs text-red-500">{postedTime}</p>
         </div>
-        <CustomButton text={"VIEW DETAILS"} link={link} />
+        <CustomButton text={"VIEW DETAILS"} onClick={onClick} />
       </div>
     </div>
   );
