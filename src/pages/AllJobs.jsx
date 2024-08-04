@@ -1,17 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomButton from "@/components/CustomButton";
 import JobList from "@/components/JobList";
 import JobCard from "../components/JobCard";
-import { jobs } from "../DB/Data";
+import axios from 'axios'
+// import { jobs } from "../DB/Data";
 import { Helmet } from "react-helmet";
 
 export default function AllJobs() {
   const [visibleJobs, setVisibleJobs] = useState(10);
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
+  // const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [getJobs, setGetJobs] = useState([])
 
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
   };
+  const allJobs = async () => {
+    try {
+      const response = await axios.get('http://jobkonnecta.com/api/job/all-jobs')
+      setGetJobs(response.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  useEffect(() => {
+    allJobs()
+  }, []);
+
   return (
     <>
     <Helmet>
@@ -67,21 +81,22 @@ export default function AllJobs() {
       </div>
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
-          {filteredJobs.slice(0, visibleJobs).map((job, index) => (
+          {getJobs.slice(0, visibleJobs).map((job, index) => (
             <JobCard
               key={index}
               title={job.title}
               company={job.company}
               salary={job.salary}
-              jobType={job.jobType}
-              location={job.location}
-              postedTime={job.postedTime}
+              jobType={job.description}
+              location={`${job.location.state}, ${job.location.country}`}
+              postedTime={job.postedAt}
               link={job.link}
+              id={job._id}
             />
           ))}
         </div>
       </div>
-      {visibleJobs < filteredJobs.length && (
+      {visibleJobs < allJobs.length && (
         <div  className="flex justify-end  my-5 w-[95%]">
           <CustomButton onClick={handleSeeMore} text={"Explore more jobs"} />
         </div>

@@ -31,13 +31,6 @@ export default function PostJobs() {
     setState("");
   };
 
-  const handleCatChange = (val) => {
-    setcategoryId(val);
-    setErrors({ ...errors, categoryd: undefined });
-    setState("");
-  };
-
-
   const handleStateChange = (val) => {
     setState(val);
     setErrors({ ...errors, state: undefined });
@@ -46,7 +39,6 @@ export default function PostJobs() {
   const getCategories = async () => {
     try {
       const response = await axios.get('http://jobkonnecta.com/api/category/all');
-      console.log(response);
       console.log(response.data);
       setCategories(response.data);
     } catch (err) {
