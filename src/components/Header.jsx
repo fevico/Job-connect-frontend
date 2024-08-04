@@ -125,7 +125,7 @@ function NavList() {
       <hr className="bg-primary lg:hidden" />
 
       {/* <span className="lg:mt-0 my-1 bg-red-500"> */}
-      <CustomButton text={"Post Jobs"} link={"#"} />
+      <CustomButton text={"Post Jobs"} link={"/login"} />
       {/* </span> */}
       <hr className="bg-primary lg:hidden" />
 

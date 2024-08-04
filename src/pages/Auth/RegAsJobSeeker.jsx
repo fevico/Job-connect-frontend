@@ -125,6 +125,13 @@ export default function RegAsJobSeeker() {
       return;
     }
 
+    const priceFromString = formData.get("experience");
+    const experience = parseInt(priceFromString, 10);
+    if (isNaN(experience) || experience <= 0) {
+      setErrors({ message: "Price From must be a positive number." });
+      return;
+    }
+
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
@@ -133,7 +140,7 @@ export default function RegAsJobSeeker() {
       location: state,
       phone: formData.get("phone"),
       qualification: formData.get("qualification"),
-      yearsOfExperience: formData.get("experience"),
+      yearsOfExperience: experience,
       // currentPosition: formData.get("currentPosition"),
       password: formData.get("password"),
       role: role,

@@ -15,9 +15,13 @@ export default function PostJobs() {
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
+  const [categoryId, setcategoryId] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "categoryId") {
+      setcategoryId(value);
+    }
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
 
@@ -27,6 +31,13 @@ export default function PostJobs() {
     setState("");
   };
 
+  const handleCatChange = (val) => {
+    setcategoryId(val);
+    setErrors({ ...errors, categoryd: undefined });
+    setState("");
+  };
+
+
   const handleStateChange = (val) => {
     setState(val);
     setErrors({ ...errors, state: undefined });
@@ -34,7 +45,9 @@ export default function PostJobs() {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get('http://jobkonnecta.com/category/all');
+      const response = await axios.get('http://jobkonnecta.com/api/category/all');
+      console.log(response);
+      console.log(response.data);
       setCategories(response.data);
     } catch (err) {
       console.error("Error fetching categories:", err);
@@ -46,6 +59,7 @@ export default function PostJobs() {
   }, []);
 
   async function handleSubmit(e) {
+    // console.log("samsonnnnnnnnnn");
     e.preventDefault();
     const formData = new FormData(e.target);
     let password = formData.get("password");
@@ -55,6 +69,7 @@ export default function PostJobs() {
       setErrors({ message: "Passwords do not match." });
       return;
     }
+    
 
     const priceFromString = formData.get("priceFrom");
     const priceFrom = parseInt(priceFromString, 10);
@@ -79,8 +94,8 @@ export default function PostJobs() {
         country: formData.get("country"),
         state: formData.get("state"),
       },
-      skills: formData.getAll("skills"),
-      categoryId: formData.get("categoryId"),
+      skills: formData.get("skills"),
+      categoryId: categoryId,
       duration: formData.get("duration"),
     };
 
@@ -97,9 +112,12 @@ export default function PostJobs() {
           },
         }
       );
-      console.log(response.data);
       toast.success('Job posted Successfully');
       console.log('Response:', response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+      
     } catch (err) {
       setErrors({ message: "An error occurred while posting the job." });
       console.error(err);
@@ -258,13 +276,14 @@ export default function PostJobs() {
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="categoryId"
                 onChange={handleInputChange}
+                id="categoryId"
                 required
               >
                 <option value="" disabled selected>
                   Select Job Type
                 </option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
+                  <option key={category._id} value={category._id}>
                     {category.name}
                   </option>
                 ))}
@@ -297,10 +316,11 @@ export default function PostJobs() {
             <div className="text-red-600 text-center">{errors.message}</div>
           )}
 
-          <div className="w-full flex justify-center items-center my-4">
+          <div className="w-full flex justify-end items-center my-4">
             <CustomButton
               title="Submit"
               type="submit"
+              text="Post Job"
               className="w-[40%] lg:w-[20%] text-center flex justify-center"
             />
           </div>
