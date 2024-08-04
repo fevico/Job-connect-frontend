@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -14,13 +14,7 @@ export default function PostJobs() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [selectedJobTypes, setSelectedJobTypes] = useState([]);
-  const navigate = useNavigate();
-
-  const role = "jobseeker";
+  const [categories, setCategories] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,24 +32,20 @@ export default function PostJobs() {
     setErrors({ ...errors, state: undefined });
   };
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
+  const getCategories = async () => {
+    try {
+      const response = await axios.get('http://jobkonnecta.com/category/all');
+      setCategories(response.data);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
   };
 
-  const toggleConfirmPasswordVisibility = () => {
-    setConfirmPasswordVisible(!confirmPasswordVisible);
-  };
+  useEffect(() => {
+    getCategories();
+  }, []);
 
-  const handleJobTypeChange = (e) => {
-    const { value } = e.target;
-    setSelectedJobTypes((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value]
-    );
-  };
-
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     let password = formData.get("password");
@@ -66,41 +56,55 @@ export default function PostJobs() {
       return;
     }
 
-    
+    const priceFromString = formData.get("priceFrom");
+    const priceFrom = parseInt(priceFromString, 10);
+    if (isNaN(priceFrom) || priceFrom <= 0) {
+      setErrors({ message: "Price From must be a positive number." });
+      return;
+    }
+
+    const priceToString = formData.get("priceTo");
+    const priceTo = parseInt(priceToString, 10);
+    if (isNaN(priceTo) || priceTo <= 0) {
+      setErrors({ message: "Price To must be a positive number." });
+      return;
+    }
 
     const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      gender: formData.get("gender"),
-      nationality: country,
-      location: state,
-      phone: formData.get("phone"),
-      qualification: formData.get("qualification"),
-      yearsOfExperience: formData.get("experience"),
-      // currentPosition: formData.get("currentPosition"),
-      password: formData.get("password"),
-      role: role,
-      jobType: selectedJobTypes,
+      title: formData.get("title"),
+      description: formData.get("summary"),
+      priceFrom: priceFrom,
+      priceTo: priceTo,
+      location: {
+        country: formData.get("country"),
+        state: formData.get("state"),
+      },
+      skills: formData.getAll("skills"),
+      categoryId: formData.get("categoryId"),
+      duration: formData.get("duration"),
     };
 
-    const token = localStorage.getItem('authToken')
+    const token = localStorage.getItem('authToken');
+    console.log(token);
 
     try {
-      await axios.post('http://jobkonnecta.com/api/job/create', data,
+      const response = await axios.post(
+        'http://jobkonnecta.com/api/job/create',
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-      // Handle successful registration, e.g., redirect to a different page
-      toast.success('Job posted Successfully')
-      console.log(token)
+        }
+      );
+      console.log(response.data);
+      toast.success('Job posted Successfully');
+      console.log('Response:', response);
     } catch (err) {
-      // Handle error
-      setErrors(err.data);
+      setErrors({ message: "An error occurred while posting the job." });
       console.error(err);
     }
-  };
+  }
 
   return (
     <>
@@ -123,13 +127,12 @@ export default function PostJobs() {
 
           <div className="w-[98%] mx-auto space-y-3">
             <div className="flex lg:flex-row flex-col justify-between w-full gap-2 items-start">
-              {/* Job Title and Industry */}
-              <div className="grid grid-cols-2 lg:grid-cols-3  justify-between gap-2 items-center">
+              <div className="grid grid-cols-2 lg:grid-cols-3 justify-between gap-2 items-center">
                 <div className="flex flex-col items-start gap-1 w-full">
                   <label className="">Job Title</label>
                   <input
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                    name="name"
+                    name="title"
                     type="text"
                     placeholder="Job Title"
                     onChange={handleInputChange}
@@ -166,7 +169,7 @@ export default function PostJobs() {
                   <CountryDropdown
                     value={country}
                     onChange={handleCountryChange}
-                    className={`p-2 w-full border-2 rounded-md border-gray-400`}
+                    className="p-2 w-full border-2 rounded-md border-gray-400"
                     name="country"
                     required
                   />
@@ -180,7 +183,7 @@ export default function PostJobs() {
                     value={state}
                     onChange={handleStateChange}
                     name="state"
-                    className={`p-2 w-full border-2 rounded-md border-gray-400`}
+                    className="p-2 w-full border-2 rounded-md border-gray-400"
                     required
                   />
                 </div>
@@ -188,7 +191,7 @@ export default function PostJobs() {
                   <label className="">Salary from</label>
                   <input
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                    name="from"
+                    name="priceFrom"
                     type="number"
                     placeholder="2,000"
                     onChange={handleInputChange}
@@ -199,54 +202,12 @@ export default function PostJobs() {
                   <label className="">Salary to</label>
                   <input
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                    name="to"
+                    name="priceTo"
                     type="number"
                     placeholder="3,000"
                     onChange={handleInputChange}
                     required
                   />
-                </div>
-              </div>
-
-              <div className="space-y-3 lg:my-0 my-4">
-                <h2 className="text-sm">Preferred Job Type</h2>
-                <div className="flex flex-row lg:flex-col items-start gap-2 w-full">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value="full_time"
-                      checked={selectedJobTypes.includes("full_time")}
-                      onChange={handleJobTypeChange}
-                    />
-                    <span className="ml-2">Full Time</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value="part_time"
-                      checked={selectedJobTypes.includes("part_time")}
-                      onChange={handleJobTypeChange}
-                    />
-                    <span className="ml-2">Part Time</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value="contract"
-                      checked={selectedJobTypes.includes("contract")}
-                      onChange={handleJobTypeChange}
-                    />
-                    <span className="ml-2">Contract</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value="internship"
-                      checked={selectedJobTypes.includes("internship")}
-                      onChange={handleJobTypeChange}
-                    />
-                    <span className="ml-2">Internship</span>
-                  </label>
                 </div>
               </div>
             </div>
@@ -271,77 +232,77 @@ export default function PostJobs() {
                   className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
                   name="summary"
                   type="text"
-                  placeholder="type your message..."
+                  placeholder="Enter Job Summary"
+                  onChange={handleInputChange}
+                  required
                 />
               </div>
-              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2">
-                <label className="">Job Responsibilities</label>
+              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+                <label className="">Required Skills</label>
                 <textarea
                   className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
-                  name="responsibilities"
+                  name="skills"
                   type="text"
-                  placeholder="type your message..."
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3 items-start w-[98%] mx-auto mt-5">
-              <div className="flex flex-col items-center leading-5 mb-3">
-                <h2 className="text-primary font-bold text-[16px] lg:text-[20px]">
-                  Job Requirements
-                </h2>
-
-                <span className="flex items-center w-full justify-end">
-                  <hr className="border-2 border-primary w-1/2" />
-                  <hr className="rounded-full p-1 bg-primary border-none" />
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-3  justify-between gap-2 items-center">
-              <div className="flex flex-col items-start gap-1 w-full">
-                <label className="">Job Qualification</label>
-                <select
-                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="qualification"
-                  onChange={handleInputChange}
-                >
-                  <option value="" disabled selected>
-                    Select
-                  </option>
-                  <option value="degree">Degree</option>
-                  <option value="diploma">Diploma</option>
-                  <option value="high_school">High School (S.S.C.E)</option>
-                  <option value="hnd">HND</option>
-                  <option value="mba_msc">MBA/MSc</option>
-                  <option value="mbbs">MBBS</option>
-                  <option value="mphil_phd">MPhil / PhD</option>
-                  <option value="nce">N.C.E</option>
-                  <option value="ond">OND</option>
-                  <option value="others">Others</option>
-                  <option value="vocational">Vocational</option>
-                </select>
-              </div>
-              <div className="flex flex-col items-start gap-1 w-full">
-                <label className="">Application deadline</label>
-                <input
-                  className=" border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="deadline"
-                  type="date"
-                  placeholder="3,000"
+                  placeholder="Required Skills"
                   onChange={handleInputChange}
                   required
                 />
               </div>
             </div>
-            {/* Submit Button */}
-            <div className="flex justify-end">
-              <CustomButton
-                text={"Post Job"}
-                type="submit"
-                className="bg-primary text-white p-3 rounded-md"
-              />
+          </div>
+
+          <div className="flex flex-col lg:flex-row items-start gap-2 w-full">
+            <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+              <label className="">Job Type</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="categoryId"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                  Select Job Type
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+              <label className="">Duration</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="duration"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                  Select Duration
+                </option>
+                <option value="1 week">1 week</option>
+                <option value="2 weeks">2 weeks</option>
+                <option value="1 month">1 month</option>
+                <option value="3 months">3 months</option>
+                <option value="6 months">6 months</option>
+                <option value="1 year">1 year</option>
+                <option value="ongoing">Ongoing</option>
+              </select>
+            </div>
+          </div>
+
+          {errors.message && (
+            <div className="text-red-600 text-center">{errors.message}</div>
+          )}
+
+          <div className="w-full flex justify-center items-center my-4">
+            <CustomButton
+              title="Submit"
+              type="submit"
+              className="w-[40%] lg:w-[20%] text-center flex justify-center"
+            />
           </div>
         </form>
       </div>

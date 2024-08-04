@@ -33,15 +33,13 @@ export default function Login() {
 
     try {
       const response = await axios.post('http://jobkonnecta.com/api/user/login', data)
-      const role = localStorage.getItem('userRole')
-      const token = response.data;
+      const token = response.data.token;
       localStorage.setItem('authToken', token);
-      console.log(response.role)
+      // console.log(response.data.data.role)
       
-      if (role === 'employer') {
+      if (response.data.data.role === 'employer') {
         toast.success("Login successful!");
         navigate('/dashboard')
-
       } else {
         navigate('/all-jobs')
       }
