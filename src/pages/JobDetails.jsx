@@ -22,6 +22,7 @@ import {
 import { ImCancelCircle } from "react-icons/im";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function ApplySuccess({ open, setOpen, handleOpen }) {
   return (
@@ -75,6 +76,7 @@ export default function JobDetails() {
   const [getJobById, setGetJobById] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate()
 
   const handleOpen = () => setOpen(!open);
 
@@ -124,6 +126,8 @@ export default function JobDetails() {
     }
   };
 
+  const handleBack = () => {navigate('/all-jobs')}
+
   return (
     <>
       <Helmet>
@@ -135,7 +139,7 @@ export default function JobDetails() {
       </Helmet>
       <div className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative" name={getJobById._id}>
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
-          <PiArrowBendUpLeftBold className="text-primary" />
+          <PiArrowBendUpLeftBold className="text-primary cursor-pointer mb-[-20px]" onClick={handleBack} />
         </h1>
       </div>
       <div className="shadow-md relative w-full max-w-[95%] lg:max-w-[90%] mx-auto transform translate-y-[-1%] bg-white">

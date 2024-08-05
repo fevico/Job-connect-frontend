@@ -34,10 +34,16 @@ import { toast } from "react-toastify";
 function App() {
   const timeout = 60 * 60 * 1000; // 60 minutes === 1 hour
   const navigate = useNavigate()
-  setTimeout(() => {
-    toast.error("Session Timeout.")
-    navigate('/login')
-  }, timeout);
+
+  if (localStorage.getItem('AuthToken') === 'undefined') {
+    toast.error('You are not logged in')
+  } else {
+    setTimeout(() => {
+      toast.error("Session Timeout.")
+      navigate('/login')
+    }, timeout);
+  }
+
   return (
     <>
       <Routes>
