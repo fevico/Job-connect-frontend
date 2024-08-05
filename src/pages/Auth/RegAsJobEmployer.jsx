@@ -76,15 +76,16 @@ export default function RegAsJobSeeker() {
       const response = await axios.post('http://jobkonnecta.com/api/user/register', data)
       
       localStorage.setItem('userRole', data.role);
+      // localStorage.setItem('accountId', data._id);
 
-      toast.success("Registeration successful!");
-      navigate('/login')
-      console.log(response)
+      toast.success("Registration successful!");
+      navigate('/signup/verify');
+      console.log(response.data.message);
     } catch (err) {
       // Handle error
-      toast.error("Registeration failed");
-      setErrors(err.data);
-      console.error(err);
+      toast.error(err.response?.data?.message || "Registration failed");
+      setErrors(err.response?.data || {});
+      console.error(err.response?.data?.message || err.message);
     }
   };
 
@@ -120,12 +121,6 @@ export default function RegAsJobSeeker() {
         </div>
 
         <div className="w-[90%] mx-auto space-y-3">
-          {errors && (
-            <span className="text-red-500 text-xs">{errors.message}</span>
-          )}
-          {error && (
-            <p className="text-red-500 text-center mt-2">{error.message}</p>
-          )}
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
               <label className="">Name</label>
