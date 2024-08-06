@@ -74,13 +74,16 @@ export default function RegAsJobSeeker() {
 
     try {
       const response = await axios.post('http://jobkonnecta.com/api/user/register', data)
+      const userId = response.data.message.id
+
+      localStorage.setItem('userId', userId);
       
       localStorage.setItem('userRole', data.role);
       // localStorage.setItem('accountId', data._id);
 
       toast.success("Registration successful!");
       navigate('/signup/verify');
-      console.log(response.data.message);
+      // console.log(response.data.message);
     } catch (err) {
       // Handle error
       toast.error(err.response?.data?.message || "Registration failed");
