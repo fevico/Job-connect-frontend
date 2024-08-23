@@ -83,7 +83,7 @@ export default function JobDetails() {
   useEffect(() => {
     const getJobDetails = async () => {
       try {
-        const response = await axios.get(`http://jobkonnecta.com/api/job/job/${id}`);
+        const response = await axios.get(`https://jobkonnecta.com/api/job/job/${id}`);
         setGetJobById(response.data);
       } catch (err) {
         setError(err);
@@ -111,7 +111,7 @@ export default function JobDetails() {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
     try {
-      const response = await axios.post('http://jobkonnecta.com/api/job/apply-job', {
+      const response = await axios.post('https://jobkonnecta.com/api/job/apply-job', {
         id: getJobById._id
       },
       {

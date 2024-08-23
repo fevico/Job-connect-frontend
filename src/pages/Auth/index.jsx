@@ -42,7 +42,11 @@ export default function SignUpHome() {
                 Seeking top-quality candidates? Advertise your opportunities and
                 find the best talent with Jobberman.{" "}
               </p>
-              <CustomButton onClick="" link={"/signup/employer"} text="SIGN UP AS AN EMPLOYER" />
+              <CustomButton
+                onClick=""
+                link={"/signup/employer"}
+                text="SIGN UP AS AN EMPLOYER"
+              />
             </div>
 
             <div className="relative flex flex-col border-2 border-primary p-5">
@@ -57,7 +61,11 @@ export default function SignUpHome() {
               <p className="text-[12px] mb-2 h-10">
                 Create a standout professional profile with Jobberman today.
               </p>
-              <CustomButton onClick="" text="SIGN UP AS CV WRITER" />
+              <CustomButton
+                link={"/signup/cvwriter"}
+                onClick=""
+                text="SIGN UP AS CV WRITER"
+              />
             </div>
 
             <div className="relative flex flex-col border-2 border-primary p-5">
@@ -72,7 +80,11 @@ export default function SignUpHome() {
               <p className="text-[12px] mb-2 h-10">
                 Create a standout professional profile with Jobberman today.
               </p>
-              <CustomButton onClick="" text="SIGN UP AS LINKEDIN OPTIMIZER" />
+              <CustomButton
+                link={"/signup/linkedin"}
+                onClick=""
+                text="SIGN UP AS LINKEDIN OPTIMIZER"
+              />
             </div>
           </div>
           <div className="flex justify-end mt-3">

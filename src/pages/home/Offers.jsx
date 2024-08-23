@@ -115,7 +115,7 @@ export default function Offers() {
         <p className="text-[12px] lg:text-[18px]">
           Your Future, Our Priority: Discover Opportunities, Land Your Dream Job
         </p>
-        {isDesktop ? (
+        {/* {isDesktop ? (
           <div className="w-[90%] mx-auto flex flex-col lg:flex-row flex-wrap items-center p-5 gap-5 justify-between mt-5">
             {data.map((offer, index) => (
               <div key={index} className="max-w-[250px] ">
@@ -138,17 +138,17 @@ export default function Offers() {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="slider-container p-2 mt-5 ">
+         ) : ( */}
+          <div className="slider-container p-2 mt-5">
             <Slider {...settings}>
               {data.map((offer, index) => (
-                <div key={index} className=" ">
+                <div key={index} className="">
                   <img
                     src={offer.image}
                     alt={offer.title}
-                    className="w-full h-auto"
+                    className="w-[300px] h-auto"
                   />
-                  <div className="rounded-b-xl flex flex-col bg-[#464545] px-3 py-4 text-white text-[14px] gap-3 h-[300px]">
+                  <div className="rounded-b-xl flex flex-col bg-[#464545] px-3 py-4 text-white text-[14px] gap-3 h-[300px] w-[300px]">
                     <h2 className="text-center text-[18px] font-semibold">
                       {offer.title}
                     </h2>
@@ -163,7 +163,7 @@ export default function Offers() {
               ))}
             </Slider>
           </div>
-        )}
+        {/* )} */}
         <div className="flex justify-end w-[90%] mx-auto ">
           <CustomButton link={"#"} text={"READ MORE"} />
         </div>

@@ -18,7 +18,7 @@ export default function AllJobs() {
   };
   const allJobs = async () => {
     try {
-      const response = await axios.get('http://jobkonnecta.com/api/job/all-jobs')
+      const response = await axios.get('https://jobkonnecta.com/api/job/all-jobs')
       setGetJobs(response.data)
     } catch (err) {
       console.error(err)

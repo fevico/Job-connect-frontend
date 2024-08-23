@@ -3,6 +3,7 @@ import Hero from "./Hero";
 import Offers from "./Offers";
 import Featured from "./Featured";
 import { Helmet } from "react-helmet";
+import Subscription from "./Subscription";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       </Helmet>
       <Hero />
       <Featured />
+      <Subscription />
       <Offers />
     </>
   );

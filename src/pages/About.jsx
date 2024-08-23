@@ -126,7 +126,7 @@ export default function About() {
       ))}
 
       <div className="flex justify-end my-[30px] w-[95%]">
-        <CustomButton link={"#"} text={"Signup/login"} />
+        <CustomButton link={"/login"} text={"login"} />
       </div>
     </>
   );

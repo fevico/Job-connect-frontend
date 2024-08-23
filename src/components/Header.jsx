@@ -78,13 +78,13 @@ function NavList() {
           >
             <Link
               className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
-              to=""
+              to="/all-cvwriters"
             >
               CV Writing
             </Link>
             <Link
               className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
-              to="#"
+              to="/all-linkedin"
             >
               LinkedIn Profile Optimization
             </Link>

@@ -19,8 +19,6 @@ import RegAsJobSeeker from "./pages/Auth/RegAsJobSeeker";
 import Login from "./pages/Auth/Login";
 import RegAsJobEmployer from "./pages/Auth/RegAsJobEmployer";
 import VerifyAccount from "./pages/Auth/VerifyAccount";
-import Employee from "./pages/Dashboard/Employee";
-import Employer from "./pages/Dashboard/Employer";
 import SpecialLayout from "./components/SpecialLayout";
 import Dashboard from "./components/dashboard";
 import PostJobs from "./components/dashboard/PostJobs";
@@ -29,6 +27,12 @@ import ActiveListings from "./components/dashboard/ActiveListings";
 import LoggedInLayout from "./components/LoggedInLayout";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import RegAsLinkedIn from "./pages/Auth/RegAsLinkedIn";
+import RegAsCVWriter from "./pages/Auth/RegAsCVWriter";
+import AllCVWriters from "./pages/CV/AllCvWriters";
+import CvWriterDetails from "./pages/CV/CvWriterDetails";
+import AllLinkedIn from "./pages/LINKEDIN/AllLinkedIn";
+import LinkedInDetails from "./pages/LINKEDIN/LinkedInDetails";
 // import { AuthProvider, useAuth } from './components/Session';
 
 function App() {
@@ -58,17 +62,21 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/all-jobs" element={<AllJobs />} />
+          <Route path="/all-cvwriters" element={<AllCVWriters />} />
+          <Route path="/all-linkedin" element={<AllLinkedIn />} />
           <Route path="/career-profile" element={<CareerProfile />} />
           <Route path="/signup/home" element={<SignUpHome />} />
           <Route path="/signup/jobseeker" element={<RegAsJobSeeker />} />
+          <Route path="/signup/cvwriter" element={<RegAsCVWriter />} />
+          <Route path="/signup/linkedin" element={<RegAsLinkedIn />} />
           <Route path="/signup/verify" element={<VerifyAccount />} />
           <Route path="/signup/employer" element={<RegAsJobEmployer />} />
           <Route path="/job/:id" element={<JobDetails />} />
+          <Route path="/cvwriter/:id" element={<CvWriterDetails />} />
+          <Route path="/linkedin/:id" element={<LinkedInDetails />} />
         </Route>
 
         <Route path="/" element={<SpecialLayout />}>
-          <Route path="/dashboard/employee" element={<Employee />} />
-          <Route path="/dashboard/employer" element={<Employer />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/active-listing" element={<ActiveListings />} />
           <Route path="/applications" element={<Applications />} />

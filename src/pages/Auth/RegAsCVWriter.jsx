@@ -78,7 +78,7 @@ function CVUpload() {
   );
 }
 
-export default function RegAsJobSeeker() {
+export default function RegAsCVWriter() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});

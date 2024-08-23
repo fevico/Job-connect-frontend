@@ -32,7 +32,7 @@ export default function Login() {
     };
 
     try {
-      const response = await axios.post('http://jobkonnecta.com/api/user/login', data)
+      const response = await axios.post('https://jobkonnecta.com/api/user/login', data)
       const token = response.data.token;
       localStorage.setItem('authToken', token);
       // console.log(response.data.data.role)

@@ -22,7 +22,7 @@ const VerifyAccount = () => {
 
   // const getId = async () => {
   //   try {
-  //     const response = await axios.post('http://jobkonnecta.com/api/user/register');
+  //     const response = await axios.post('https://jobkonnecta.com/api/user/register');
   //     const id = response.data.id; // Assuming the API returns the created item's ID
   //     setId(id); // Store the ID in state
   //   } catch (err) {
@@ -47,7 +47,7 @@ const VerifyAccount = () => {
   
     try {
       // Send verification request to the server
-      const response = await axios.post(`http://jobkonnecta.com/api/user/verify-email/${id}`, { token: code });
+      const response = await axios.post(`https://jobkonnecta.com/api/user/verify-email/${id}`, { token: code });
   
       // Assuming the server returns the verification token in response.data.token
       navigate("/login"); // Redirect to login page on success

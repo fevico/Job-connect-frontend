@@ -73,7 +73,7 @@ export default function RegAsJobSeeker() {
     };
 
     try {
-      const response = await axios.post('http://jobkonnecta.com/api/user/register', data)
+      const response = await axios.post('https://jobkonnecta.com/api/user/register', data)
       const userId = response.data.message.id
 
       localStorage.setItem('userId', userId);

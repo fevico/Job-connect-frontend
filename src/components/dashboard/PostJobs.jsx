@@ -38,7 +38,7 @@ export default function PostJobs() {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get('http://jobkonnecta.com/api/category/all');
+      const response = await axios.get('https://jobkonnecta.com/api/category/all');
       console.log(response.data);
       setCategories(response.data);
     } catch (err) {
@@ -96,7 +96,7 @@ export default function PostJobs() {
 
     try {
       const response = await axios.post(
-        'http://jobkonnecta.com/api/job/create',
+        'https://jobkonnecta.com/api/job/create',
         data,
         {
           headers: {
