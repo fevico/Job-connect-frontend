@@ -3,12 +3,15 @@ import CustomButton from "../../components/CustomButton";
 import { useLoginMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import axios from 'axios'
-import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useSession from "../../components/hooks/useSession";
 
 export default function Login() {
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState("");
+  const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { signIn } = useSession();
 
   const [login, { isLoading, isSuccess, error }] = useLoginMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
@@ -21,9 +24,12 @@ export default function Login() {
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+  const location = useLocation();
+  const from = location.state?.from || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.target);
 
     const data = {
@@ -32,22 +38,24 @@ export default function Login() {
     };
 
     try {
-      const response = await axios.post('https://jobkonnecta.com/api/user/login', data)
+      const response = await axios.post(
+        "https://jobkonnecta.com/api/user/login",
+        data
+      );
       const token = response.data.token;
-      localStorage.setItem('authToken', token);
+      // localStorage.setItem("authToken", token);
+      // setCookie("authToken", token, { path: "/", maxAge: 3600 });
+      signIn(token);
       // console.log(response.data.data.role)
-      
-      if (response.data.data.role === 'employer') {
-        toast.success("Login successful!");
-        navigate('/dashboard')
-      } else {
-        navigate('/all-jobs')
-      }
-      console.log(response)
+      setLoading(false);
+      navigate(from);
+      console.log(response);
     } catch (err) {
       // Handle error
+      setLoading(false);
       toast.error("Login failed");
-      setErrors(err.data);
+
+      setErrors(err.response.data);
       console.error(err);
     }
   };
@@ -64,16 +72,19 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen mx-auto w-[90%] lg:w-[50%]">
+      <div className="flex items-center justify-center min-h-screen mx-auto w-[90%] lg:w-[45%]">
         {" "}
-        <form onSubmit={handleSubmit} className="w-full space-y-4 mb-6">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4 mb-6 bg-gray-300 py-5"
+        >
           <div className="w-[90%] mx-auto space-y-3">
             {errors && (
               <span className="text-red-500 text-xs">{errors.message}</span>
             )}
-            {error && (
+            {/* {error && (
               <p className="text-red-500 text-center mt-2">{error.message}</p>
-            )}
+            )} */}
 
             <div className="flex flex-col items-start gap-1 w-full">
               <label className="">Email</label>
@@ -107,33 +118,32 @@ export default function Login() {
               </div>
             </div>
             <div className="flex justify-between items-center mt-3">
-            <div className="">
-              <input
-                type="checkbox"
-                id="terms"
-                name="terms"
-                // checked={termsAccepted}
-                // onChange={() => setTermsAccepted(!termsAccepted)}
-              />
-              <label htmlFor="terms" className="text-sm ml-2">
-                Remember me
-              </label>
+              <div className="">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  // checked={termsAccepted}
+                  // onChange={() => setTermsAccepted(!termsAccepted)}
+                />
+                <label htmlFor="terms" className="text-sm ml-2">
+                  Remember me
+                </label>
+              </div>
+              <Link
+                to={"/signup/home"}
+                className="cursor-pointer underline lg:text-xl"
+              >
+                I don't have an account
+              </Link>
             </div>
-            <Link
-              to={"/signup/home"}
-              className="cursor-pointer underline lg:text-xl"
-            >
-              I don't have an account
-            </Link>
-          </div>
           </div>
 
-         
           <div className="flex justify-start mt-4 w-[90%] mx-auto">
             <CustomButton
               type="submit"
-              text={isLoading ? "Logging in..." : "Login"}
-              disabled={isLoading}
+              text={loading ? "Logging in..." : "Login"}
+              disabled={loading}
             />
           </div>
         </form>

@@ -164,9 +164,9 @@ export default function Offers() {
             </Slider>
           </div>
         {/* )} */}
-        <div className="flex justify-end w-[90%] mx-auto ">
+        {/* <div className="flex justify-end w-[90%] mx-auto ">
           <CustomButton link={"#"} text={"READ MORE"} />
-        </div>
+        </div> */}
       </div>
     </>
   );

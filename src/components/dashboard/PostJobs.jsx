@@ -9,6 +9,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 export default function PostJobs() {
   const [country, setCountry] = useState("");
@@ -16,6 +17,9 @@ export default function PostJobs() {
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
   const [categoryId, setcategoryId] = useState("");
+  const [cookies] = useCookies(["authToken"]);
+  const [loading, setLoading] = useState("");
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +42,9 @@ export default function PostJobs() {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get('https://jobkonnecta.com/api/category/all');
+      const response = await axios.get(
+        "https://jobkonnecta.com/api/category/all"
+      );
       console.log(response.data);
       setCategories(response.data);
     } catch (err) {
@@ -52,6 +58,7 @@ export default function PostJobs() {
 
   async function handleSubmit(e) {
     // console.log("samsonnnnnnnnnn");
+    setLoading(true);
     e.preventDefault();
     const formData = new FormData(e.target);
     let password = formData.get("password");
@@ -61,7 +68,6 @@ export default function PostJobs() {
       setErrors({ message: "Passwords do not match." });
       return;
     }
-    
 
     const priceFromString = formData.get("priceFrom");
     const priceFrom = parseInt(priceFromString, 10);
@@ -91,12 +97,11 @@ export default function PostJobs() {
       duration: formData.get("duration"),
     };
 
-    const token = localStorage.getItem('authToken');
-    console.log(token);
+    const token = cookies?.authToken;
 
     try {
       const response = await axios.post(
-        'https://jobkonnecta.com/api/job/create',
+        "https://jobkonnecta.com/api/job/create",
         data,
         {
           headers: {
@@ -104,15 +109,14 @@ export default function PostJobs() {
           },
         }
       );
-      toast.success('Job posted Successfully');
-      console.log('Response:', response);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-      
+      toast.success("Job posted Successfully");
+      setLoading(false);
     } catch (err) {
+      toast.error("Job posting failed");
+
       setErrors({ message: "An error occurred while posting the job." });
       console.error(err);
+      setLoading(false);
     }
   }
 
@@ -312,7 +316,7 @@ export default function PostJobs() {
             <CustomButton
               title="Submit"
               type="submit"
-              text="Post Job"
+              text={loading ? "Posting..." : "Post Job"}
               className="w-[40%] lg:w-[20%] text-center flex justify-center"
             />
           </div>

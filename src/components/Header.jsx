@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   Collapse,
@@ -11,9 +11,16 @@ import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "./CustomButton";
 import Logo from "./Logo";
+import useSession from "./hooks/useSession";
+import { BiUserCircle } from "react-icons/bi";
+import { BsArrowDown } from "react-icons/bs";
+import { FaAngleDown } from "react-icons/fa";
 
-function NavList() {
+function NavList({ setOpenNav }) {
   const [openMenu, setOpenMenu] = React.useState(false);
+  const [openProfile, setOpenProfile] = React.useState(false);
+  const { isSignedIn, userDetails, signOut } = useSession();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const toggleMenu = () => {
     setOpenMenu(!openMenu);
@@ -23,16 +30,40 @@ function NavList() {
     setOpenMenu(false);
   };
 
+  const toggleProfile = () => {
+    setOpenProfile(!openProfile);
+  };
+
+  const closeProfile = () => {
+    setOpenProfile(false);
+  };
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleNavLinkClick = () => {
+    if (isMobile) {
+      setOpenNav(false);
+    }
+  };
+
   return (
     <ul className="w-full my-2 flex flex-col lg:mb-0 lg:mt-0 lg:flex-row lg:items-center justify-around gap-2">
       <Typography
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-medium "
+        className="p-1 font-medium"
       >
         <Link
           to="/"
+          onClick={handleNavLinkClick}
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Home
@@ -48,6 +79,7 @@ function NavList() {
       >
         <Link
           to="all-jobs"
+          onClick={handleNavLinkClick}
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Job Listing
@@ -65,6 +97,7 @@ function NavList() {
       >
         <Link
           to="#"
+          onClick={handleNavLinkClick}
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Services
@@ -73,18 +106,18 @@ function NavList() {
           />
         </Link>
         {openMenu && (
-          <div
-            className="absolute top-8 left-0 py-2 bg-white shadow-lg rounded-lg w-[230px]"
-          >
+          <div className="absolute top-8 left-0 py-2 bg-white shadow-lg rounded-lg w-[230px]">
             <Link
-              className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
               to="/all-cvwriters"
+              onClick={handleNavLinkClick}
+              className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
             >
               CV Writing
             </Link>
             <Link
-              className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
               to="/all-linkedin"
+              onClick={handleNavLinkClick}
+              className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
             >
               LinkedIn Profile Optimization
             </Link>
@@ -92,6 +125,7 @@ function NavList() {
         )}
       </Typography>
       <hr className="bg-primary lg:hidden" />
+
       <Typography
         as="li"
         variant="small"
@@ -100,6 +134,7 @@ function NavList() {
       >
         <Link
           to="/about"
+          onClick={handleNavLinkClick}
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           About Us
@@ -115,18 +150,97 @@ function NavList() {
       >
         <Link
           to="/contact"
+          onClick={handleNavLinkClick}
           className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
         >
           Contact Us
         </Link>
       </Typography>
       <hr className="bg-primary lg:hidden" />
+      {isSignedIn ? (
+        <>
+          {(userDetails?.role === "admin" ||
+            userDetails?.role === "employer") && (
+            <CustomButton text={"Post Jobs"} link={"/post-jobs"} />
+          )}
+        </>
+      ) : (
+        <CustomButton text={"Post Jobs"} link={"/login"} />
+      )}
+      <hr className="bg-primary lg:hidden" />
+      {isSignedIn ? (
+        isMobile ? (
+          // <hr className="bg-primary lg:hidden" />
 
-      <CustomButton text={"Post Jobs"} link={"/login"} />
-      <hr className="bg-primary lg:hidden" />
-      <CustomButton text={"Login"} link={"/login"} />
-      <CustomButton text={"Signup"} link={"signup/home"} />
-      <hr className="bg-primary lg:hidden" />
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium "
+          >
+            <Link
+              to={userDetails.role === "user" ? "/" : "/dashboard"}
+              className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
+            >
+              My Profile
+            </Link>
+          </Typography>
+        ) : (
+          <Typography
+          as="li"
+          variant="medium"
+          color="white"
+          className="p-1 font-semibold relative"
+          onMouseEnter={toggleProfile}
+            onMouseLeave={closeProfile}
+        >
+          <div
+            className="flex items-center gap-1 cursor-pointer relative"
+           
+          >
+            <BiUserCircle className="w-7 h-7" />
+            <FaAngleDown
+              className={`transition-transform ${
+                openProfile ? "rotate-180" : ""
+              }`}
+            />
+            {openProfile && (
+              <div className="absolute top-8 right-0 py-2 bg-white shadow-lg rounded-lg w-[230px]">
+                <Link
+                  to={userDetails.role === "user" ? "/" : "/dashboard"}
+                  onClick={handleNavLinkClick}
+                  className="px-4 py-2 hover:bg-gray-200 gap-2  text-[#797B89] text-sm mb-1 no-underline flex items-center"
+                >
+                  Profile
+                </Link>
+                <Link
+                  to="/all-linkedin"
+                  onClick={handleNavLinkClick}
+                  className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
+                >
+                  LinkedIn Profile Optimization
+                </Link>
+                <p
+                  className="text-red-400 font-bold text-left px-4 py-2"
+                  onClick={() => {
+                    handleNavLinkClick();
+                    signOut();
+                  }}
+                >
+                  Logout
+                </p>
+              </div>
+            )}
+          </div>
+          </Typography>
+
+        )
+      ) : (
+        <>
+          <CustomButton text={"Login"} link={"/login"} />
+          <CustomButton text={"Signup"} link={"signup/home"} />
+        </>
+      )}
     </ul>
   );
 }
@@ -152,7 +266,7 @@ export default function Header() {
           <Logo />
         </div>
         <div className="hidden lg:block w-[85%]">
-          <NavList />
+          <NavList setOpenNav={setOpenNav} />
         </div>
         <IconButton
           variant="text"
@@ -168,9 +282,8 @@ export default function Header() {
         </IconButton>
       </div>
       <Collapse open={openNav}>
-        <NavList />
+        <NavList setOpenNav={setOpenNav} />
       </Collapse>
     </div>
   );
 }
-

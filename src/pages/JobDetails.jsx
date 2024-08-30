@@ -18,11 +18,16 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Spinner,
 } from "@material-tailwind/react";
 import { ImCancelCircle } from "react-icons/im";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { toast } from "react-toastify";
+import useAxios from "../components/hooks/AxiosInstance";
+import useSession from "../components/hooks/useSession";
 
 export function ApplySuccess({ open, setOpen, handleOpen }) {
   return (
@@ -75,15 +80,21 @@ export default function JobDetails() {
   const [open, setOpen] = useState(false);
   const [getJobById, setGetJobById] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [cookies] = useCookies(["authToken"]);
+  const axiosInstance = useAxios();
+  const { isSignedIn, userDetails } = useSession();
 
   const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
     const getJobDetails = async () => {
       try {
-        const response = await axios.get(`https://jobkonnecta.com/api/job/job/${id}`);
+        const response = await axios.get(
+          `https://jobkonnecta.com/api/job/job/${id}`
+        );
         setGetJobById(response.data);
       } catch (err) {
         setError(err);
@@ -96,7 +107,11 @@ export default function JobDetails() {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    );
   }
 
   if (error) {
@@ -107,26 +122,38 @@ export default function JobDetails() {
     return <div>No job found</div>;
   }
 
+  console.log(getJobById);
+
   const handleApply = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
-    const token = localStorage.getItem('authToken');
     try {
-      const response = await axios.post('https://jobkonnecta.com/api/job/apply-job', {
-        id: getJobById._id
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      console.log('Response:', response);
+      const response = await axiosInstance.post("/job/apply-job", {
+        id: getJobById._id,
+      });
+      console.log("Response:", response);
+      setIsLoading(false);
       setOpen(true);
     } catch (error) {
+      setIsLoading(false);
+
       console.error(error);
+      toast.error(error.response.data.message);
     }
   };
 
-  const handleBack = () => {navigate('/all-jobs')}
+  const handleButtonClick = () => {
+    if (!isSignedIn) {
+      // Redirect to login and then return to the current page
+      navigate("/login", { state: { returnTo: window.location.pathname } });
+    } else if (userDetails?.role === "user") {
+      handleApply();
+    }
+  };
+
+  const handleBack = () => {
+    navigate("/all-jobs");
+  };
 
   return (
     <>
@@ -137,9 +164,15 @@ export default function JobDetails() {
         <meta name="author" content="JobKonnectaNG" />
         <meta name="robots" content="index, follow" />
       </Helmet>
-      <div className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative" name={getJobById._id}>
+      <div
+        className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative"
+        name={getJobById._id}
+      >
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
-          <PiArrowBendUpLeftBold className="text-primary cursor-pointer mb-[-20px]" onClick={handleBack} />
+          <PiArrowBendUpLeftBold
+            className="text-primary cursor-pointer mb-[-20px]"
+            onClick={handleBack}
+          />
         </h1>
       </div>
       <div className="shadow-md relative w-full max-w-[95%] lg:max-w-[90%] mx-auto transform translate-y-[-1%] bg-white">
@@ -150,16 +183,32 @@ export default function JobDetails() {
               <h2 className="text-[16px] lg:text-[32px] font-extrabold text-primary text-left">
                 {getJobById.title}
               </h2>
-              <p className=" text-primary text-left">Creative Solutions Inc.</p>
-              <p className="flex items-center gap-2  text-primary text-left">
-                Full Time
+              <p className=" text-primary text-left">
+                {" "}
+                {getJobById.companyName}
               </p>
               <p className="flex items-center gap-2  text-primary text-left">
-                Lagos
+                {getJobById.jobType || "Remote"}
+              </p>
+              <p className="flex items-center gap-2  text-primary text-left">
+                {getJobById.location.state}, {getJobById.location.country}
               </p>
             </div>
             <div className="flex flex-col items-left gap-2 w-[40%] lg:w-[25%]">
-              <CustomButton text={"Apply Now"} onClick={handleApply} />
+              {(userDetails?.role === "user" || !isSignedIn) && (
+                <CustomButton
+                  text={
+                    isLoading ? (
+                      <div className="flex items-center gap-2 justify-center">
+                        Applying <Spinner />
+                      </div>
+                    ) : (
+                      "Apply Now"
+                    )
+                  }
+                  onClick={handleButtonClick}
+                />
+              )}
               <p className="text-left text-sm text-[#001F3F80]/50">
                 share this job:
               </p>
@@ -204,26 +253,13 @@ export default function JobDetails() {
               Job Summary
             </h1>
           </div>
-          <p className="text-left">
-            Creative Solutions Inc., a leading agency specializing in innovative
-            design and digital experiences, is seeking a talented UI/UX Designer
-            to join our dynamic team. The ideal candidate will have a strong
-            portfolio showcasing their expertise in user interface and user
-            experience design, along with a deep understanding of user-centered
-            design principles. In this role, you will collaborate with product
-            managers, developers, and other designers to create intuitive and
-            engaging digital products. You will be responsible for crafting
-            visually appealing and user-friendly interfaces, conducting user
-            research, and ensuring the usability and functionality of our
-            products. This is an exciting opportunity to work on diverse
-            projects and contribute to the success of our clients.
-          </p>
+          <p className="text-left">{getJobById.description}</p>
         </div>
 
-        <div className="flex flex-col gap-3 p-4">
+        {/* <div className="flex flex-col gap-3 p-4">
           <div className="p-3 lg:h-[50px] w bg-[#D5D5DC]">
             <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
-              Job Details
+              Required Skills
             </h1>
           </div>
           <h1 className=" lg:text-[16px] text-left font-[600]">
@@ -253,7 +289,9 @@ export default function JobDetails() {
               design, and apply them to enhance our products.
             </li>
           </div>
-          <h1 className=" lg:text-[16px] text-left font-[600]">Requirements:</h1>
+          <h1 className=" lg:text-[16px] text-left font-[600]">
+            Requirements:
+          </h1>
           <div className="text-left">
             <li className="">
               Bachelor's degree in UI/UX Design, Interaction Design, or a
@@ -280,32 +318,16 @@ export default function JobDetails() {
               plus.
             </li>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex flex-col gap-3 p-4">
           <div className="p-3 lg:h-[50px] w bg-[#D5D5DC]">
             <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
-              Benefits
+              Skills
             </h1>
           </div>
           <div className="text-left">
-            <li className="">
-              Competitive salary and performance-based bonuses.
-            </li>
-            <li className="">
-              Flexible working hours and remote work options.
-            </li>
-            <li className="">
-              Health and wellness benefits, including medical, dental, and
-              vision coverage.
-            </li>
-            <li className="">
-              Professional development opportunities and a supportive work
-              environment.
-            </li>
-            <li className="">
-              Exciting projects with diverse clients and industries.
-            </li>
+            <p className=""> {getJobById.skills}</p>
           </div>
         </div>
       </div>

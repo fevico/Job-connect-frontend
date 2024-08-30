@@ -1,11 +1,18 @@
 import React from "react";
 import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { AiOutlineProduct } from "react-icons/ai";
-import { MdDashboard, MdOutlineCategory, MdOutlineInventory } from "react-icons/md";
+import {
+  MdDashboard,
+  MdOutlineCategory,
+  MdOutlineInventory,
+} from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
+import useSession from "./hooks/useSession";
 
 export function SidebarLinks() {
+  const { userDetails } = useSession();
+
   return (
     <List>
       <NavLink

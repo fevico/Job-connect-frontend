@@ -1,15 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "../../components/CustomButton";
 import JobCard from "../../components/JobCard";
-import { jobs } from "../../DB/Data";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Featured() {
   const [visibleJobs, setVisibleJobs] = useState(10);
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const navigate = useNavigate()
+
 
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
   };
+
+  const allJobs = async () => {
+    try {
+      const response = await axios.get(
+        "https://jobkonnecta.com/api/job/all-jobs"
+      );
+      console.log(response.data)
+      setFilteredJobs(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    allJobs();
+  }, []);
+
+  const handleJobClick = (id) => {
+    navigate(`/job/${id}`);
+  };
+
   return (
     <>
       <div className="bg-white w-full  p-5  mt-5">
@@ -24,19 +47,22 @@ export default function Featured() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
+        <div className="flex flex-col gap-3 w-[97%] lg:w-[90%] mx-auto  my-5">
           <div className="space-y-4">
-            {filteredJobs.slice(0, visibleJobs).map((job, index) => (
-              <JobCard
-                key={index}
-                title={job.title}
-                company={job.company}
-                salary={job.salary}
-                jobType={job.jobType}
-                location={job.location}
-                postedTime={job.postedTime}
-                link={job.link}
-              />
+          {filteredJobs.slice(0, visibleJobs).map((job, index) => (
+               <JobCard
+               key={index}
+               title={job.title}
+               companyName={job?.companyName || "companyName"}
+               description={job.description}
+               priceFrom={job.priceFrom || 20888}
+               priceTo={job.priceTo || 60300} 
+               jobType={job.jobType || "Remote"}
+               location={`${job.location.state}, ${job.location.country}`}
+               postedTime={job.postedAt}
+               onClick={() => handleJobClick(job._id)}
+               id={job._id}
+             />
             ))}
           </div>
         </div>

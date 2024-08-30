@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import "../node_modules/slick-carousel/slick/slick.css";
 import "../node_modules/slick-carousel/slick/slick-theme.css";
@@ -25,37 +25,20 @@ import PostJobs from "./components/dashboard/PostJobs";
 import Applications from "./components/dashboard/Applications";
 import ActiveListings from "./components/dashboard/ActiveListings";
 import LoggedInLayout from "./components/LoggedInLayout";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import RegAsLinkedIn from "./pages/Auth/RegAsLinkedIn";
 import RegAsCVWriter from "./pages/Auth/RegAsCVWriter";
 import AllCVWriters from "./pages/CV/AllCvWriters";
 import CvWriterDetails from "./pages/CV/CvWriterDetails";
 import AllLinkedIn from "./pages/LINKEDIN/AllLinkedIn";
 import LinkedInDetails from "./pages/LINKEDIN/LinkedInDetails";
-// import { AuthProvider, useAuth } from './components/Session';
+import { AuthRoute, PrivateRoute } from "./components/hooks/RouteGuards";
 
 function App() {
-  const timeout = 60 * 60 * 1000; // 60 minutes === 1 hour
-  const navigate = useNavigate()
-
-  if (localStorage.getItem('AuthToken') === 'undefined') {
-    toast.error('You are not logged in')
-  } else {
-    setTimeout(() => {
-      toast.error("Session Timeout.")
-      navigate('/login')
-    }, timeout);
-  }
-
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-        </Route>
-
-        <Route path="/" element={<LoggedInLayout />}>
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/contact" element={<Contact />} />
@@ -65,25 +48,84 @@ function App() {
           <Route path="/all-cvwriters" element={<AllCVWriters />} />
           <Route path="/all-linkedin" element={<AllLinkedIn />} />
           <Route path="/career-profile" element={<CareerProfile />} />
-          <Route path="/signup/home" element={<SignUpHome />} />
-          <Route path="/signup/jobseeker" element={<RegAsJobSeeker />} />
-          <Route path="/signup/cvwriter" element={<RegAsCVWriter />} />
-          <Route path="/signup/linkedin" element={<RegAsLinkedIn />} />
-          <Route path="/signup/verify" element={<VerifyAccount />} />
-          <Route path="/signup/employer" element={<RegAsJobEmployer />} />
           <Route path="/job/:id" element={<JobDetails />} />
           <Route path="/cvwriter/:id" element={<CvWriterDetails />} />
           <Route path="/linkedin/:id" element={<LinkedInDetails />} />
         </Route>
 
-        <Route path="/" element={<SpecialLayout />}>
+        {/* Protect these routes using PrivateRoute */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <SpecialLayout />
+            </PrivateRoute>
+          }
+        >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/active-listing" element={<ActiveListings />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/analytics" element={<Dashboard />} />
         </Route>
-        <Route path="/login" element={<Login />} />
+
+        {/* Redirect signed-in users away from auth pages */}
+        <Route
+          path="/signup/home"
+          element={
+            <AuthRoute>
+              <SignUpHome />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/signup/jobseeker"
+          element={
+            <AuthRoute>
+              <RegAsJobSeeker />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/signup/cvwriter"
+          element={
+            <AuthRoute>
+              <RegAsCVWriter />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/signup/linkedin"
+          element={
+            <AuthRoute>
+              <RegAsLinkedIn />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/signup/employer"
+          element={
+            <AuthRoute>
+              <RegAsJobEmployer />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/signup/verify"
+          element={
+            <AuthRoute>
+              <VerifyAccount />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <AuthRoute>
+              <Login />
+            </AuthRoute>
+          }
+        />
       </Routes>
       <ToastContainer
         position="top-right"
