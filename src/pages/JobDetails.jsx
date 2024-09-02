@@ -7,9 +7,9 @@ import {
   FaLink,
   FaWhatsapp,
 } from "react-icons/fa";
-import job from "@/assets/images/job.png";
+import jobImage from "@/assets/images/job.png";
 import mark from "@/assets/images/mark.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
 import {
@@ -76,61 +76,62 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
 }
 
 export default function JobDetails() {
-  const { id } = useParams();
+  const location = useLocation();
+  const { job } = location.state;
+  console.log(job)
   const [open, setOpen] = useState(false);
-  const [getJobById, setGetJobById] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [cookies] = useCookies(["authToken"]);
+  // const [cookies] = useCookies(["authToken"]);
   const axiosInstance = useAxios();
   const { isSignedIn, userDetails } = useSession();
 
   const handleOpen = () => setOpen(!open);
 
-  useEffect(() => {
-    const getJobDetails = async () => {
-      try {
-        const response = await axios.get(
-          `https://jobkonnecta.com/api/job/job/${id}`
-        );
-        setGetJobById(response.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const getJobDetails = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `https://jobkonnecta.com/api/job/job/${id}`
+  //       );
+  //       setGetJobById(response.data);
+  //     } catch (err) {
+  //       setError(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    getJobDetails();
-  }, [id]);
+  //   getJobDetails();
+  // }, [id]);
 
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <Spinner className="w-8 h-8" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       <Spinner className="w-8 h-8" />
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
-  if (!getJobById) {
-    return <div>No job found</div>;
-  }
+  // if (!getJobById) {
+  //   return <div>No job found</div>;
+  // }
 
-  console.log(getJobById);
+  // console.log(getJobById);
 
   const handleApply = async (e) => {
     setIsLoading(true);
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/job/apply-job", {
-        id: getJobById._id,
-      });
+      // const response = await axiosInstance.post("/job/apply-job", {
+      //   id: getJobById._id,
+      // });
       console.log("Response:", response);
       setIsLoading(false);
       setOpen(true);
@@ -166,7 +167,7 @@ export default function JobDetails() {
       </Helmet>
       <div
         className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative"
-        name={getJobById._id}
+        name={job._id}
       >
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
           <PiArrowBendUpLeftBold
@@ -179,19 +180,19 @@ export default function JobDetails() {
         <div className="flex flex-col gap-8 p-4">
           <div className="flex items-center justify-between">
             <div className="">
-              <img src={job} alt="" className="rounded-full" />
+              <img src={jobImage} alt="" className="rounded-full" />
               <h2 className="text-[16px] lg:text-[32px] font-extrabold text-primary text-left">
-                {getJobById.title}
+                {job.title}
               </h2>
               <p className=" text-primary text-left">
                 {" "}
-                {getJobById.companyName}
+                {job.companyName}
               </p>
               <p className="flex items-center gap-2  text-primary text-left">
-                {getJobById.jobType || "Remote"}
+                {job.jobType || "Remote"}
               </p>
               <p className="flex items-center gap-2  text-primary text-left">
-                {getJobById.location.state}, {getJobById.location.country}
+                {job.location.state}, {job.location.country}
               </p>
             </div>
             <div className="flex flex-col items-left gap-2 w-[40%] lg:w-[25%]">
@@ -253,7 +254,7 @@ export default function JobDetails() {
               Job Summary
             </h1>
           </div>
-          <p className="text-left">{getJobById.description}</p>
+          <p className="text-left">{job.description}</p>
         </div>
 
         {/* <div className="flex flex-col gap-3 p-4">
@@ -327,7 +328,7 @@ export default function JobDetails() {
             </h1>
           </div>
           <div className="text-left">
-            <p className=""> {getJobById.skills}</p>
+            <p className=""> {job.skills}</p>
           </div>
         </div>
       </div>

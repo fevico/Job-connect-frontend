@@ -32,6 +32,8 @@ import CvWriterDetails from "./pages/CV/CvWriterDetails";
 import AllLinkedIn from "./pages/LINKEDIN/AllLinkedIn";
 import LinkedInDetails from "./pages/LINKEDIN/LinkedInDetails";
 import { AuthRoute, PrivateRoute } from "./components/hooks/RouteGuards";
+import Earnings from "./components/dashboard/Earnings";
+import Subscription from "./components/dashboard/Subscription";
 
 function App() {
   return (
@@ -66,6 +68,9 @@ function App() {
           <Route path="/active-listing" element={<ActiveListings />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/post-jobs" element={<PostJobs />} />
+          <Route path="/earnings" element={<Earnings />} />
+          <Route path="/subscription" element={<Subscription />} />
+
           <Route path="/analytics" element={<Dashboard />} />
         </Route>
 

@@ -6,15 +6,16 @@ import { clearCredentials, setCredentials } from "./slices/authSlice";
 import { clearUserInfo } from "./slices/userSlice";
 import { setUserInfo } from "./slices/userSlice";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: "http://localhost:5000/api/",
-  baseUrl: "http://localhost:3000/",
+  baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers, { getState }) => {
     headers.set("Content-Type", "application/json");
-    const token = getState().auth.token;
+    const token = Cookies.get("authToken");
     if (token) {
-      headers.set("Authorization", `Token ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
     return headers;
   },
@@ -45,21 +46,32 @@ export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
   endpoints: (builder) => ({
-    // getAllProduct: builder.query({
-    //   query: () => "/products",
-    // }),
-    //     getOneProduct: builder.query({
+    getAllJobs: builder.query({
+      query: () => "job/all-jobs",
+    }),
+    getAllJobsByEmployer: builder.query({
+      query: (id) => `job/get-jobs-by-employer/${id}`,
+    }),
+    getAllCategory: builder.query({
+      query: () => "category/all",
+    }),
+
+    addJob: builder.mutation({
+      query: (credentials ) => ({
+        url: `job/create`,
+        method: "POST",
+        body: credentials,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to create job:", err);
+        }
+      },
+    }),
+    // getOneProduct: builder.query({
     //       query: (id) => `products/${id}`,
-    //     }),
-    //     addProduct: builder.mutation({
-    //       query: (newProduct) => ({
-    //         url: `products/add`,
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: newProduct,
-    //       }),
     //     }),
     //     updateProduct: builder.mutation({
     //       query: ({ id, updatedProduct }) => ({
@@ -278,7 +290,10 @@ export const {
   // useGetAllNotesMutation,
   useLoginMutation,
   useRegisterMutation,
-  useGetAllProductQuery,
+  useGetAllJobsQuery,
+  useGetAllCategoryQuery,
+  useGetAllJobsByEmployerQuery,
+  useAddJobMutation,
   // useLogoutMutation,
   // useGenerateAiClinicalNoteMutation,
   // useAddNoteMutation,

@@ -7,57 +7,48 @@ import axios from "axios";
 import { Helmet } from "react-helmet";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Spinner } from "@material-tailwind/react";
+import { useGetAllJobsQuery } from "../redux/appData";
 
 export default function AllJobs() {
   const [visibleJobs, setVisibleJobs] = useState(10);
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
-  const [getJobs, setGetJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const isSearch = searchParams.get("search");
   const searchResults = location.state?.SearchResults || [];
+  console.log(searchResults)
+
+  const {
+    data: allJobs,
+    isLoading,
+    error,
+  } = useGetAllJobsQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   useEffect(() => {
     // Determine the products to use: search results, all products, or filtered by category
-    let jobsToUse = getJobs;
+    let jobsToUse = allJobs;
 
     if (isSearch && searchResults.length > 0) {
       jobsToUse = searchResults; // Use search results if available
     }
     setFilteredJobs(jobsToUse);
-  }, [getJobs, searchResults, isSearch]);
-
-
+  }, [allJobs, searchResults, isSearch]);
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
   };
-  const allJobs = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        "https://jobkonnecta.com/api/job/all-jobs"
-      );
-      setLoading(false);
 
-      setGetJobs(response.data);
-    } catch (err) {
-      setLoading(false);
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    allJobs();
-  }, []);
-
-  const handleJobClick = (id) => {
-    navigate(`/job/${id}`);
+  const handleJobClick = (job) => {
+    navigate(`/job/${job.slug}`, { state: { job } });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
         <Spinner className="w-8 h-8" />
@@ -120,24 +111,24 @@ export default function AllJobs() {
       </div>
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
-          {getJobs.slice(0, visibleJobs).map((job, index) => (
-           <JobCard
-           key={index}
-           title={job.title}
-           companyName={job?.companyName || "companyName"}
-           description={job.description}
-           priceFrom={job.priceFrom || 20888}
-           priceTo={job.priceTo || 60300} 
-           jobType={job.jobType || "Remote"}
-           location={`${job.location.state}, ${job.location.country}`}
-           postedTime={job.postedAt}
-           onClick={() => handleJobClick(job._id)}
-           id={job._id}
-         />
+          {filteredJobs.slice(0, visibleJobs).map((job, index) => (
+            <JobCard
+              key={index}
+              title={job.title}
+              companyName={job?.companyName || "companyName"}
+              description={job.description}
+              priceFrom={job.priceFrom || 20888}
+              priceTo={job.priceTo || 60300}
+              jobType={job.jobType || "Remote"}
+              location={`${job.location.state}, ${job.location.country}`}
+              postedTime={job.postedAt}
+              onClick={() => handleJobClick(job)}
+              id={job._id}
+            />
           ))}
         </div>
       </div>
-      {visibleJobs < getJobs.length && (
+      {allJobs && visibleJobs < allJobs.length && (
         <div className="flex justify-end  my-5 w-[95%]">
           <CustomButton onClick={handleSeeMore} text={"Explore more jobs"} />
         </div>

@@ -4,7 +4,7 @@ import { BsArrowUp } from "react-icons/bs";
 export default function Dashboard() {
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p>
+      {/* <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p> */}
 
       <div className="bg-[#E2F0FF] p-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -12,7 +12,7 @@ export default function Dashboard() {
           <div className="bg-white shadow-md p-2 flex flex-col">
             <div className="flex items-center justify-between">
               <p className="font-semibold tex-sm">Active Jobs</p>
-              <select
+              {/* <select
                 className=" border-gray-400 outline-none border-2 rounded-md p-2"
                 name="qualification"
               >
@@ -20,7 +20,7 @@ export default function Dashboard() {
                   Select
                 </option>
                 <option value="lastMonth">Last 1 month</option>
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col items-center gap-2">
               <h2 className="font-bold text-4xl">10</h2>
@@ -35,7 +35,7 @@ export default function Dashboard() {
           <div className="bg-white shadow-md p-2 flex flex-col">
             <div className="flex items-center justify-between">
               <p className="font-semibold tex-sm">Total Applications</p>
-              <select
+              {/* <select
                 className=" border-gray-400 outline-none border-2 rounded-md p-2"
                 name="qualification"
               >
@@ -43,7 +43,7 @@ export default function Dashboard() {
                   Select
                 </option>
                 <option value="lastMonth">Last 1 month</option>
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col items-center gap-2">
               <h2 className="font-bold text-4xl">2000</h2>
@@ -58,7 +58,7 @@ export default function Dashboard() {
           <div className="bg-white shadow-md p-2 flex flex-col">
             <div className="flex items-center justify-between">
               <p className="font-semibold tex-sm">Total Views</p>
-              <select
+              {/* <select
                 className=" border-gray-400 outline-none border-2 rounded-md p-2"
                 name="qualification"
               >
@@ -66,7 +66,7 @@ export default function Dashboard() {
                   Select
                 </option>
                 <option value="last3Months">Last 3 months</option>
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col items-center gap-2">
               <h2 className="font-bold text-4xl">6400</h2>
@@ -81,7 +81,7 @@ export default function Dashboard() {
           <div className="bg-white shadow-md p-2 flex flex-col">
             <div className="flex items-center justify-between">
               <p className="font-semibold tex-sm">Closed Jobs</p>
-              <select
+              {/* <select
                 className=" border-gray-400 outline-none border-2 rounded-md p-2"
                 name="qualification"
               >
@@ -89,7 +89,7 @@ export default function Dashboard() {
                   Select
                 </option>
                 <option value="last6Months">Last 6 months</option>
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col items-center gap-2">
               <h2 className="font-bold text-4xl">40</h2>

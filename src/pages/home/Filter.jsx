@@ -1,29 +1,26 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useGetAllJobsQuery } from "../../redux/appData";
 
 export default function Filter() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [getJobs, setGetJobs] = useState([]);
   const navigate = useNavigate();
-  const allJobs = async () => {
-    try {
-      const response = await axios.get(
-        "https://jobkonnecta.com/api/job/all-jobs"
-      );
-
-      setGetJobs(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    allJobs();
-  }, []);
+  const {
+    data: allJobs,
+    isLoading,
+    error,
+  } = useGetAllJobsQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   // Filter products based on search query
-  const filteredJobs = getJobs.filter((job) =>
-    job.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredJobs = allJobs && allJobs.filter(
+    (job) =>
+      job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearch = (e) => {

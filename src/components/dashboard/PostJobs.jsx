@@ -9,17 +9,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useCookies } from "react-cookie";
+import { useAddJobMutation, useGetAllCategoryQuery } from "../../redux/appData";
+import useSession from "../hooks/useSession";
 
 export default function PostJobs() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
-  const [categories, setCategories] = useState([]);
   const [categoryId, setcategoryId] = useState("");
-  const [cookies] = useCookies(["authToken"]);
   const [loading, setLoading] = useState("");
-
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,21 +39,17 @@ export default function PostJobs() {
     setErrors({ ...errors, state: undefined });
   };
 
-  const getCategories = async () => {
-    try {
-      const response = await axios.get(
-        "https://jobkonnecta.com/api/category/all"
-      );
-      console.log(response.data);
-      setCategories(response.data);
-    } catch (err) {
-      console.error("Error fetching categories:", err);
-    }
-  };
+  const {
+    data: categories,
+    isLoading: fetchingCat,
+    error: errorCat,
+  } = useGetAllCategoryQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+  const [addJob, { isSuccess, isLoading, error }] = useAddJobMutation();
 
   async function handleSubmit(e) {
     // console.log("samsonnnnnnnnnn");
@@ -97,28 +92,37 @@ export default function PostJobs() {
       duration: formData.get("duration"),
     };
 
-    const token = cookies?.authToken;
-
     try {
-      const response = await axios.post(
-        "https://jobkonnecta.com/api/job/create",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      toast.success("Job posted Successfully");
+      await addJob(data);
       setLoading(false);
     } catch (err) {
       toast.error("Job posting failed");
 
-      setErrors({ message: "An error occurred while posting the job." });
+      // setErrors({ message: "An error occurred while posting the job." });
       console.error(err);
       setLoading(false);
     }
   }
+
+  const { signOut } = useSession();
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast.success("Job Posted Successfully!");
+      setErrors({});
+      navigate("/all-jobs");
+    } else if (error) {
+      toast.error("failed to post job");
+      setErrors(error);
+      if (
+        error?.data?.message &&
+        error?.data?.message === "Token has expired"
+      ) {
+        signOut();
+        navigate("/login");
+      }
+    }
+  }, [isSuccess]);
 
   return (
     <>
@@ -138,7 +142,6 @@ export default function PostJobs() {
               </span>
             </div>
           </div>
-
           <div className="w-[98%] mx-auto space-y-3">
             <div className="flex lg:flex-row flex-col justify-between w-full gap-2 items-start">
               <div className="grid grid-cols-2 lg:grid-cols-3 justify-between gap-2 items-center">
@@ -278,11 +281,12 @@ export default function PostJobs() {
                 <option value="" disabled selected>
                   Select Job Type
                 </option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category._id}>
-                    {category.name}
-                  </option>
-                ))}
+                {categories &&
+                  categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -308,8 +312,10 @@ export default function PostJobs() {
             </div>
           </div>
 
-          {errors.message && (
-            <div className="text-red-600 text-center">{errors.message}</div>
+          {errors && (
+            <div className="text-red-600 text-center">
+              {error?.data?.message}
+            </div>
           )}
 
           <div className="w-full flex justify-end items-center my-4">
