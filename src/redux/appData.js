@@ -23,13 +23,27 @@ const baseQuery = fetchBaseQuery({
   async responseHandler(response) {
     const text = await response.text();
     try {
-      return JSON.parse(text);
+      const jsonResponse = JSON.parse(text);
+
+      // Check for token expiration
+      if (
+        jsonResponse.error &&
+        jsonResponse.error.message === "Token has expired"
+      ) {
+        // Handle expired token here, e.g., clear credentials and user info
+        // You can dispatch actions or handle the logic here
+        Cookies.remove("authToken");
+        window.location.href = "/login";
+        // Optionally, you might want to redirect the user to the login page or show a message
+        // For example: window.location.href = '/login';
+      }
+
+      return jsonResponse;
     } catch {
-      return text;
+      return text; // If JSON parsing fails, return the raw text
     }
   },
 });
-
 // const baseQuery = fetchBaseQuery({
 //   baseUrl: "http://localhost:3000/",
 //   prepareHeaders: (headers, { getState }) => {
@@ -57,7 +71,7 @@ export const productsApi = createApi({
     }),
 
     addJob: builder.mutation({
-      query: (credentials ) => ({
+      query: (credentials) => ({
         url: `job/create`,
         method: "POST",
         body: credentials,

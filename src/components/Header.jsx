@@ -187,53 +187,49 @@ function NavList({ setOpenNav }) {
           </Typography>
         ) : (
           <Typography
-          as="li"
-          variant="medium"
-          color="white"
-          className="p-1 font-semibold relative"
-          onMouseEnter={toggleProfile}
+            as="li"
+            variant="medium"
+            color="white"
+            className="p-1 font-semibold relative"
+            onMouseEnter={toggleProfile}
             onMouseLeave={closeProfile}
-        >
-          <div
-            className="flex items-center gap-1 cursor-pointer relative"
-           
           >
-            <BiUserCircle className="w-7 h-7" />
-            <FaAngleDown
-              className={`transition-transform ${
-                openProfile ? "rotate-180" : ""
-              }`}
-            />
-            {openProfile && (
-              <div className="absolute top-8 right-0 py-2 bg-white shadow-lg rounded-lg w-[230px]">
-                <Link
-                  to={userDetails.role === "user" ? "/" : "/dashboard"}
-                  onClick={handleNavLinkClick}
-                  className="px-4 py-2 hover:bg-gray-200 gap-2  text-[#797B89] text-sm mb-1 no-underline flex items-center"
-                >
-                  Profile
-                </Link>
-                <Link
-                  to="/all-linkedin"
-                  onClick={handleNavLinkClick}
-                  className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
-                >
-                  LinkedIn Profile Optimization
-                </Link>
-                <p
-                  className="text-red-400 font-bold text-left px-4 py-2"
-                  onClick={() => {
-                    handleNavLinkClick();
-                    signOut();
-                  }}
-                >
-                  Logout
-                </p>
-              </div>
-            )}
-          </div>
+            <div className="flex items-center gap-1 cursor-pointer relative">
+              <BiUserCircle className="w-7 h-7" />
+              <FaAngleDown
+                className={`transition-transform ${
+                  openProfile ? "rotate-180" : ""
+                }`}
+              />
+              {openProfile && (
+                <div className="absolute top-8 right-0 py-2 bg-white shadow-lg rounded-lg w-[230px]">
+                  <Link
+                    to={userDetails.role === "user" ? "/" : "/dashboard"}
+                    onClick={handleNavLinkClick}
+                    className="px-4 py-2 hover:bg-gray-200 gap-2  text-[#797B89] text-sm mb-1 no-underline flex items-center"
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    onClick={handleNavLinkClick}
+                    className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
+                  >
+                    Settings
+                  </Link>
+                  <p
+                    className="text-red-400 font-bold text-left px-4 py-2"
+                    onClick={() => {
+                      handleNavLinkClick();
+                      signOut();
+                    }}
+                  >
+                    Logout
+                  </p>
+                </div>
+              )}
+            </div>
           </Typography>
-
         )
       ) : (
         <>

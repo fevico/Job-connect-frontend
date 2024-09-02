@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import useSession from "./hooks/useSession";
 import { BsArrow90DegLeft, BsCashStack, BsGear } from "react-icons/bs";
-import { BiLogOut, BiPackage } from "react-icons/bi";
+import { BiLogOut } from "react-icons/bi";
 
 export function SidebarLinks({ closeDrawer }) {
   const { userDetails, signOut } = useSession();

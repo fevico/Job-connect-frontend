@@ -111,7 +111,7 @@ export default function AllJobs() {
       </div>
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
-          {filteredJobs.slice(0, visibleJobs).map((job, index) => (
+          {filteredJobs && filteredJobs.slice(0, visibleJobs).map((job, index) => (
             <JobCard
               key={index}
               title={job.title}

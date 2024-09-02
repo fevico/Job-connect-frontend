@@ -9,7 +9,7 @@ import { useRegisterMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 
 function CVUpload() {
   const [file, setFile] = useState(null);
@@ -88,7 +88,7 @@ export default function RegAsCVWriter() {
   const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
 
-  const role = "jobseeker";
+  const role = "cvwriter";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -147,14 +147,17 @@ export default function RegAsCVWriter() {
     };
 
     try {
-      const response = await axios.post('https://jobkonnecta.com/api/user/register', data);
+      const response = await axios.post(
+        "https://jobkonnecta.com/api/user/register",
+        data
+      );
 
-      const userId = response.data.message.id
-      console.log(userId)
+      const userId = response.data.message.id;
+      console.log(userId);
 
-      localStorage.setItem('userId', userId);
+      localStorage.setItem("userId", userId);
       toast.success("Registration successful!");
-      navigate('/signup/verify');
+      navigate("/signup/verify");
       // console.log(response.data.message);
     } catch (err) {
       // Handle error
@@ -178,16 +181,16 @@ export default function RegAsCVWriter() {
     <>
       <Breadcrumb
         auth
-        title1="Job Seeker Registration Form"
+        title1="CV Writer Registration Form"
         title2={"Let’s get to know more about you"}
       />
       <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+        {/* Personal Information */}
         <div className="flex flex-col gap-3 items-start w-[90%] mx-auto mt-4">
           <div className="flex flex-col items-center leading-5 mb-3">
             <h2 className="text-primary font-bold text-[16px] lg:text-[24px]">
               Personal Information
             </h2>
-
             <span className="flex items-center w-full justify-end">
               <hr className="border-2 border-primary w-1/2" />
               <hr className="rounded-full p-1 bg-primary border-none" />
@@ -198,18 +201,18 @@ export default function RegAsCVWriter() {
         <div className="w-[90%] mx-auto space-y-3">
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Name</label>
+              <label>Name</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="name"
                 type="text"
-                placeholder="Name"
+                placeholder="Full Name"
                 onChange={handleInputChange}
                 required
               />
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Email</label>
+              <label>Email</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="email"
@@ -220,56 +223,11 @@ export default function RegAsCVWriter() {
               />
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Gender</label>
-              <select
-                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="gender"
-                onChange={handleInputChange}
-                required
-              >
-                <option value="" disabled selected>
-                  Select Gender
-                </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-          </div>
-          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
-            <div className="flex flex-col items-start gap-1 w-full">
-              <label className="" htmlFor="country">
-                Country
-              </label>
-              <CountryDropdown
-                value={country}
-                onChange={handleCountryChange}
-                className={`p-2 w-full border-2 rounded-md "border-gray-400"
-                `}
-                name="country"
-                required
-              />
-            </div>
-            <div className="flex flex-col items-start gap-1 w-full">
-              <label className="" htmlFor="state">
-                State
-              </label>
-              <RegionDropdown
-                country={country}
-                value={state}
-                onChange={handleStateChange}
-                name="state"
-                className={`p-2 w-full border-2 rounded-md "border-gray-400"
-                `}
-                required
-              />
-            </div>
-            <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Phone</label>
+              <label>Phone</label>
               <PhoneInput
                 international
                 countryCallingCodeEditable={false}
-                className={`w-full p-2 border-2 rounded-md "border-gray-400"
-                `}
+                className="w-full p-2 border-2 rounded-md border-gray-400"
                 name="phone"
                 placeholder="Input Phone"
                 onChange={(value) => {
@@ -279,12 +237,36 @@ export default function RegAsCVWriter() {
               />
             </div>
           </div>
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label htmlFor="location">Location</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="location"
+                type="text"
+                placeholder="City, State, Country"
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label htmlFor="profilePhoto">Profile Photo</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="profilePhoto"
+                type="file"
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
         </div>
 
+        {/* Professional Information */}
         <div className="flex flex-col gap-3 items-start w-[90%] mx-auto mt-4">
           <div className="flex flex-col items-center leading-5 mb-3">
             <h2 className="text-primary font-bold text-[16px] lg:text-[24px]">
-              Qualification Information
+              Professional Information
             </h2>
             <span className="flex items-center w-full justify-end">
               <hr className="border-2 border-primary w-1/2" />
@@ -296,57 +278,89 @@ export default function RegAsCVWriter() {
         <div className="w-[90%] mx-auto space-y-3">
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Highest Qualification</label>
-              <select
+              <label>Resume/CV</label>
+              <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="qualification"
+                name="resume"
+                type="file"
                 onChange={handleInputChange}
-              >
-                <option value="" disabled selected>
-                  Select
-                </option>
-                <option value="degree">Degree</option>
-                <option value="diploma">Diploma</option>
-                <option value="high_school">High School (S.S.C.E)</option>
-                <option value="hnd">HND</option>
-                <option value="mba_msc">MBA/MSc</option>
-                <option value="mbbs">MBBS</option>
-                <option value="mphil_phd">MPhil / PhD</option>
-                <option value="nce">N.C.E</option>
-                <option value="ond">OND</option>
-                <option value="others">Others</option>
-                <option value="vocational">Vocational</option>
-              </select>
+                required
+              />
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Experience (years)</label>
+              <label>Portfolio</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="portfolio"
+                type="text"
+                placeholder="Links to previous work"
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label>Years of Experience</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="experience"
                 type="number"
-                placeholder="Experience"
+                placeholder="Years of Experience"
                 onChange={handleInputChange}
                 required
               />
             </div>
-            {/* <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Current Position</label>
+          </div>
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label>Specializations</label>
+              <textarea
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="specializations"
+                placeholder="Industries and types of CVs"
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label>Certifications</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="currentPosition"
+                name="certifications"
                 type="text"
-                placeholder="Current Position"
+                placeholder="Relevant certifications"
                 onChange={handleInputChange}
-                required
               />
-            </div> */}
+            </div>
+          </div>
+          <div className="flex flex-col items-start gap-1 w-full">
+            <label>Education</label>
+            <select
+              className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+              name="education"
+              onChange={handleInputChange}
+              required
+            >
+              <option value="" disabled selected>
+                Select Education Level
+              </option>
+              <option value="degree">Degree</option>
+              <option value="diploma">Diploma</option>
+              <option value="high_school">High School (S.S.C.E)</option>
+              <option value="hnd">HND</option>
+              <option value="mba_msc">MBA/MSc</option>
+              <option value="mbbs">MBBS</option>
+              <option value="mphil_phd">MPhil / PhD</option>
+              <option value="nce">N.C.E</option>
+              <option value="ond">OND</option>
+              <option value="others">Others</option>
+              <option value="vocational">Vocational</option>
+            </select>
           </div>
         </div>
 
+        {/* Work Availability */}
         <div className="flex flex-col gap-3 items-start w-[90%] mx-auto mt-4">
           <div className="flex flex-col items-center leading-5 mb-3">
             <h2 className="text-primary font-bold text-[16px] lg:text-[24px]">
-              Security Information
+              Work Availability
             </h2>
             <span className="flex items-center w-full justify-end">
               <hr className="border-2 border-primary w-1/2" />
@@ -358,76 +372,52 @@ export default function RegAsCVWriter() {
         <div className="w-[90%] mx-auto space-y-3">
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Password</label>
-              <div className="relative w-full">
-                <input
-                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="password"
-                  type={passwordVisible ? "text" : "password"}
-                  placeholder="Password"
-                  onChange={handleInputChange}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={togglePasswordVisibility}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3"
-                >
-                  {passwordVisible ? <FaEye /> : <FaEyeSlash />}
-                </button>
-              </div>
+              <label>Availability</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="availability"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                  Select Availability
+                </option>
+                <option value="full_time">Full-time</option>
+                <option value="part_time">Part-time</option>
+                <option value="freelance">Freelance</option>
+              </select>
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
-              <label className="">Confirm Password</label>
-              <div className="relative w-full">
-                <input
-                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="confirmPassword"
-                  type={confirmPasswordVisible ? "text" : "password"}
-                  placeholder="Confirm Password"
-                  onChange={handleInputChange}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={toggleConfirmPasswordVisibility}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3"
-                >
-                  {confirmPasswordVisible ? <FaEye /> : <FaEyeSlash />}
-                </button>
-              </div>
+              <label>Work Hours</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="workHours"
+                type="text"
+                placeholder="Time zone and preferred hours"
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label>Expected Response Time</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="responseTime"
+                type="text"
+                placeholder="Response time to client requests"
+                onChange={handleInputChange}
+              />
             </div>
           </div>
         </div>
 
-        <div className="flex items-start gap-1 w-[90%] mx-auto">
-          <input
-            type="checkbox"
-            id="terms"
-            name="terms"
-            checked={termsAccepted}
-            onChange={() => setTermsAccepted(!termsAccepted)}
-            required
-          />
-          <label htmlFor="terms" className="text-sm">
-            I accept the{" "}
-            <a href="/terms" className="text-blue-500 underline">
-              Terms and Conditions
-            </a>
-          </label>
-        </div>
-
-        <div className="w-[90%] mx-auto mt-4">
-          <CVUpload />
-        </div>
-
-        <div className="flex justify-end mt-4 w-[95%]">
-          <CustomButton
+        {/* Submit Button */}
+        <div className="w-[90%] mx-auto flex justify-center mt-6">
+          <button
             type="submit"
-            text={isLoading ? "Registering..." : "Register"}
-            disabled={isLoading}
-            onClick={''}
-          />
+            className="bg-primary text-white px-6 py-3 rounded-md"
+          >
+            Register as CV Writer
+          </button>
         </div>
       </form>
     </>

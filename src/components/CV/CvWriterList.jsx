@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CvWriterCard from "./CvWriterCard";
+import {useNavigate} from "react-router-dom";
 
 const cvWriters = [
   {
@@ -117,6 +118,11 @@ const CvWriterList = ({ searchQuery }) => {
     setVisibleCvWriters((prevVisibleCvWriters) => prevVisibleCvWriters + 5);
   };
 
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleCvWriterClick = (cvwriter) => {
+    navigate(`/cvwriter/${cvwriter.id}`, { state: { cvwriter } }); // Navigate to the details page with the current CV writer's id
+  };
   return (
     <div className="space-y-4 mb-3">
       {/* {filteredJobs.slice(0, visibleJobs).map((job, index) => ( */}
@@ -126,7 +132,12 @@ const CvWriterList = ({ searchQuery }) => {
           name={cvWriter.name}
           image={cvWriter.image}
           bio={cvWriter.bio}
+          specialization="Resume Writing & Career Coaching"
+          rating="4.8"
+          services="Resume writing, cover letter creation, LinkedIn profile optimization"
           id={cvWriter.id}
+          onClick={() => handleCvWriterClick(cvWriter)}
+
         />
       ))}
       {/* {visibleCvWriters < filteredCvWriters.length && ( */}

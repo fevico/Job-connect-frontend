@@ -110,17 +110,10 @@ export default function PostJobs() {
     if (isSuccess) {
       toast.success("Job Posted Successfully!");
       setErrors({});
-      navigate("/all-jobs");
+      navigate("/active-listing");
     } else if (error) {
       toast.error("failed to post job");
       setErrors(error);
-      if (
-        error?.data?.message &&
-        error?.data?.message === "Token has expired"
-      ) {
-        signOut();
-        navigate("/login");
-      }
     }
   }, [isSuccess]);
 
