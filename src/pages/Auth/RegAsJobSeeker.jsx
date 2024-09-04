@@ -9,14 +9,18 @@ import { useRegisterMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
+// import { storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../components/hooks/firebase";
 
-function CVUpload() {
-  const [file, setFile] = useState(null);
+function CVUpload({ cvFile, setCvFile }) {
   const [dragging, setDragging] = useState(false);
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleCvChange = (e) => {
+    if (e.target.files[0]) {
+      setCvFile(e.target.files[0]);
+    }
   };
 
   const handleDrop = (event) => {
@@ -66,12 +70,12 @@ function CVUpload() {
         type="file"
         accept=".pdf,.doc,.docx"
         style={{ display: "none" }}
-        onChange={handleFileChange}
+        onChange={handleCvChange}
       />
-      {file && (
+      {cvFile && (
         <div className="mt-4">
           <p className="text-sm font-medium">Selected File:</p>
-          <p className="text-sm text-gray-700">{file.name}</p>
+          <p className="text-sm text-gray-700">{cvFile.name}</p>
         </div>
       )}
     </div>
@@ -85,8 +89,11 @@ export default function RegAsJobSeeker() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
+  // const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
+  const [cvFile, setCvFile] = useState(null);
+  // const [cvUrl, setCvUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const role = "jobseeker";
 
@@ -120,6 +127,7 @@ export default function RegAsJobSeeker() {
     let password = formData.get("password");
     let confirmPassword = formData.get("confirmPassword");
 
+    // Validate password match
     if (password !== confirmPassword) {
       setErrors({ message: "Passwords do not match." });
       return;
@@ -127,9 +135,38 @@ export default function RegAsJobSeeker() {
 
     const priceFromString = formData.get("experience");
     const experience = parseInt(priceFromString, 10);
+
+    // Validate experience input
     if (isNaN(experience) || experience <= 0) {
-      setErrors({ message: "Price From must be a positive number." });
+      setErrors({ message: "Experience must be a positive number." });
       return;
+    }
+
+    // Check if CV file is provided
+    if (!cvFile) {
+      setErrors({ message: "Please upload your CV." });
+      toast.error("Please upload your CV.");
+      return;
+    }
+
+    let cvUrl = "";
+
+    // Proceed with the upload if CV file is present
+    if (cvFile) {
+      const storageRef = ref(storage, `cvs/${cvFile.name}`);
+      try {
+        setIsLoading(true);
+        // Upload the file
+        await uploadBytes(storageRef, cvFile);
+        // Get the download URL
+        cvUrl = await getDownloadURL(storageRef);
+        console.log("Uploaded CV URL:", cvUrl);
+      } catch (error) {
+        setIsLoading(false);
+        console.error("Error uploading CV:", error);
+        toast.error("Failed to upload CV. Please try again.");
+        return;
+      }
     }
 
     const data = {
@@ -141,23 +178,26 @@ export default function RegAsJobSeeker() {
       phone: formData.get("phone"),
       qualification: formData.get("qualification"),
       yearsOfExperience: experience,
-      // currentPosition: formData.get("currentPosition"),
       password: formData.get("password"),
       role: role,
+      Cv: cvUrl, // Ensure cvUrl is included
     };
 
+    console.log(data);
+
     try {
-      const response = await axios.post('https://jobkonnecta.com/api/user/register', data);
+      const response = await axios.post(
+        "https://jobkonnecta.com/api/user/register",
+        data
+      );
+      setIsLoading(false);
 
-      const userId = response.data.message.id
-      console.log(userId)
-
-      localStorage.setItem('userId', userId);
+      const userId = response.data.message.id;
+      localStorage.setItem("userId", userId);
       toast.success("Registration successful!");
-      navigate('/signup/verify');
-      // console.log(response.data.message);
+      navigate("/signup/verify");
     } catch (err) {
-      // Handle error
+      setIsLoading(false);
       toast.error(err.response?.data?.message || "Registration failed");
       setErrors(err.response?.data || {});
       console.error(err.response?.data?.message || err.message);
@@ -298,6 +338,7 @@ export default function RegAsJobSeeker() {
             <div className="flex flex-col items-start gap-1 w-full">
               <label className="">Highest Qualification</label>
               <select
+                required
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="qualification"
                 onChange={handleInputChange}
@@ -418,7 +459,7 @@ export default function RegAsJobSeeker() {
         </div>
 
         <div className="w-[90%] mx-auto mt-4">
-          <CVUpload />
+          <CVUpload cvFile={cvFile} setCvFile={setCvFile} />
         </div>
 
         <div className="flex justify-end mt-4 w-[95%]">
@@ -426,7 +467,6 @@ export default function RegAsJobSeeker() {
             type="submit"
             text={isLoading ? "Registering..." : "Register"}
             disabled={isLoading}
-            onClick={''}
           />
         </div>
       </form>

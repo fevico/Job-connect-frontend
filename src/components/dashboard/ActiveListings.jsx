@@ -70,7 +70,15 @@ export default function ActiveListings() {
                   <p className="text-sm font-normal w-[12%] pr-2">
                     {new Date(job?.postedAt).toLocaleDateString()}
                   </p>
-                  <p className="text-sm font-normal w-[14%] pr-2"><Link to={"/applications"} className="flex gap-1 items-center rounded-lg bg-primary p-2 text-white font-semibold">view <span className="bg-white rounded-full text-primary p-1">4</span><BiChevronRight /></Link></p>
+                  <p className="text-sm font-normal w-[14%] pr-2">
+                    <Link
+                      state={{ jobId: job?._id }}
+                      to={"/applications"}
+                      className="flex gap-1 items-center justify-center rounded-lg bg-primary p-2 text-white font-semibold"
+                    >
+                      view <BiChevronRight />
+                    </Link>
+                  </p>
                   <p className="text-sm font-normal w-[10%] pr-2">
                     {job?.status}
                   </p>
@@ -101,5 +109,4 @@ function handleJobClick(job) {
   // navigate(`/job/${job?._id}`, { state: { job } }); // Example using react-router's navigate with state
 }
 
-
-// navigaey to applcatons page with 
+// navigaey to applcatons page with

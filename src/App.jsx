@@ -34,6 +34,7 @@ import LinkedInDetails from "./pages/LINKEDIN/LinkedInDetails";
 import { AuthRoute, PrivateRoute } from "./components/hooks/RouteGuards";
 import Earnings from "./components/dashboard/Earnings";
 import Subscription from "./components/dashboard/Subscription";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   return (
@@ -49,7 +50,8 @@ function App() {
           <Route path="/all-jobs" element={<AllJobs />} />
           <Route path="/all-cvwriters" element={<AllCVWriters />} />
           <Route path="/all-linkedin" element={<AllLinkedIn />} />
-          <Route path="/career-profile" element={<CareerProfile />} />
+          <Route path="/settings" element={<CareerProfile />} />
+          <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/job/:id" element={<JobDetails />} />
           <Route path="/cvwriter/:id" element={<CvWriterDetails />} />
           <Route path="/linkedin/:id" element={<LinkedInDetails />} />

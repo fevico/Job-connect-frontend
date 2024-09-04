@@ -28,6 +28,8 @@ import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 import useAxios from "../components/hooks/AxiosInstance";
 import useSession from "../components/hooks/useSession";
+import { useApplyJobMutation } from "../redux/appData";
+
 
 export function ApplySuccess({ open, setOpen, handleOpen }) {
   return (
@@ -78,11 +80,11 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
 export default function JobDetails() {
   const location = useLocation();
   const { job } = location.state;
-  console.log(job)
+  console.log(job);
   const [open, setOpen] = useState(false);
   // const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
   const navigate = useNavigate();
   // const [cookies] = useCookies(["authToken"]);
   const axiosInstance = useAxios();
@@ -124,17 +126,26 @@ export default function JobDetails() {
   // }
 
   // console.log(getJobById);
+  const [applyJob, { isSuccess, isLoading: isLoadingApply, error }] =
+    useApplyJobMutation();
 
+  console.log(userDetails);
   const handleApply = async (e) => {
+    // e.preventDefault();
+
     setIsLoading(true);
-    e.preventDefault();
     try {
-      // const response = await axiosInstance.post("/job/apply-job", {
-      //   id: getJobById._id,
-      // });
-      console.log("Response:", response);
+      //   const response = await axiosInstance.post("/job/apply-job", {
+      //     id: job._id,
+      //   });
+      //   console.log("Response:", response);
+      const data = {
+        id: job._id,
+      };
+      await applyJob(data);
+
       setIsLoading(false);
-      setOpen(true);
+      //   setOpen(true);
     } catch (error) {
       setIsLoading(false);
 
@@ -147,7 +158,7 @@ export default function JobDetails() {
     if (!isSignedIn) {
       // Redirect to login and then return to the current page
       navigate("/login", { state: { returnTo: window.location.pathname } });
-    } else if (userDetails?.role === "user") {
+    } else if (userDetails?.role === "jobseeker") {
       handleApply();
     }
   };
@@ -155,6 +166,15 @@ export default function JobDetails() {
   const handleBack = () => {
     navigate("/all-jobs");
   };
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      setOpen(true);
+    } else  {
+      toast.error(error?.data?.message);
+      setErrors(error?.data?.message);
+    }
+  }, [isSuccess, navigate]);
 
   return (
     <>
@@ -184,10 +204,7 @@ export default function JobDetails() {
               <h2 className="text-[16px] lg:text-[32px] font-extrabold text-primary text-left">
                 {job.title}
               </h2>
-              <p className=" text-primary text-left">
-                {" "}
-                {job.companyName}
-              </p>
+              <p className=" text-primary text-left"> {job.companyName}</p>
               <p className="flex items-center gap-2  text-primary text-left">
                 {job.jobType || "Remote"}
               </p>
@@ -196,7 +213,7 @@ export default function JobDetails() {
               </p>
             </div>
             <div className="flex flex-col items-left gap-2 w-[40%] lg:w-[25%]">
-              {(userDetails?.role === "user" || !isSignedIn) && (
+              {(userDetails?.role === "jobseeker" || !isSignedIn) && (
                 <CustomButton
                   text={
                     isLoading ? (

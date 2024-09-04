@@ -16,10 +16,9 @@ import { BiUserCircle } from "react-icons/bi";
 import { BsArrowDown } from "react-icons/bs";
 import { FaAngleDown } from "react-icons/fa";
 
-function NavList({ setOpenNav }) {
+function NavList({ setOpenNav, isSignedIn, signOut, userDetails }) {
   const [openMenu, setOpenMenu] = React.useState(false);
   const [openProfile, setOpenProfile] = React.useState(false);
-  const { isSignedIn, userDetails, signOut } = useSession();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const toggleMenu = () => {
@@ -179,10 +178,14 @@ function NavList({ setOpenNav }) {
             className="p-1 font-medium "
           >
             <Link
-              to={userDetails.role === "user" ? "/" : "/dashboard"}
+              to={
+                userDetails?.role === "jobseeker"
+                  ? "/user/dashboard"
+                  : "/dashboard"
+              }
               className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
             >
-              My Profile
+              My Profile{userDetails?.role}
             </Link>
           </Typography>
         ) : (
@@ -204,7 +207,11 @@ function NavList({ setOpenNav }) {
               {openProfile && (
                 <div className="absolute top-8 right-0 py-2 bg-white shadow-lg rounded-lg w-[230px]">
                   <Link
-                    to={userDetails.role === "user" ? "/" : "/dashboard"}
+                    to={
+                      userDetails?.role === "jobseeker"
+                        ? "/user/dashboard"
+                        : "/dashboard"
+                    }
                     onClick={handleNavLinkClick}
                     className="px-4 py-2 hover:bg-gray-200 gap-2  text-[#797B89] text-sm mb-1 no-underline flex items-center"
                   >
@@ -243,6 +250,7 @@ function NavList({ setOpenNav }) {
 
 export default function Header() {
   const [openNav, setOpenNav] = React.useState(false);
+  const { isSignedIn, userDetails, signOut } = useSession();
 
   const handleWindowResize = () =>
     window.innerWidth >= 960 && setOpenNav(false);
@@ -255,6 +263,8 @@ export default function Header() {
     };
   }, []);
 
+  // console.log(userDetails);
+
   return (
     <div className="w-[98%] mx-auto px-6 py-3 bg-primary text-white sticky top-0 z-10">
       <div className="flex items-center justify-between">
@@ -262,7 +272,12 @@ export default function Header() {
           <Logo />
         </div>
         <div className="hidden lg:block w-[85%]">
-          <NavList setOpenNav={setOpenNav} />
+          <NavList
+            setOpenNav={setOpenNav}
+            signOut={signOut}
+            isSignedIn={isSignedIn}
+            userDetails={userDetails}
+          />
         </div>
         <IconButton
           variant="text"

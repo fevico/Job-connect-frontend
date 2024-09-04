@@ -26,6 +26,8 @@ export default function JobCard({
   postedTime,
   onClick,
   id,
+  userDashboard,
+  status,
 }) {
   return (
     <div
@@ -37,16 +39,31 @@ export default function JobCard({
           <h2 className="text-left font-bold text-[14px] lg:text-[18px] line-clamp-1 overflow-hidden">
             {title} @ {companyName}
           </h2>
-          <button className="p-2 bg-[#2C2F4E]/70 text-center text-white rounded">
-            &#8358;{priceFrom} - &#8358;{priceTo}
-          </button>
-          <p className="">
-            {jobType} | {location}
+          {!userDashboard && (
+            <>
+              <button className="p-2 bg-[#2C2F4E]/70 text-center text-white rounded">
+                &#8358;{priceFrom} - &#8358;{priceTo}
+              </button>
+              <p className="">
+                {jobType} | {location}
+              </p>
+            </>
+          )}
+          <p className="line-clamp-2 overflow-hidden text-left text-[12px] lg:text-[16px]">
+            {description}
           </p>
-          <p className="line-clamp-2 overflow-hidden text-left text-[12px] lg:text-[16px]">{description}</p>
           <p className="text-xs text-red-500">{formatDate(postedTime)}</p>
         </div>
-        <CustomButton text={"VIEW DETAILS"} onClick={onClick} />
+        {userDashboard ? (
+          <div className="">
+            Current Status:{" "}
+            <span className="bg-gray-300 p-2 font-semibold uppercase">
+              {status}
+            </span>
+          </div>
+        ) : (
+          <CustomButton text={"VIEW DETAILS"} onClick={onClick} />
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Slider from "react-slick";import {
+import Slider from "react-slick";
+import {
   Card,
   CardHeader,
   CardBody,

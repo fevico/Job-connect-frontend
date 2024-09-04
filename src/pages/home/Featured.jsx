@@ -48,7 +48,7 @@ export default function Featured() {
             </div>
           ) : (
             <div className="space-y-4">
-              {allJobs.slice(0, visibleJobs).map((job, index) => (
+              {allJobs && allJobs.slice(0, visibleJobs).map((job, index) => (
                 <JobCard
                   key={index}
                   title={job.title}

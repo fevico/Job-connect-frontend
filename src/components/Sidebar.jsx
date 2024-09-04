@@ -74,7 +74,9 @@ export function SidebarLinks({ closeDrawer }) {
       )}
 
       {/* Admin only */}
-      {role === "admin" && (
+      {(role === "admin" ||
+        role === "cvwriter" ||
+        role === "linkdinOptimizer") && (
         <NavLink
           onClick={handleClose}
           to="/earnings"
@@ -108,6 +110,26 @@ export function SidebarLinks({ closeDrawer }) {
               Applications
             </ListItem>
           </NavLink>
+        </>
+      )}
+
+      {/* Admin, Employer, CV Writer, LinkedIn Optimizer */}
+      {role !== "jobseeker" && (
+        <>
+          <NavLink
+            onClick={handleClose}
+            to=""
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <BsGear className="h-5 w-5" />
+              </ListItemPrefix>
+              Settings
+            </ListItem>
+          </NavLink>
 
           <NavLink
             onClick={handleClose}
@@ -124,24 +146,6 @@ export function SidebarLinks({ closeDrawer }) {
             </ListItem>
           </NavLink>
         </>
-      )}
-
-      {/* Admin, Employer, CV Writer, LinkedIn Optimizer */}
-      {role !== "jobseeker" && (
-        <NavLink
-          onClick={handleClose}
-          to=""
-          className={({ isActive }) =>
-            isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-          }
-        >
-          <ListItem className="focus:bg-transparent text-white">
-            <ListItemPrefix>
-              <BsGear className="h-5 w-5" />
-            </ListItemPrefix>
-            Settings
-          </ListItem>
-        </NavLink>
       )}
 
       {/* Admin only */}

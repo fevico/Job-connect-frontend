@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://localhost:5000/api/",
+  // baseUrl: "http://localhost:5000/",
   baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers, { getState }) => {
     headers.set("Content-Type", "application/json");
@@ -24,12 +24,9 @@ const baseQuery = fetchBaseQuery({
     const text = await response.text();
     try {
       const jsonResponse = JSON.parse(text);
-
+      // console.log(jsonResponse)
       // Check for token expiration
-      if (
-        jsonResponse.error &&
-        jsonResponse.error.message === "Token has expired"
-      ) {
+      if (jsonResponse && jsonResponse.message === "Token has expired") {
         // Handle expired token here, e.g., clear credentials and user info
         // You can dispatch actions or handle the logic here
         Cookies.remove("authToken");
@@ -63,8 +60,14 @@ export const productsApi = createApi({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
     }),
+    getAllAppliedJobs: builder.query({
+      query: () => "job/get-applied-jobs",
+    }),
     getAllJobsByEmployer: builder.query({
       query: (id) => `job/get-jobs-by-employer/${id}`,
+    }),
+    getJobApp: builder.query({
+      query: (id) => `job/get-applications-by-job/${id}`,
     }),
     getAllCategory: builder.query({
       query: () => "category/all",
@@ -81,6 +84,34 @@ export const productsApi = createApi({
           await queryFulfilled;
         } catch (err) {
           console.error(" failed to create job:", err);
+        }
+      },
+    }),
+    hire: builder.mutation({
+      query: ({ credentials, id }) => ({
+        url: `job/hire-applicant/${id}`,
+        method: "POST",
+        body: credentials,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to hire:", err);
+        }
+      },
+    }),
+    applyJob: builder.mutation({
+      query: (credentials) => ({
+        url: `job/apply-job`,
+        method: "POST",
+        body: credentials,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to apply job:", err);
         }
       },
     }),
@@ -305,9 +336,13 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useGetAllJobsQuery,
+  useGetAllAppliedJobsQuery,
   useGetAllCategoryQuery,
   useGetAllJobsByEmployerQuery,
+  useGetJobAppQuery,
   useAddJobMutation,
+  useHireMutation,
+  useApplyJobMutation,
   // useLogoutMutation,
   // useGenerateAiClinicalNoteMutation,
   // useAddNoteMutation,
