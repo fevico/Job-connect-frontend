@@ -9,8 +9,8 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://localhost:5000/",
-  baseUrl: "https://jobkonnecta.com/api/",
+  baseUrl: "http://localhost:5000/",
+  // baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers, { getState }) => {
     headers.set("Content-Type", "application/json");
     const token = Cookies.get("authToken");
@@ -56,6 +56,7 @@ const baseQuery = fetchBaseQuery({
 export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
+  tagTypes: ["AllUsers"],
   endpoints: (builder) => ({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
@@ -71,6 +72,11 @@ export const productsApi = createApi({
     }),
     getAllCategory: builder.query({
       query: () => "category/all",
+    }),
+    getAllUsers: builder.query({
+      query: () => "user/all-users",
+      providesTags: ["AllUsers"],
+
     }),
 
     addJob: builder.mutation({
@@ -88,10 +94,10 @@ export const productsApi = createApi({
       },
     }),
     hire: builder.mutation({
-      query: ({ credentials, id }) => ({
+      query: ({ data, id }) => ({
         url: `job/hire-applicant/${id}`,
         method: "POST",
-        body: credentials,
+        body: data,
       }),
       onQueryStarted: async (arg, { queryFulfilled }) => {
         try {
@@ -111,9 +117,24 @@ export const productsApi = createApi({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error(" failed to apply job:", err);
+          console.error("failed to apply job:", err);
         }
       },
+    }),
+    suspend: builder.mutation({
+      query: (credentials) => ({
+        url: `user/suspend`,
+        method: "POST",
+        body: credentials,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("failed:", err);
+        }
+      },
+      invalidatesTags: ["AllUsers"],
     }),
     // getOneProduct: builder.query({
     //       query: (id) => `products/${id}`,
@@ -338,11 +359,13 @@ export const {
   useGetAllJobsQuery,
   useGetAllAppliedJobsQuery,
   useGetAllCategoryQuery,
+  useGetAllUsersQuery,
   useGetAllJobsByEmployerQuery,
   useGetJobAppQuery,
   useAddJobMutation,
   useHireMutation,
   useApplyJobMutation,
+  useSuspendMutation,
   // useLogoutMutation,
   // useGenerateAiClinicalNoteMutation,
   // useAddNoteMutation,

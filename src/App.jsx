@@ -33,6 +33,7 @@ import AllLinkedIn from "./pages/LINKEDIN/AllLinkedIn";
 import LinkedInDetails from "./pages/LINKEDIN/LinkedInDetails";
 import { AuthRoute, PrivateRoute } from "./components/hooks/RouteGuards";
 import Earnings from "./components/dashboard/Earnings";
+import AllUsers from "./components/dashboard/AllUsers";
 import Subscription from "./components/dashboard/Subscription";
 import UserDashboard from "./pages/UserDashboard";
 
@@ -72,6 +73,7 @@ function App() {
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/earnings" element={<Earnings />} />
           <Route path="/subscription" element={<Subscription />} />
+          <Route path="/all-users" element={<AllUsers />} />
 
           <Route path="/analytics" element={<Dashboard />} />
         </Route>

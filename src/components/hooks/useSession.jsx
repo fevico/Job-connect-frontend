@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode"; // Correct import for jwt-decode
+import { jwtDecode } from "jwt-decode"; // Correct import for jwt-decode
 
 export default function useSession() {
   // Check if the user is signed in by checking if the authToken exists in cookies
@@ -24,6 +24,7 @@ export default function useSession() {
   const signOut = () => {
     // Remove the authToken cookie
     Cookies.remove("authToken", { path: "/" });
+    window.location.reload();
   };
 
   return { isSignedIn, userDetails, signIn, signOut };

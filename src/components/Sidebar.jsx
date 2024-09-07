@@ -13,8 +13,7 @@ import useSession from "./hooks/useSession";
 import { BsArrow90DegLeft, BsCashStack, BsGear } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
 
-export function SidebarLinks({ closeDrawer }) {
-  const { userDetails, signOut } = useSession();
+export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
   const role = userDetails.role;
 
   const handleClose = () => {
@@ -89,6 +88,24 @@ export function SidebarLinks({ closeDrawer }) {
               <BsCashStack className="h-5 w-5" />
             </ListItemPrefix>
             Earnings
+          </ListItem>
+        </NavLink>
+      )}
+
+      {/* Admin only */}
+      {role === "admin" && (
+        <NavLink
+          onClick={handleClose}
+          to="/all-users"
+          className={({ isActive }) =>
+            isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+          }
+        >
+          <ListItem className="focus:bg-transparent text-white">
+            <ListItemPrefix>
+              <BsCashStack className="h-5 w-5" />
+            </ListItemPrefix>
+            All Users
           </ListItem>
         </NavLink>
       )}
@@ -168,29 +185,39 @@ export function SidebarLinks({ closeDrawer }) {
 
       {/* All roles except jobseeker */}
       {role !== "jobseeker" && (
-        <NavLink
-          to=""
-          onClick={() => {
-            handleClose();
-            signOut();
-          }}
-          className={({ isActive }) =>
-            isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-          }
-        >
-          <ListItem className="focus:bg-transparent text-white">
-            <ListItemPrefix>
-              <BiLogOut className="h-5 w-5" />
-            </ListItemPrefix>
+        // <NavLink
+        //   to=""
+        //   onClick={() => {
+        //     handleClose();
+        //     signOut();
+        //   }}
+        //   className={({ isActive }) =>
+        //     isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+        //   }
+        // >
+        <ListItem className="focus:bg-transparent text-white">
+          <ListItemPrefix>
+            <BiLogOut className="h-5 w-5" />
+          </ListItemPrefix>
+          <p
+            className="text-red-400 font-bold text-left px-4 py-2"
+            onClick={() => {
+              handleClose();
+              signOut();
+            }}
+          >
             Logout
-          </ListItem>
-        </NavLink>
+          </p>
+        </ListItem>
+        // </NavLink>
       )}
     </List>
   );
 }
 
 export default function Sidebar({ mobile, closeDrawer }) {
+  const { userDetails, signOut } = useSession();
+
   return (
     <div
       className={`max-w-[300px] ${
@@ -206,7 +233,11 @@ export default function Sidebar({ mobile, closeDrawer }) {
       </div>
 
       <div>
-        <SidebarLinks closeDrawer={closeDrawer} />
+        <SidebarLinks
+          closeDrawer={closeDrawer}
+          signOut={signOut}
+          userDetails={userDetails}
+        />
       </div>
     </div>
   );

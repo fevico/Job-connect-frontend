@@ -9,17 +9,18 @@ import { useRegisterMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 
-export default function RegAsJobSeeker() {
+export default function RegAsJobEmployer() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
+  // const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const role = "employer";
 
@@ -49,6 +50,8 @@ export default function RegAsJobSeeker() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     const formData = new FormData(e.target);
     let password = formData.get("password");
     let confirmPassword = formData.get("confirmPassword");
@@ -62,8 +65,10 @@ export default function RegAsJobSeeker() {
       name: formData.get("name"),
       email: formData.get("email"),
       gender: formData.get("gender"),
-      nationality: country,
-      location: state,
+      location: {
+        country: formData.get("country"),
+        state: formData.get("state"),
+      },
       phone: formData.get("phone"),
       companyName: formData.get("companyName"),
       comapanyAddress: formData.get("address"),
@@ -71,24 +76,32 @@ export default function RegAsJobSeeker() {
       password: formData.get("password"),
       role: role,
     };
-
+    console.log(data);
     try {
-      const response = await axios.post('https://jobkonnecta.com/api/user/register', data)
-      const userId = response.data.message.id
+      const response = await axios.post(
+        "https://jobkonnecta.com/api/user/register",
+        // "http://localhost:5000/user/register",
+        data
+      );
+      setIsLoading(false);
 
-      localStorage.setItem('userId', userId);
-      
-      localStorage.setItem('userRole', data.role);
+      const userId = response.data.message.id;
+
+      localStorage.setItem("userId", userId);
+
+      localStorage.setItem("userRole", data.role);
       // localStorage.setItem('accountId', data._id);
 
       toast.success("Registration successful!");
-      navigate('/signup/verify');
+      navigate("/signup/verify");
       // console.log(response.data.message);
     } catch (err) {
       // Handle error
+      setIsLoading(false);
+
       toast.error(err.response?.data?.message || "Registration failed");
       setErrors(err.response?.data || {});
-      console.error(err.response?.data?.message || err.message);
+      console.error(err);
     }
   };
 
@@ -223,7 +236,7 @@ export default function RegAsJobSeeker() {
 
         <div className="w-[90%] mx-auto space-y-3">
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
-          <div className="flex flex-col items-start gap-1 w-full">
+            <div className="flex flex-col items-start gap-1 w-full">
               <label className="">Company Name</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
@@ -245,7 +258,6 @@ export default function RegAsJobSeeker() {
                 required
               />
             </div>
-            
           </div>
         </div>
 

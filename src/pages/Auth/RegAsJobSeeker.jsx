@@ -10,7 +10,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../components/hooks/firebase";
 
@@ -173,8 +172,10 @@ export default function RegAsJobSeeker() {
       name: formData.get("name"),
       email: formData.get("email"),
       gender: formData.get("gender"),
-      nationality: country,
-      location: state,
+      location: {
+        country: formData.get("country"),
+        state: formData.get("state"),
+      },
       phone: formData.get("phone"),
       qualification: formData.get("qualification"),
       yearsOfExperience: experience,

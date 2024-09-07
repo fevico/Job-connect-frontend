@@ -79,16 +79,48 @@ function CVUpload() {
 }
 
 export default function RegAsCVWriter() {
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null); // For image preview
   const [errors, setErrors] = useState({});
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
+  const [isLoading, setIsLoading] = useState(false);
+  // const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
 
-  const role = "cvwriter";
+  const role = "cvWriter";
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreviewUrl(URL.createObjectURL(file)); // Create a preview URL
+    }
+  };
+
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "db0zguvf");
+    formData.append("folder", "jobkonnect");
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dgz5bgdzc/auto/upload",
+        formData
+      );
+      setIsLoading(false);
+
+      return response.data.secure_url; // Return the secure URL of the uploaded file
+    } catch (error) {
+      setIsLoading(false);
+
+      console.error("Error uploading file:", error);
+      throw new Error("Failed to upload file to Cloudinary");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -115,6 +147,8 @@ export default function RegAsCVWriter() {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
+
     e.preventDefault();
     const formData = new FormData(e.target);
     let password = formData.get("password");
@@ -125,32 +159,47 @@ export default function RegAsCVWriter() {
       return;
     }
 
-    const priceFromString = formData.get("experience");
-    const experience = parseInt(priceFromString, 10);
-    if (isNaN(experience) || experience <= 0) {
-      setErrors({ message: "Price From must be a positive number." });
-      return;
+ 
+
+    let imageUrl = "";
+
+    if (image) {
+      try {
+        imageUrl = await uploadFile(image);
+        console.log(imageUrl);
+      } catch (error) {
+        setErrors("Failed to upload image. Please try again.");
+        return;
+      }
     }
 
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
       gender: formData.get("gender"),
-      nationality: country,
-      location: state,
+      location: formData.get("location"),
       phone: formData.get("phone"),
-      qualification: formData.get("qualification"),
-      yearsOfExperience: experience,
-      // currentPosition: formData.get("currentPosition"),
+      bio: formData.get("bio"),
+      education: formData.get("education"),
+      workHours: formData.get("workHours"),
+      responseTime: formData.get("responseTime"),
       password: formData.get("password"),
       role: role,
+      portfolio: formData.get("portfolio"),
+      yearsOfExperience: formData.get("experience"),
+      specializations: formData.get("specializations"),
+      avatar: imageUrl,
     };
+
+    console.log(data);
 
     try {
       const response = await axios.post(
         "https://jobkonnecta.com/api/user/register",
         data
       );
+
+      setIsLoading(false);
 
       const userId = response.data.message.id;
       console.log(userId);
@@ -161,6 +210,8 @@ export default function RegAsCVWriter() {
       // console.log(response.data.message);
     } catch (err) {
       // Handle error
+      setIsLoading(false);
+
       toast.error(err.response?.data?.message || "Registration failed");
       setErrors(err.response?.data || {});
       console.error(err.response?.data?.message || err.message);
@@ -239,6 +290,21 @@ export default function RegAsCVWriter() {
           </div>
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
+              <label className="">Gender</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="gender"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                  Select Gender
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
               <label htmlFor="location">Location</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
@@ -253,9 +319,9 @@ export default function RegAsCVWriter() {
               <label htmlFor="profilePhoto">Profile Photo</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="profilePhoto"
                 type="file"
-                onChange={handleInputChange}
+                name="image"
+                onChange={handleImageChange}
                 required
               />
             </div>
@@ -277,7 +343,7 @@ export default function RegAsCVWriter() {
 
         <div className="w-[90%] mx-auto space-y-3">
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
-            <div className="flex flex-col items-start gap-1 w-full">
+            {/* <div className="flex flex-col items-start gap-1 w-full">
               <label>Resume/CV</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
@@ -286,7 +352,7 @@ export default function RegAsCVWriter() {
                 onChange={handleInputChange}
                 required
               />
-            </div>
+            </div> */}
             <div className="flex flex-col items-start gap-1 w-full">
               <label>Portfolio</label>
               <input
@@ -320,12 +386,11 @@ export default function RegAsCVWriter() {
               />
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
-              <label>Certifications</label>
-              <input
+              <label>bio</label>
+              <textarea
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="certifications"
-                type="text"
-                placeholder="Relevant certifications"
+                name="bio"
+                placeholder="A brief about you..."
                 onChange={handleInputChange}
               />
             </div>
@@ -371,7 +436,7 @@ export default function RegAsCVWriter() {
 
         <div className="w-[90%] mx-auto space-y-3">
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
-            <div className="flex flex-col items-start gap-1 w-full">
+            {/* <div className="flex flex-col items-start gap-1 w-full">
               <label>Availability</label>
               <select
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
@@ -386,7 +451,7 @@ export default function RegAsCVWriter() {
                 <option value="part_time">Part-time</option>
                 <option value="freelance">Freelance</option>
               </select>
-            </div>
+            </div> */}
             <div className="flex flex-col items-start gap-1 w-full">
               <label>Work Hours</label>
               <input
@@ -398,7 +463,7 @@ export default function RegAsCVWriter() {
               />
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
-              <label>Expected Response Time</label>
+              <label>Expected Response Time (in hours)</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="responseTime"
@@ -409,15 +474,74 @@ export default function RegAsCVWriter() {
             </div>
           </div>
         </div>
+        <div className="w-[90%] mx-auto space-y-3">
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="">Password</label>
+              <div className="relative w-full">
+                <input
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="password"
+                  type={passwordVisible ? "text" : "password"}
+                  placeholder="Password"
+                  onChange={handleInputChange}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="">Confirm Password</label>
+              <div className="relative w-full">
+                <input
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="confirmPassword"
+                  type={confirmPasswordVisible ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  onChange={handleInputChange}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  {confirmPasswordVisible ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* Submit Button */}
-        <div className="w-[90%] mx-auto flex justify-center mt-6">
-          <button
+        <div className="flex items-start gap-1 w-[90%] mx-auto">
+          <input
+            type="checkbox"
+            id="terms"
+            name="terms"
+            checked={termsAccepted}
+            onChange={() => setTermsAccepted(!termsAccepted)}
+            required
+          />
+          <label htmlFor="terms" className="text-sm">
+            I accept the{" "}
+            <a href="/terms" className="text-blue-500 underline">
+              Terms and Conditions
+            </a>
+          </label>
+        </div>
+
+        <div className="flex justify-end mt-4 w-[95%]">
+          <CustomButton
             type="submit"
-            className="bg-primary text-white px-6 py-3 rounded-md"
-          >
-            Register as CV Writer
-          </button>
+            text={isLoading ? "Registering..." : "Register As Cv writer"}
+            disabled={isLoading}
+          />
         </div>
       </form>
     </>

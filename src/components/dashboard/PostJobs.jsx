@@ -56,13 +56,6 @@ export default function PostJobs() {
     setLoading(true);
     e.preventDefault();
     const formData = new FormData(e.target);
-    let password = formData.get("password");
-    let confirmPassword = formData.get("confirmPassword");
-
-    if (password !== confirmPassword) {
-      setErrors({ message: "Passwords do not match." });
-      return;
-    }
 
     const priceFromString = formData.get("priceFrom");
     const priceFrom = parseInt(priceFromString, 10);

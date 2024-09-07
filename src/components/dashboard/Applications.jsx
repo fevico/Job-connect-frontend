@@ -19,7 +19,7 @@ export default function Applications() {
     refetchOnReconnect: false,
   });
 
-  console.log(applications)
+  console.log(applications);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -41,12 +41,12 @@ export default function Applications() {
     e.preventDefault();
     const data = {
       id: selectedApplication._id,
-      status: selectedApplication.status,
+      // status: selectedApplication.status,
       applicantId: selectedApplication.userId,
     };
     console.log(data);
     try {
-      await hire({ data, id : jobId });
+      await hire({ data, id: jobId });
     } catch (error) {
       console.log("error", error);
     }
@@ -57,9 +57,10 @@ export default function Applications() {
       setOpenDialog(false);
       toast.success("Hired Successfully!");
     } else if (hireError) {
-      toast.error("failed to hire");
+      setOpenDialog(false);
+      toast.error(`failed to hire, ${hireError.data.message}`);
     }
-  }, [isSuccess]);
+  }, [isSuccess, hireError]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading applications: {error.message}</p>;

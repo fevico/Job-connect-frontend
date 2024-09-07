@@ -79,16 +79,18 @@ function CVUpload() {
 }
 
 export default function RegAsLinkedIn() {
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
+  const [image, setImage] = useState(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
+  // const [register, { isLoading, isSuccess, error }] = useRegisterMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const role = "linkdinOptimizer";
+
+  const role = "linkedinOptimizer";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -114,6 +116,37 @@ export default function RegAsLinkedIn() {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreviewUrl(URL.createObjectURL(file)); // Create a preview URL
+    }
+  };
+
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "db0zguvf");
+    formData.append("folder", "jobkonnect");
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dgz5bgdzc/auto/upload",
+        formData
+      );
+      setIsLoading(false);
+
+      return response.data.secure_url; // Return the secure URL of the uploaded file
+    } catch (error) {
+      setIsLoading(false);
+
+      console.error("Error uploading file:", error);
+      throw new Error("Failed to upload file to Cloudinary");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -125,25 +158,40 @@ export default function RegAsLinkedIn() {
       return;
     }
 
-    const priceFromString = formData.get("experience");
-    const experience = parseInt(priceFromString, 10);
-    if (isNaN(experience) || experience <= 0) {
-      setErrors({ message: "Price From must be a positive number." });
-      return;
+    setIsLoading(true);
+
+   
+
+    let imageUrl = "";
+
+    if (image) {
+      try {
+        imageUrl = await uploadFile(image);
+        console.log(imageUrl);
+      } catch (error) {
+        setErrors("Failed to upload image. Please try again.");
+        return;
+      }
     }
 
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
-      gender: formData.get("gender"),
-      nationality: country,
-      location: state,
+      // gender: formData.get("gender"),
+      // nationality: country,
+      location: formData.get("location"),
       phone: formData.get("phone"),
-      qualification: formData.get("qualification"),
-      yearsOfExperience: experience,
-      // currentPosition: formData.get("currentPosition"),
+      linkdinUrl: formData.get("linkedinUrl"),
+      currentJob: formData.get("currentJob"),
+      keySkills: formData.get("keySkills"),
+      yearsOfExperience: formData.get("yearsOfExperience"),
+      industry: formData.get("industry"),
+      optimizationGoal: formData.get("optimizationGoal"),
+      targetAudience: formData.get("targetAudience"),
+      profileSection: formData.get("profileSection"),
       password: formData.get("password"),
       role: role,
+      avatar: imageUrl,
     };
 
     try {
@@ -151,6 +199,7 @@ export default function RegAsLinkedIn() {
         "https://jobkonnecta.com/api/user/register",
         data
       );
+      setIsLoading(false);
 
       const userId = response.data.message.id;
       console.log(userId);
@@ -161,6 +210,8 @@ export default function RegAsLinkedIn() {
       // console.log(response.data.message);
     } catch (err) {
       // Handle error
+      setIsLoading(false);
+
       toast.error(err.response?.data?.message || "Registration failed");
       setErrors(err.response?.data || {});
       console.error(err.response?.data?.message || err.message);
@@ -253,9 +304,9 @@ export default function RegAsLinkedIn() {
               <label htmlFor="profilePhoto">Profile Photo</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="profilePhoto"
                 type="file"
-                onChange={handleInputChange}
+                name="image"
+                onChange={handleImageChange}
                 required
               />
             </div>
@@ -281,7 +332,7 @@ export default function RegAsLinkedIn() {
               <label>LinkedIn Profile URL</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="linkedinUrl"
+                name="linkdinUrl"
                 type="url"
                 placeholder="LinkedIn Profile URL"
                 onChange={handleInputChange}
@@ -316,7 +367,7 @@ export default function RegAsLinkedIn() {
               <label>Years of Experience</label>
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="experience"
+                name="yearsOfExperience"
                 type="number"
                 placeholder="Years of Experience"
                 onChange={handleInputChange}
@@ -328,7 +379,7 @@ export default function RegAsLinkedIn() {
             <label>Key Skills</label>
             <textarea
               className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-              name="skills"
+              name="keySkills"
               placeholder="List your key skills (separated by commas)"
               onChange={handleInputChange}
             />
@@ -382,21 +433,125 @@ export default function RegAsLinkedIn() {
             <label>LinkedIn Profile Sections to Optimize</label>
             <textarea
               className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-              name="profileSections"
+              name="profileSection"
               placeholder="Specify LinkedIn profile sections you want to focus on (e.g., Summary, Experience, Skills)"
               onChange={handleInputChange}
             />
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="w-[90%] mx-auto flex justify-center mt-6">
-          <button
+        <div className="w-[90%] mx-auto space-y-3">
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            {/* <div className="flex flex-col items-start gap-1 w-full">
+              <label>Availability</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="availability"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                  Select Availability
+                </option>
+                <option value="full_time">Full-time</option>
+                <option value="part_time">Part-time</option>
+                <option value="freelance">Freelance</option>
+              </select>
+            </div> */}
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label>Work Hours</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="workHours"
+                type="text"
+                placeholder="Time zone and preferred hours"
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label>Expected Response Time (in hours)</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="responseTime"
+                type="text"
+                placeholder="Response time to client requests"
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="w-[90%] mx-auto space-y-3">
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="">Password</label>
+              <div className="relative w-full">
+                <input
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="password"
+                  type={passwordVisible ? "text" : "password"}
+                  placeholder="Password"
+                  onChange={handleInputChange}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="">Confirm Password</label>
+              <div className="relative w-full">
+                <input
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="confirmPassword"
+                  type={confirmPasswordVisible ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  onChange={handleInputChange}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  {confirmPasswordVisible ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-1 w-[90%] mx-auto">
+          <input
+            type="checkbox"
+            id="terms"
+            name="terms"
+            checked={termsAccepted}
+            onChange={() => setTermsAccepted(!termsAccepted)}
+            required
+          />
+          <label htmlFor="terms" className="text-sm">
+            I accept the{" "}
+            <a href="/terms" className="text-blue-500 underline">
+              Terms and Conditions
+            </a>
+          </label>
+        </div>
+
+        <div className="flex justify-end mt-4 w-[95%]">
+          <CustomButton
             type="submit"
-            className="bg-primary text-white px-6 py-3 rounded-md"
-          >
-            Register for LinkedIn Optimization
-          </button>
+            text={
+              isLoading
+                ? "Registering..."
+                : "Register for LinkedIn Optimization"
+            }
+            disabled={isLoading}
+          />
         </div>
       </form>
     </>
