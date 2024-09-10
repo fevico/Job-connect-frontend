@@ -25,63 +25,12 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function LinkedInDetails() {
-  const { id } = useParams();
-  const [getJobById, setGetJobById] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+ 
 
-  //   useEffect(() => {
-  //     const getJobDetails = async () => {
-  //       try {
-  //         const response = await axios.get(
-  //           `https://jobkonnecta.com/api/job/job/${id}`
-  //         );
-  //         setGetJobById(response.data);
-  //       } catch (err) {
-  //         setError(err);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     getJobDetails();
-  //   }, [id]);
-
-  //   if (loading) {
-  //     return <div>Loading...</div>;
-  //   }
-
-  //   if (error) {
-  //     return <div>Error: {error.message}</div>;
-  //   }
-
-  //   if (!getJobById) {
-  //     return <div>No job found</div>;
-  //   }
-
-  //   const handleApply = async (e) => {
-  //     e.preventDefault();
-  //     const token = localStorage.getItem("authToken");
-  //     try {
-  //       const response = await axios.post(
-  //         "https://jobkonnecta.com/api/job/apply-job",
-  //         {
-  //           id: getJobById._id,
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  //       console.log("Response:", response);
-  //       setOpen(true);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
+  
   return (
     <>
       <Helmet>

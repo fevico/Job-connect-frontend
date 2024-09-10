@@ -42,19 +42,20 @@ const LinkedInList = ({ searchQuery }) => {
   return (
     <div className="space-y-4 mb-3">
       {/* {filteredJobs.slice(0, visibleJobs).map((job, index) => ( */}
-      {linkedinOptimizers.map((linkedin, index) => (
-        <LinkedInCard
-          key={index}
-          name={linkedin.name}
-          image={linkedin.image}
-          bio={linkedin.bio}
-          id={linkedin.id}
-          specialization="Resume Writing & Career Coaching"
-          rating="4.8"
-          services="Resume writing, cover letter creation, LinkedIn profile optimization"
-        />
-      ))}
-      {visibleLinkedIn < linkedinOptimizers.length && (
+      {linkedinOptimizers &&
+        linkedinOptimizers.map((linkedin, index) => (
+          <LinkedInCard
+            key={index}
+            name={linkedin.name}
+            image={linkedin.image}
+            bio={linkedin.bio}
+            id={linkedin.id}
+            specialization="Resume Writing & Career Coaching"
+            rating="4.8"
+            services="Resume writing, cover letter creation, LinkedIn profile optimization"
+          />
+        ))}
+      {linkedinOptimizers && visibleLinkedIn < linkedinOptimizers.length && (
         <div className="flex w-full justify-end">
           <button
             onClick={handleSeeMore}

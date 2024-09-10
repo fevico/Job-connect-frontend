@@ -22,24 +22,25 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
 
   return (
     <List>
+      {role !== "jobseeker" && (
+        <NavLink
+          onClick={handleClose}
+          to="/dashboard"
+          className={({ isActive }) =>
+            isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+          }
+        >
+          <ListItem className="focus:bg-transparent text-white">
+            <ListItemPrefix>
+              <MdDashboard className="h-5 w-5" />
+            </ListItemPrefix>
+            Dashboard
+          </ListItem>
+        </NavLink>
+      )}
       {/* Admin and Employer */}
       {(role === "admin" || role === "employer") && (
         <>
-          <NavLink
-            onClick={handleClose}
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-            }
-          >
-            <ListItem className="focus:bg-transparent text-white">
-              <ListItemPrefix>
-                <MdDashboard className="h-5 w-5" />
-              </ListItemPrefix>
-              Dashboard
-            </ListItem>
-          </NavLink>
-
           <NavLink
             onClick={handleClose}
             to="/active-listing"
@@ -113,7 +114,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       {/* Admin, CV Writer, LinkedIn Optimizer */}
       {(role === "cvwriter" || role === "linkdinOptimizer") && (
         <>
-          <NavLink
+          {/* <NavLink
             onClick={handleClose}
             to="/service-applications"
             className={({ isActive }) =>
@@ -125,6 +126,36 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
                 <AiOutlineProduct className="h-5 w-5" />
               </ListItemPrefix>
               Applications
+            </ListItem>
+          </NavLink> */}
+
+          <NavLink
+            onClick={handleClose}
+            to="/create-package"
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <AiOutlineProduct className="h-5 w-5" />
+              </ListItemPrefix>
+              Create Packages
+            </ListItem>
+          </NavLink>
+
+          <NavLink
+            onClick={handleClose}
+            to="/all-package"
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <AiOutlineProduct className="h-5 w-5" />
+              </ListItemPrefix>
+              All Packages
             </ListItem>
           </NavLink>
         </>

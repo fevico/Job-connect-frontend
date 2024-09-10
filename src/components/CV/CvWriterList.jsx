@@ -44,7 +44,7 @@ const CvWriterList = ({ searchQuery }) => {
   const navigate = useNavigate(); // Initialize navigate
 
   const handleCvWriterClick = (cvwriter) => {
-    navigate(`/cvwriter/${cvwriter.id}`, { state: { cvwriter } }); // Navigate to the details page with the current CV writer's id
+    navigate(`/cvwriter/${cvwriter._id}`, { state: { cvwriter } }); // Navigate to the details page with the current CV writer's id
   };
   return (
     <div className="space-y-4 mb-3">

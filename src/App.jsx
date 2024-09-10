@@ -23,6 +23,7 @@ import SpecialLayout from "./components/SpecialLayout";
 import Dashboard from "./components/dashboard";
 import PostJobs from "./components/dashboard/PostJobs";
 import Applications from "./components/dashboard/Applications";
+import ApplicationsServices from "./components/dashboard/ApplicationsServices";
 import ActiveListings from "./components/dashboard/ActiveListings";
 import LoggedInLayout from "./components/LoggedInLayout";
 import RegAsLinkedIn from "./pages/Auth/RegAsLinkedIn";
@@ -34,6 +35,8 @@ import LinkedInDetails from "./pages/LINKEDIN/LinkedInDetails";
 import { AuthRoute, PrivateRoute } from "./components/hooks/RouteGuards";
 import Earnings from "./components/dashboard/Earnings";
 import AllUsers from "./components/dashboard/AllUsers";
+import AllPackage from "./components/dashboard/AllPackage";
+import CreatePackage from "./components/dashboard/CreatePackage";
 import Subscription from "./components/dashboard/Subscription";
 import UserDashboard from "./pages/UserDashboard";
 
@@ -43,6 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="/:reference" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/contact" element={<Contact />} />
@@ -70,10 +74,13 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/active-listing" element={<ActiveListings />} />
           <Route path="/applications" element={<Applications />} />
+          <Route path="/applications-services" element={<ApplicationsServices />} />
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/earnings" element={<Earnings />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/all-users" element={<AllUsers />} />
+          <Route path="/all-package" element={<AllPackage />} />
+          <Route path="/create-package" element={<CreatePackage />} />
 
           <Route path="/analytics" element={<Dashboard />} />
         </Route>

@@ -54,7 +54,7 @@ export default function HeaderSpecial() {
   return (
     <Navbar
       variant="gradient"
-      color=""
+      color="transparent"
       className="mx-auto w-[95%] bg-primary px-4 py-3 mt-3"
     >
       <div className="flex flex-wrap items-center justify-between gap-y-4 text-white">

@@ -83,11 +83,11 @@ export default function ActiveListings() {
                     {job?.status}
                   </p>
                   <p className="text-sm font-normal w-[15%] flex items-center gap-4">
-                    <BiPencil onClick={""} className="w-5 h-5 cursor-pointer" />
+                    {/* <BiPencil onClick={""} className="w-5 h-5 cursor-pointer" />
                     <BiTrash
                       onClick={""}
                       className="w-5 h-5 text-red-400 cursor-pointer"
-                    />
+                    /> */}
                   </p>
                 </div>
               ))

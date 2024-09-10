@@ -67,6 +67,45 @@ export const productsApi = createApi({
     getAllJobsByEmployer: builder.query({
       query: (id) => `job/get-jobs-by-employer/${id}`,
     }),
+    getAllPackages: builder.query({
+      query: () => `product/user/product`,
+    }),
+    getAllPackagesGlobal: builder.query({
+      query: () => `product/all`,
+    }),
+    getBalance: builder.query({
+      query: () => `wallet/get-balance`,
+    }),
+    getBank: builder.query({
+      query: () => `wallet/get-bank-list`,
+    }),
+    getBankAccountName: builder.query({
+      query: ({ bank_code, account_number }) =>
+        `wallet/get-account-name?bank_code=${bank_code}&account_number=${account_number}`,
+    }),
+    withdraw: builder.mutation({
+      query: ({
+        bank_code,
+        account_number,
+        narration,
+        amount,
+        name_enquiry_reference,
+      }) => ({
+        url: `wallet/bank-transfer?bank_code=${bank_code}&account_number=${account_number}&narration=${narration}&amount=${amount}&name_enquiry_reference=${name_enquiry_reference}`,
+        method: "POST",
+        body: {
+          bank_code,
+          account_number,
+          narration,
+          amount,
+          name_enquiry_reference,
+        },
+      }),
+    }),
+
+    getSuccessfulOrders: builder.query({
+      query: (productId) => `payment/get-successful-orders/${productId}`,
+    }),
     getJobApp: builder.query({
       query: (id) => `job/get-applications-by-job/${id}`,
     }),
@@ -76,15 +115,32 @@ export const productsApi = createApi({
     getAllUsers: builder.query({
       query: () => "user/all-users",
       providesTags: ["AllUsers"],
-
     }),
-
+    getVerifyPayment: builder.query({
+      query: (reference) => `payment/verify-payment/${reference}`,
+    }),
     addJob: builder.mutation({
       query: (credentials) => ({
         url: `job/create`,
         method: "POST",
         body: credentials,
       }),
+
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to create job:", err);
+        }
+      },
+    }),
+    addPackage: builder.mutation({
+      query: (credentials) => ({
+        url: `product/create`,
+        method: "POST",
+        body: credentials,
+      }),
+
       onQueryStarted: async (arg, { queryFulfilled }) => {
         try {
           await queryFulfilled;
@@ -121,6 +177,49 @@ export const productsApi = createApi({
         }
       },
     }),
+    shareJob: builder.mutation({
+      query: (data) => ({
+        url: `referal/refer-candidate`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("failed to apply job:", err);
+        }
+      },
+    }),
+    payment: builder.mutation({
+      query: (credentials) => ({
+        url: `payment/create-payment`,
+        method: "POST",
+        body: credentials,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("failed to pay for service:", err);
+        }
+      },
+    }),
+    // verifyPayment: builder.mutation({
+    //   query: ({credentials, reference}) => ({
+    //     url: `payment/verify-payment/${reference}`,
+    //     method: "POST",
+    //     body: credentials,
+    //   }),
+    //   onQueryStarted: async (arg, { queryFulfilled }) => {
+    //     try {
+    //       await queryFulfilled;
+    //     } catch (err) {
+    //       console.error(" failed to verify payment:", err);
+    //     }
+    //   },
+    // }),
+
     suspend: builder.mutation({
       query: (credentials) => ({
         url: `user/suspend`,
@@ -355,17 +454,28 @@ export const {
   // useGetProfileQuery,
   // useGetAllNotesMutation,
   useLoginMutation,
+  useWithdrawMutation,
   useRegisterMutation,
   useGetAllJobsQuery,
+  useGetSuccessfulOrdersQuery,
   useGetAllAppliedJobsQuery,
   useGetAllCategoryQuery,
   useGetAllUsersQuery,
   useGetAllJobsByEmployerQuery,
   useGetJobAppQuery,
   useAddJobMutation,
+  useAddPackageMutation,
   useHireMutation,
+  useGetVerifyPaymentQuery,
   useApplyJobMutation,
+  useShareJobMutation,
+  usePaymentMutation,
   useSuspendMutation,
+  useGetAllPackagesQuery,
+  useGetAllPackagesGlobalQuery,
+  useGetBalanceQuery,
+  useGetBankQuery,
+  useLazyGetBankAccountNameQuery,
   // useLogoutMutation,
   // useGenerateAiClinicalNoteMutation,
   // useAddNoteMutation,

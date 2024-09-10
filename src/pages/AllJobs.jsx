@@ -45,7 +45,7 @@ export default function AllJobs() {
   };
 
   const handleJobClick = (job) => {
-    navigate(`/job/${job.slug}`, { state: { job } });
+    navigate(`/job/${job._id}`, { state: { job } });
   };
 
   if (isLoading) {

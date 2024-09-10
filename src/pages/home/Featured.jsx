@@ -19,12 +19,14 @@ export default function Featured() {
     refetchOnReconnect: false,
   });
 
+  console.log(allJobs);
+
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
   };
 
   const handleJobClick = (job) => {
-    navigate(`/job/${job.slug}`, { state: { job } });
+    navigate(`/job/${job._id}`, { state: { job } });
   };
 
   return (
@@ -48,21 +50,25 @@ export default function Featured() {
             </div>
           ) : (
             <div className="space-y-4">
-              {allJobs && allJobs.slice(0, visibleJobs).map((job, index) => (
-                <JobCard
-                  key={index}
-                  title={job.title}
-                  companyName={job?.companyName || "companyName"}
-                  description={job.description}
-                  priceFrom={job.priceFrom || 20888}
-                  priceTo={job.priceTo || 60300}
-                  jobType={job.jobType || "Remote"}
-                  location={`${job.location.state}, ${job.location.country}`}
-                  postedTime={job.postedAt}
-                  onClick={() => handleJobClick(job)}
-                  id={job._id}
-                />
-              ))}
+              {allJobs &&
+                allJobs
+                  .slice(0, visibleJobs)
+                  .map((job, index) => (
+                    <JobCard
+                      key={index}
+                      title={job.title}
+                      companyName={job?.companyName || "companyName"}
+                      description={job.description}
+                      priceFrom={job.priceFrom || 20888}
+                      priceTo={job.priceTo || 60300}
+                      jobType={job.jobType || "Remote"}
+                      location={`${job.location.state}, ${job.location.country}`}
+                      postedTime={job.postedAt}
+                      onClick={() => handleJobClick(job)}
+                      id={job._id}
+                      referal={job.referal}
+                    />
+                  ))}
             </div>
           )}
         </div>

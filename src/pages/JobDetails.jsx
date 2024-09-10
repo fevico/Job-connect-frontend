@@ -28,8 +28,7 @@ import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 import useAxios from "../components/hooks/AxiosInstance";
 import useSession from "../components/hooks/useSession";
-import { useApplyJobMutation } from "../redux/appData";
-
+import { useApplyJobMutation, useShareJobMutation } from "../redux/appData";
 
 export function ApplySuccess({ open, setOpen, handleOpen }) {
   return (
@@ -89,6 +88,12 @@ export default function JobDetails() {
   // const [cookies] = useCookies(["authToken"]);
   const axiosInstance = useAxios();
   const { isSignedIn, userDetails } = useSession();
+  const [formOpen, setFormOpen] = useState(false); // Toggle form modal
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+  });
 
   const handleOpen = () => setOpen(!open);
 
@@ -128,6 +133,43 @@ export default function JobDetails() {
   // console.log(getJobById);
   const [applyJob, { isSuccess, isLoading: isLoadingApply, error }] =
     useApplyJobMutation();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const [
+    shareJob,
+    { isSuccess: isSuccessShare, isLoading: isLoadingShare, error: errorShare },
+  ] = useShareJobMutation();
+
+  const handleShare = async (e) => {
+    // e.preventDefault();
+
+    setIsLoading(true);
+    try {
+      //   const response = await axiosInstance.post("/job/apply-job", {
+      //     id: job._id,
+      //   });
+      //   console.log("Response:", response);
+      const data = {
+        ...formData,
+        jobId: job._id,
+        candidateName: formData.fullName,
+        candidateEmail: formData.email,
+      };
+      const response = await shareJob(data);
+      console.log("Response:", response);
+
+      setIsLoading(false);
+      //   setOpen(true);
+    } catch (error) {
+      setIsLoading(false);
+
+      console.error(error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   console.log(userDetails);
   const handleApply = async (e) => {
@@ -170,11 +212,20 @@ export default function JobDetails() {
   React.useEffect(() => {
     if (isSuccess) {
       setOpen(true);
-    } else  {
+    } else {
       toast.error(error?.data?.message);
       setErrors(error?.data?.message);
     }
   }, [isSuccess, navigate]);
+
+  React.useEffect(() => {
+    if (isSuccessShare) {
+      toast.success("Referal Successful");
+    } else {
+      toast.error(error?.data?.message);
+      setErrors(error?.data?.message);
+    }
+  }, [isSuccessShare]);
 
   return (
     <>
@@ -227,17 +278,21 @@ export default function JobDetails() {
                   onClick={handleButtonClick}
                 />
               )}
-              <p className="text-left text-sm text-[#001F3F80]/50">
-                share this job:
-              </p>
-              <div className="grid grid-cols-3 lg:grid-cols-5 items-center gap-3 justify-around ">
-                <Link
-                  to="#"
-                  className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
-                >
-                  <FaLink className="" />
-                </Link>
-                <Link
+              {job && job.referal === "yes" && (
+                <>
+                  <p className="text-left text-sm text-[#001F3F80]/50">
+                    click to refer this job:
+                  </p>
+                  <div className="grid grid-cols-3 lg:grid-cols-5 items-center gap-3 justify-around ">
+                    <div
+                      onClick={() => {
+                        setFormOpen(true); // Open the modal
+                      }}
+                      className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
+                    >
+                      <FaLink className="" />
+                    </div>
+                    {/* <Link
                   to="#"
                   className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
                 >
@@ -260,8 +315,10 @@ export default function JobDetails() {
                   className="shadow-md px-3 shadow-gray-500 py-2 cursor-pointer"
                 >
                   <FaFacebook className="" />
-                </Link>
-              </div>
+                </Link> */}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -351,6 +408,51 @@ export default function JobDetails() {
       </div>
 
       <ApplySuccess open={open} setOpen={setOpen} handleOpen={handleOpen} />
+      {/* Modal for collecting CV details */}
+      <Dialog
+        open={formOpen}
+        handler={() => setFormOpen(!formOpen)}
+        size="sm"
+        className="max-h-screen overflow-y-auto"
+      >
+        <DialogHeader>Provide Details for Referal</DialogHeader>
+        <DialogBody>
+          <form className="flex flex-col gap-4">
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              placeholder="Full Name"
+              className="border p-2 rounded"
+            />
+
+            <input
+              type="text"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Email"
+              className="border p-2 rounded"
+            />
+          </form>
+        </DialogBody>
+        <DialogFooter>
+          <Button variant="text" color="red" onClick={() => setFormOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => {
+              handleShare();
+              setFormOpen(false);
+            }}
+          >
+            {isLoadingShare ? "Loading..." : "Refer"}
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </>
   );
 }

@@ -28,12 +28,18 @@ export default function JobCard({
   id,
   userDashboard,
   status,
+  referal,
 }) {
   return (
     <div
-      className="border-[#001F3F]/40 border rounded-[30px] px-5 py-3 lg:py-10 w-full"
+      className="border-[#001F3F]/40 border rounded-[30px] px-5 py-3 lg:py-10 w-full relative"
       id={id}
     >
+      {referal === "yes" && (
+        <div className="absolute top-0 right-0 bg-gray-300 rounded-tr-[30px] p-3 font-semibold italic text-sm">
+          referral
+        </div>
+      )}
       <div className="flex flex-col lg:flex-row justify-between lg:items-center h-[180px] lg:h-[120px] w-full">
         <div className="flex flex-col gap-1 lg:gap-2 items-start w-full lg:w-[80%]">
           <h2 className="text-left font-bold text-[14px] lg:text-[18px] line-clamp-1 overflow-hidden">
