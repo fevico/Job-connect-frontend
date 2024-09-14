@@ -73,7 +73,7 @@ export default function Earnings() {
   // Fetch banks when the component mounts
   useEffect(() => {
     const today = new Date();
-    if (today.getDate() === 10) {
+    if (today.getDate() === 13) {
       setWithdrawEnabled(true);
     }
   }, []);

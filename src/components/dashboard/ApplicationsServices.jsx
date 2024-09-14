@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import CustomButton from "../CustomButton";
 import { useLocation } from "react-router-dom";
-import { useGetJobAppQuery, useGetSuccessfulOrdersQuery, useHireMutation } from "../../redux/appData";
+import {
+  useGetJobAppQuery,
+  useGetSuccessfulOrdersQuery,
+  useHireMutation,
+  useSendCVMutation,
+} from "../../redux/appData";
 import { Dialog } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import { storage } from "../hooks/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function ApplicationsServices() {
   const location = useLocation();
@@ -11,7 +18,7 @@ export default function ApplicationsServices() {
 
   const {
     data: applications,
-    isLoading,
+    isLoading: isLoadingApplications,
     error,
   } = useGetSuccessfulOrdersQuery(productId, {
     refetchOnMountOrArgChange: false,
@@ -23,6 +30,8 @@ export default function ApplicationsServices() {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [showInput, setShowInput] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleViewInfo = (application) => {
     setSelectedApplication(application);
@@ -34,35 +43,74 @@ export default function ApplicationsServices() {
     setSelectedApplication(null);
   };
 
-  const [hire, { isSuccess, isLoading: isHiring, error: hireError }] =
-    useHireMutation();
+  const [cvFile, setCvFile] = useState(null);
+  const handleCVFileChange = (e) => {
+    setCvFile(e.target.files[0]); // Save the selected file to state
+  };
 
-  const handleHireCandidate = async (e) => {
+  const [
+    sendCV,
+    { isSuccess: isSendingSuccess, isLoading: isSending, error: sendError },
+  ] = useSendCVMutation();
+
+  const handleUploadCV = async (e) => {
     e.preventDefault();
+
+    if (!cvFile) {
+      toast.error("Please select a CV file to upload.");
+      return;
+    }
+
+    let cvUrl = "";
+
+    // Proceed with the upload if CV file is present
+    if (cvFile) {
+      const storageRef = ref(storage, `newcv/${cvFile.name}`);
+      try {
+        setIsLoading(true);
+        // Upload the file
+        await uploadBytes(storageRef, cvFile);
+        // Get the download URL
+        cvUrl = await getDownloadURL(storageRef);
+        setIsLoading(false);
+
+        // console.log("Uploaded CV URL:", cvUrl);
+      } catch (error) {
+        setIsLoading(false);
+        console.error("Error uploading CV:", error);
+        toast.error("Failed to upload CV. Please try again.");
+        return;
+      }
+    }
+
     const data = {
-      id: selectedApplication._id,
-      // status: selectedApplication.status,
-      applicantId: selectedApplication.userId,
+      name: selectedApplication.name,
+      email: selectedApplication.email,
+      cv: cvUrl,
     };
-    console.log(data);
+    // console.log("DATA", data);
     try {
-      await hire({ data, id: jobId });
+      await sendCV(data);
+      setOpenDialog(false); // Close the dialog after successful upload
+      setCvFile(null); // Clear the file input
     } catch (error) {
-      console.log("error", error);
+      toast.error("Failed to upload CV.");
+      console.error("Upload CV error", error);
     }
   };
 
   React.useEffect(() => {
-    if (isSuccess) {
+    if (isSendingSuccess) {
       setOpenDialog(false);
-      toast.success("Hired Successfully!");
-    } else if (hireError) {
-      setOpenDialog(false);
-      toast.error(`failed to hire, ${hireError.data.message}`);
-    }
-  }, [isSuccess, hireError]);
 
-  if (isLoading) return <p>Loading...</p>;
+      toast.success("CV Sent successfully!");
+    } else if (sendError) {
+      setOpenDialog(false);
+      toast.error(`failed to send cv, ${sendError.data.message}`);
+    }
+  }, [isSendingSuccess, sendError]);
+
+  if (isLoadingApplications) return <p>Loading...</p>;
   if (error) return <p>Error loading applications: {error.message}</p>;
 
   return (
@@ -73,10 +121,12 @@ export default function ApplicationsServices() {
           <div className="bg-[#E2F0FF] p-5">
             {/* Header Row */}
             <div className="flex items-center w-full px-4 py-2 mb-4 border-b-2 border-primary">
-              <p className="text-xs font-normal w-[25%] pr-2">Candidate Name</p>
-              <p className="text-xs font-normal w-[26%] pr-2">Job Title</p>
-              <p className="text-xs font-normal w-[16%] pr-2">Date Applied</p>
-              <p className="text-xs font-normal w-[13%] pr-2">Status</p>
+              <p className="text-xs font-normal w-[35%] pr-2">
+                Candidate Email
+              </p>
+              {/* <p className="text-xs font-normal w-[26%] pr-2">Job Title</p> */}
+              <p className="text-xs font-normal w-[24%] pr-2">Date Applied</p>
+              <p className="text-xs font-normal w-[21%] pr-2">Service Status</p>
               <p className="text-xs font-normal w-[20%]"></p>
             </div>
 
@@ -86,17 +136,17 @@ export default function ApplicationsServices() {
                 key={application._id}
                 className="flex items-center w-full px-4 py-2 mb-4"
               >
-                <p className="text-sm font-normal w-[25%] pr-2">
-                  {application.name}
+                <p className="text-sm font-normal w-[35%] pr-2">
+                  {application.email}
                 </p>
-                <p className="text-sm font-normal w-[26%] pr-2">
+                {/* <p className="text-sm font-normal w-[26%] pr-2">
                   {application.jobTitle}
-                </p>
-                <p className="text-sm font-normal w-[16%] pr-2">
+                </p> */}
+                <p className="text-sm font-normal w-[24%] pr-2">
                   {new Date(application.appliedAt).toLocaleDateString()}
                 </p>
-                <p className="text-sm font-normal w-[13%] pr-2">
-                  {application.status}
+                <p className="text-sm font-normal w-[21%] pr-2">
+                  {application.serviceStatus}
                 </p>
                 <p className="text-sm font-normal w-[20%]">
                   <CustomButton
@@ -111,51 +161,83 @@ export default function ApplicationsServices() {
       </div>
 
       {/* Dialog for application details */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        className="h-screen overflow-y-scroll"
+      >
         <div className="p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto">
           {selectedApplication && (
             <>
               <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-                {selectedApplication.jobTitle}
+                {selectedApplication.packageTitle} Package
               </h2>
+
               <p className="text-gray-700">
-                <strong>Candidate Name:</strong> {selectedApplication.name}
+                <strong>Candidate Name:</strong>{" "}
+                {selectedApplication.name || "Not Provided"}
               </p>
+
               <p className="text-gray-700">
-                <strong>Date Applied:</strong>{" "}
-                {new Date(selectedApplication.appliedAt).toLocaleDateString()}
+                <strong>User Email:</strong> {selectedApplication.email}
               </p>
+
+              {/* <p className="text-gray-700">
+                <strong>Phone Number:</strong>{" "}
+                {selectedApplication.phoneNumber || "Not Provided"}
+              </p> */}
+
               <p className="text-gray-700">
-                <strong>Status:</strong> {selectedApplication.status}
+                <strong>Professional Summary:</strong>{" "}
+                {selectedApplication.professionalSummary}
               </p>
+
               <p className="text-gray-700">
-                <strong>Company Name:</strong> {selectedApplication.companyName}
+                <strong>Work Experience:</strong>{" "}
+                {selectedApplication.workExperience}
               </p>
+
               <p className="text-gray-700">
-                <strong>User Email:</strong> {selectedApplication.userEmail}
+                <strong>Education:</strong> {selectedApplication.education}
               </p>
-              <p className="mt-4">
-                <strong>Resume:</strong>
+
+              <p className="text-gray-700">
+                <strong>Skills:</strong> {selectedApplication.skills}
+              </p>
+
+              <div className="mt-4 flex justify-start">
                 <CustomButton
-                  text="View Resume"
-                  onClick={() =>
-                    window.open(selectedApplication.resume, "_blank")
-                  }
-                  className="ml-2 mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                  text="Upload CV"
+                  onClick={() => setShowInput(true)} // Add the logic for uploading a CV here
+                  className="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
                 />
-              </p>
+              </div>
+              {showInput && (
+                <form onSubmit={handleUploadCV} className="my-4">
+                  <input
+                    type="file"
+                    onChange={handleCVFileChange}
+                    className="border my-3 rounded-md border-primary"
+                    placeholder="Upload CV"
+                  />
+                  <button
+                    onClick={handleCloseDialog}
+                    disabled={isLoading}
+                    type="submit"
+                    className="p-2 bg-primary text-white rounded-md"
+                  >
+                    {isLoading ? "sending..." : "Send CV"}
+                  </button>
+                </form>
+              )}
             </>
           )}
+
           <div className="mt-6 flex justify-between">
             <CustomButton
               text="Close"
               onClick={handleCloseDialog}
               className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition duration-200"
-            />
-            <CustomButton
-              text={isHiring ? "Hiring" : "Hire"}
-              onClick={handleHireCandidate}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
             />
           </div>
         </div>

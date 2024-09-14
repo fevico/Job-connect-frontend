@@ -51,9 +51,9 @@ export default function CvWriterDetails() {
   ] = usePaymentMutation();
 
   const userEmail = userDetails?.email; // Replace with dynamic user email
-  console.log(userDetails);
-  console.log(selectedPackage)
-  console.log(allPackages)
+  // console.log(userDetails);
+  // console.log(selectedPackage);
+  // console.log(allPackages);
 
   const handleFormSubmit = async () => {
     if (!selectedPackage) return;
@@ -70,17 +70,18 @@ export default function CvWriterDetails() {
         vendorId: selectedPackage.userId,
       };
 
-      
+      // console.log(metadata);
+
       const credentials = {
         amount: selectedPackage.price,
         email: userEmail, // You can replace with dynamic user email if needed
         metadata,
       };
 
-      console.log(credentials);
+      // console.log(credentials);
       const response = await payment(credentials);
       setLoading(false);
-      console.log(response);
+      // console.log(response);
 
       if (response?.data?.data?.authorization_url) {
         window.location.href = response.data.data.authorization_url;
@@ -196,50 +197,73 @@ export default function CvWriterDetails() {
         <DialogHeader>Provide Details for CV Writing</DialogHeader>
         <DialogBody>
           <form className="flex flex-col gap-4">
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              placeholder="Full Name"
-              className="border p-2 rounded"
-            />
-            <input
-              type="text"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              placeholder="Phone Number"
-              className="border p-2 rounded"
-            />
-            <textarea
-              name="professionalSummary"
-              value={formData.professionalSummary}
-              onChange={handleInputChange}
-              placeholder="Professional Summary"
-              className="border p-2 rounded"
-            />
-            <textarea
-              name="workExperience"
-              value={formData.workExperience}
-              onChange={handleInputChange}
-              placeholder="Work Experience"
-              className="border p-2 rounded"
-            />
-            <textarea
-              name="education"
-              value={formData.education}
-              onChange={handleInputChange}
-              placeholder="Education"
-              className="border p-2 rounded"
-            />
-            <textarea
-              name="skills"
-              value={formData.skills}
-              onChange={handleInputChange}
-              placeholder="Skills"
-              className="border p-2 rounded"
-            />
+            <label className="flex flex-col">
+              <span className="font-bold text-sm"> Full Name</span>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                placeholder="Enter your full name"
+                className="border p-2 rounded"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span className="font-bold text-sm"> Phone Number</span>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                placeholder="Enter your phone number"
+                className="border p-2 rounded"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span className="font-bold text-sm">Professional Summary</span>
+              <textarea
+                name="professionalSummary"
+                value={formData.professionalSummary}
+                onChange={handleInputChange}
+                placeholder="Briefly summarize your professional experience"
+                className="border p-2 rounded"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span className="font-bold text-sm"> Work Experience</span>
+              <textarea
+                name="workExperience"
+                value={formData.workExperience}
+                onChange={handleInputChange}
+                placeholder="List your work experience"
+                className="border p-2 rounded"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span className="font-bold text-sm"> Education</span>
+              <textarea
+                name="education"
+                value={formData.education}
+                onChange={handleInputChange}
+                placeholder="Provide details of your education"
+                className="border p-2 rounded"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span className="font-bold text-sm">Skills</span>
+              <textarea
+                name="skills"
+                value={formData.skills}
+                onChange={handleInputChange}
+                placeholder="Mention your skills"
+                className="border p-2 rounded"
+              />
+            </label>
           </form>
         </DialogBody>
         <DialogFooter>

@@ -102,13 +102,13 @@ export default function RegAsCVWriter() {
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "db0zguvf");
+    formData.append("upload_preset", "dnj3mn6et");
     formData.append("folder", "jobkonnect");
     setIsLoading(true);
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dgz5bgdzc/auto/upload",
+        "https://api.cloudinary.com/v1_1/dnj3mn6et/auto/upload",
         formData
       );
       setIsLoading(false);

@@ -1,9 +1,4 @@
-// src/service/dummyData.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-import { useDispatch } from "react-redux";
-import { clearCredentials, setCredentials } from "./slices/authSlice";
-import { clearUserInfo } from "./slices/userSlice";
 import { setUserInfo } from "./slices/userSlice";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
@@ -106,9 +101,16 @@ export const productsApi = createApi({
     getSuccessfulOrders: builder.query({
       query: (productId) => `payment/get-successful-orders/${productId}`,
     }),
+    getAllOrders: builder.query({
+      query: () => `payment/all-orders`,
+    }),
+    getUserOrders: builder.query({
+      query: () => `payment/user-orders`,
+    }),
     getJobApp: builder.query({
       query: (id) => `job/get-applications-by-job/${id}`,
     }),
+
     getAllCategory: builder.query({
       query: () => "category/all",
     }),
@@ -160,6 +162,20 @@ export const productsApi = createApi({
           await queryFulfilled;
         } catch (err) {
           console.error(" failed to hire:", err);
+        }
+      },
+    }),
+    sendCV: builder.mutation({
+      query: (data) => ({
+        url: `/product/upload-cv`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to upload cv:", err);
         }
       },
     }),
@@ -458,6 +474,7 @@ export const {
   useRegisterMutation,
   useGetAllJobsQuery,
   useGetSuccessfulOrdersQuery,
+
   useGetAllAppliedJobsQuery,
   useGetAllCategoryQuery,
   useGetAllUsersQuery,
@@ -466,6 +483,7 @@ export const {
   useAddJobMutation,
   useAddPackageMutation,
   useHireMutation,
+  useSendCVMutation,
   useGetVerifyPaymentQuery,
   useApplyJobMutation,
   useShareJobMutation,
@@ -476,9 +494,8 @@ export const {
   useGetBalanceQuery,
   useGetBankQuery,
   useLazyGetBankAccountNameQuery,
-  // useLogoutMutation,
-  // useGenerateAiClinicalNoteMutation,
-  // useAddNoteMutation,
-  // useEditNoteMutation,
-  // useDeleteNoteMutation,
+
+  // untreated
+  useGetAllOrdersQuery,
+  useGetUserOrdersQuery,
 } = productsApi;
