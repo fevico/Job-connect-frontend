@@ -148,6 +148,34 @@ export default function Earnings() {
 
   console.log(adminBalance);
 
+  const isCurrentMonth = (date) => {
+    const transactionDate = new Date(date);
+    const currentDate = new Date();
+    return (
+      transactionDate.getMonth() === currentDate.getMonth() &&
+      transactionDate.getFullYear() === currentDate.getFullYear()
+    );
+  };
+
+  // Function to calculate the total for the current month
+  const calculateMonthlyTotals = (transactions) => {
+    let totalSalesForMonth = 0;
+    let actualForMonth = 0;
+
+    transactions.forEach((transaction) => {
+      if (isCurrentMonth(transaction.date)) {
+        totalSalesForMonth += transaction.totalAmount || 0; // Summing totalAmount
+        actualForMonth += transaction.amount || 0; // Summing actual amount (20%)
+      }
+    });
+
+    return { totalSalesForMonth, actualForMonth };
+  };
+
+  const { transactions = [] } = adminBalance || {};
+  const { totalSalesForMonth, actualForMonth } =
+    calculateMonthlyTotals(transactions);
+
   return (
     <>
       <p className="font-bold my-3">EARNINGS</p>
@@ -173,6 +201,29 @@ export default function Earnings() {
                     &#8358;{adminBalance && adminBalance.balance}
                   </h2>
                   {/* <p className="text-sm">Available for Withdrawal</p> */}
+                </div>
+              </div>
+              {/* Total Sales for the Month Card */}
+              <div className="bg-white shadow-md p-4 flex flex-col">
+                <p className="font-semibold text-sm">
+                  Total Sales for the Month
+                </p>
+                <div className="flex flex-col items-center gap-2 mt-4">
+                  <h2 className="font-bold text-4xl">
+                    &#8358;{totalSalesForMonth}
+                  </h2>
+                </div>
+              </div>
+
+              {/* Actual (20%) for the Month Card */}
+              <div className="bg-white shadow-md p-4 flex flex-col">
+                <p className="font-semibold text-sm">
+                  Actual (20%) for the Month
+                </p>
+                <div className="flex flex-col items-center gap-2 mt-4">
+                  <h2 className="font-bold text-4xl">
+                    &#8358;{actualForMonth}
+                  </h2>
                 </div>
               </div>
             </>

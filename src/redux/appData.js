@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://localhost:5001/",
+  // baseUrl: "http://localhost:5000/",
   baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers, { getState }) => {
     headers.set("Content-Type", "application/json");

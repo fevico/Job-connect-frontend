@@ -1,11 +1,11 @@
 import React from "react";
 import CustomButton from "./CustomButton";
-import Rating from "react-rating";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 import {
   useAddRatingMutation,
 } from "../redux/appData";
+import Rating from "react-rating";
 
 function formatDate(dateString) {
   const date = new Date(dateString);
