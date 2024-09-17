@@ -74,6 +74,7 @@ export default function PostJobs() {
     const data = {
       title: formData.get("title"),
       description: formData.get("summary"),
+      aboutCompany: formData.get("aboutCompany"),
       priceFrom: priceFrom,
       priceTo: priceTo,
       location: {
@@ -297,6 +298,17 @@ export default function PostJobs() {
               </select>
             </div>
           </div>
+          <div className="flex flex-col items-start gap-1 w-full ">
+                <label className="">About Company</label>
+                <textarea
+                  className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
+                  name="aboutCompany"
+                  type="text"
+                  placeholder="Enter brief company info"
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
 
           {errors && (
             <div className="text-red-600 text-center">

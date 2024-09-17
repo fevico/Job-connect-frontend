@@ -1,5 +1,11 @@
 import React from "react";
 import CustomButton from "./CustomButton";
+import Rating from "react-rating";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { toast } from "react-toastify";
+import {
+  useAddRatingMutation,
+} from "../redux/appData";
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -27,9 +33,37 @@ export default function JobCard({
   onClick,
   id,
   userDashboard,
+  services,
   status,
   referal,
+  vendorId,
 }) {
+  const [rating, setRating] = React.useState(3); // Default initial rating
+
+  const [addRating, { isSuccess, isLoading, error }] = useAddRatingMutation();
+
+  const handleRating = async (rate) => {
+    setRating(rate);
+
+    const data = {
+      rating: rate,
+    };
+    console.log(data);
+    try {
+      await addRating({ data, owner: vendorId  });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast.success("Rating added Successfully!");
+    } else if (error) {
+      toast.error(`failed to rate`);
+    }
+  }, [isSuccess, error]);
+
   return (
     <div
       className="border-[#001F3F]/40 border rounded-[30px] px-5 py-3 lg:py-10 w-full relative"
@@ -59,6 +93,22 @@ export default function JobCard({
             {description}
           </p>
           <p className="text-xs text-red-500">{formatDate(postedTime)}</p>
+          {services && userDashboard ? (
+            <div className="">
+              <p className="text-xs italic">Please rate this service here: </p>
+              <Rating
+                onChange={handleRating}
+                start={0}
+                stop={5}
+                step={1}
+                initialRating={rating}
+                emptySymbol={<FaRegStar className="text-yellow-400" />}
+                fullSymbol={<FaStar className="text-yellow-400" />}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         {userDashboard ? (
           <div className="">

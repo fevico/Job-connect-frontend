@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://localhost:5000/",
+  // baseUrl: "http://localhost:5001/",
   baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers, { getState }) => {
     headers.set("Content-Type", "application/json");
@@ -51,7 +51,7 @@ const baseQuery = fetchBaseQuery({
 export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
-  tagTypes: ["AllUsers"],
+  tagTypes: ["AllUsers", "AllJobApp"],
   endpoints: (builder) => ({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
@@ -70,6 +70,9 @@ export const productsApi = createApi({
     }),
     getBalance: builder.query({
       query: () => `wallet/get-balance`,
+    }),
+    getAdminBalance: builder.query({
+      query: () => `payment/total-sales`,
     }),
     getBank: builder.query({
       query: () => `wallet/get-bank-list`,
@@ -97,7 +100,9 @@ export const productsApi = createApi({
         },
       }),
     }),
-
+    getEmployerPlan: builder.query({
+      query: () => `user/plan`,
+    }),
     getSuccessfulOrders: builder.query({
       query: (productId) => `payment/get-successful-orders/${productId}`,
     }),
@@ -109,6 +114,7 @@ export const productsApi = createApi({
     }),
     getJobApp: builder.query({
       query: (id) => `job/get-applications-by-job/${id}`,
+      providesTags: ["AllJobApp"],
     }),
 
     getAllCategory: builder.query({
@@ -120,6 +126,9 @@ export const productsApi = createApi({
     }),
     getVerifyPayment: builder.query({
       query: (reference) => `payment/verify-payment/${reference}`,
+    }),
+    getSubscriptionVerifyPayment: builder.query({
+      query: (reference) => `subscription/verify-payment/${reference}`,
     }),
     addJob: builder.mutation({
       query: (credentials) => ({
@@ -164,6 +173,51 @@ export const productsApi = createApi({
           console.error(" failed to hire:", err);
         }
       },
+    }),
+    shortlist: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `job/shortlist-application/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to shortlist:", err);
+        }
+      },
+      invalidatesTags: ["AllJobApp"],
+    }),
+    reject: builder.mutation({
+      query: ({ data, id }) => ({
+        url: `job/reject-application/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to reject:", err);
+        }
+      },
+      invalidatesTags: ["AllJobApp"],
+    }),
+    addRating: builder.mutation({
+      query: ({ data, owner }) => ({
+        url: `user/add-rating/${owner}`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to shortlist:", err);
+        }
+      },
+      invalidatesTags: ["AllJobApp"],
     }),
     sendCV: builder.mutation({
       query: (data) => ({
@@ -218,6 +272,20 @@ export const productsApi = createApi({
           await queryFulfilled;
         } catch (err) {
           console.error("failed to pay for service:", err);
+        }
+      },
+    }),
+    subscribe: builder.mutation({
+      query: (credentials) => ({
+        url: `subscription/purchase`,
+        method: "POST",
+        body: credentials,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("failed to pay for subscription:", err);
         }
       },
     }),
@@ -483,15 +551,22 @@ export const {
   useAddJobMutation,
   useAddPackageMutation,
   useHireMutation,
+  useShortlistMutation,
+  useAddRatingMutation,
+  useRejectMutation,
   useSendCVMutation,
+  useGetSubscriptionVerifyPaymentQuery,
   useGetVerifyPaymentQuery,
   useApplyJobMutation,
   useShareJobMutation,
   usePaymentMutation,
+  useSubscribeMutation,
   useSuspendMutation,
   useGetAllPackagesQuery,
   useGetAllPackagesGlobalQuery,
   useGetBalanceQuery,
+  useGetAdminBalanceQuery,
+  useGetEmployerPlanQuery,
   useGetBankQuery,
   useLazyGetBankAccountNameQuery,
 

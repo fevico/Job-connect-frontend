@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Slider from "react-slick";
 import {
   Card,
   CardHeader,
@@ -28,9 +27,15 @@ function CheckIcon() {
   );
 }
 
-export function PricingCard() {
+function PricingCard({ plan, isActive, onSelect }) {
   return (
-    <Card variant="gradient" className="w-full max-w-[20rem] p-8 bg-gray-500">
+    <Card
+      variant="gradient"
+      className={`h-[600px] p-8 ${
+        isActive ? "bg-gray-900 text-white" : "bg-gray-500"
+      }`}
+      onClick={() => onSelect(plan.id)}
+    >
       <CardHeader
         floated={false}
         shadow={false}
@@ -39,120 +44,112 @@ export function PricingCard() {
       >
         <Typography
           variant="small"
-          color="black"
-          className="font-normal uppercase"
+          color={isActive ? "white" : "black"}
+          className="font-normal uppercase bg-gray-900 text-white p-2"
         >
-          standard
+          {plan.name}
         </Typography>
         <Typography
           variant="h1"
-          color="black"
-          className="mt-6 flex justify-center gap-1 text-7xl font-normal"
+          color={isActive ? "white" : "black"}
+          className="mt-6 flex justify-center gap-1 text-5xl"
         >
-          <span className="mt-2 text-4xl">$</span>29{" "}
-          <span className="self-end text-4xl">/mo</span>
+          <span className="mt-2 text-4xl">₦</span>
+          {plan.priceNGN}
+          <span className="self-end text-2xl font-normal">/Job post</span>
+        </Typography>
+        <Typography
+          variant="small"
+          color={isActive ? "white" : "black"}
+          className="font-normal uppercase"
+        >
+          ({plan.priceUSD} USD)
         </Typography>
       </CardHeader>
       <CardBody className="p-0">
-        <ul className="flex flex-col gap-4">
-          <li className="flex items-center gap-4">
-            <span className="rounded-full border border-white/20 bg-white/20 p-1">
-              <CheckIcon />
-            </span>
-            <Typography className="font-normal">5 team members</Typography>
-          </li>
-          <li className="flex items-center gap-4">
-            <span className="rounded-full border border-white/20 bg-white/20 p-1">
-              <CheckIcon />
-            </span>
-            <Typography className="font-normal">200+ components</Typography>
-          </li>
-          <li className="flex items-center gap-4">
-            <span className="rounded-full border border-white/20 bg-white/20 p-1">
-              <CheckIcon />
-            </span>
-            <Typography className="font-normal">40+ built-in pages</Typography>
-          </li>
-          <li className="flex items-center gap-4">
-            <span className="rounded-full border border-white/20 bg-white/20 p-1">
-              <CheckIcon />
-            </span>
-            <Typography className="font-normal">1 year free updates</Typography>
-          </li>
-          <li className="flex items-center gap-4">
-            <span className="rounded-full border border-white/20 bg-white/20 p-1">
-              <CheckIcon />
-            </span>
-            <Typography className="font-normal">
-              Life time technical support
-            </Typography>
-          </li>
+        <ul className="flex flex-col gap-2">
+          {plan.features.map((feature, index) => (
+            <li key={index} className="flex items-center gap-3">
+              <span className="rounded-full border border-white/20 bg-white/20 p-1">
+                <CheckIcon />
+              </span>
+              <Typography className="font-normal">{feature}</Typography>
+            </li>
+          ))}
         </ul>
       </CardBody>
-      <CardFooter className="mt-12 p-0">
+      {/* <CardFooter className="mt-12 p-0">
         <Button
           size="lg"
-          color="black"
+          color={isActive ? "white" : "black"}
           className="hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
           ripple={false}
           fullWidth={true}
+          onClick={() => onSelect(plan.id)}
         >
-          Buy Now
+          {isActive ? "Current Plan" : "Select Plan"}
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
 
 export default function Subscription() {
-    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 960);
+  const [currentPlan, setCurrentPlan] = useState(null);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 960);
-    };
+  // Updated plan data based on your image
+  const plans = [
+    {
+      id: "basic",
+      name: "Basic",
+      priceNGN: 10000,
+      priceUSD: 15,
+      features: [
+        "1 Job Post",
+        "14 days Job Visibility",
+        "Email Support",
+      ],
+    },
+    {
+      id: "standard",
+      name: "Standard",
+      priceNGN: 25000,
+      priceUSD: 35,
+      features: [
+        "3 Job Posts",
+        "30 days Job Visibility",
+        "Featured Job Listing",
+        "Social Media Promotion",
+        "Employer Branding",
+        "Email & Phone Support",
+        "1-month Candidate Database access",
+        "Custom Candidate Filtering",
+        "Company Logo on Listings",
+      ],
+    },
+    {
+      id: "premium",
+      name: "Premium",
+      priceNGN: 50000,
+      priceUSD: 70,
+      features: [
+        "5 Job Posts",
+        "45 days Job Visibility",
+        "Featured Job Listing",
+        "Social Media Promotion",
+        "Priority Listing and Branding",
+        "24/7 Priority Support",
+        "3-month Candidate Database access",
+        "Premium Filtering Tools",
+        "Company Logo on Listings",
+      ],
+    },
+  ];
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 700,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    initialSlide: 0,
-    // **Responsive adjustments for centering:**
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-          // Centering for larger screens using `centerMode`
-          centerMode: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  const handleSelectPlan = (planId) => {
+    setCurrentPlan(planId);
   };
+
   return (
     <>
       <div className="bg-white">
@@ -165,30 +162,16 @@ export default function Subscription() {
         </p>
       </div>
 
-      {/* <div className="my-4 w-[95%] mx-auto bg-white p-4">
-        <PricingCard />
-      </div> */}
-
-      {isDesktop ? (
-        <div className="w-[90%] mx-auto flex flex-col lg:flex-row flex-wrap items-center p-5 gap-5 justify-between mt-5">
-          {/* {data.map((offer, index) => ( */}
-          <PricingCard />
-          <PricingCard />
-          <PricingCard />
-
-          {/* ))} */}
-        </div>
-      ) : (
-        <div className="slider-container p-2 mt-5">
-          <Slider {...settings}>
-            {/* {data.map((offer, index) => ( */}
-            <PricingCard />
-            <PricingCard />
-            <PricingCard />
-            {/* ))} */}
-          </Slider>
-        </div>
-      )}
+      <div className="w-[90%] mx-auto flex flex-col lg:flex-row  items-center p-5 gap-3 justify-between mt-5">
+        {plans.map((plan) => (
+          <PricingCard
+            key={plan.id}
+            plan={plan}
+            // isActive={currentPlan === plan.id}
+            // onSelect={handleSelectPlan}
+          />
+        ))}
+      </div>
     </>
   );
 }

@@ -64,7 +64,7 @@ export default function CvWriterDetails() {
         ...formData,
         packageTitle: selectedPackage.title,
         packageDescription: selectedPackage.description,
-        packagePrice: selectedPackage.price,
+        packagePrice: selectedPackage.price * 100,
         userId: userDetails.id,
         productId: selectedPackage._id,
         vendorId: selectedPackage.userId,
@@ -73,7 +73,7 @@ export default function CvWriterDetails() {
       // console.log(metadata);
 
       const credentials = {
-        amount: selectedPackage.price,
+        amount: selectedPackage.price * 100,
         email: userEmail, // You can replace with dynamic user email if needed
         metadata,
       };

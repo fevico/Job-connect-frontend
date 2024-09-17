@@ -50,9 +50,9 @@ const LinkedInList = ({ searchQuery }) => {
             image={linkedin.image}
             bio={linkedin.bio}
             id={linkedin.id}
-            specialization="Resume Writing & Career Coaching"
-            rating="4.8"
-            services="Resume writing, cover letter creation, LinkedIn profile optimization"
+            specialization={linkedin.specialization}
+            rating={linkedin.averageRating}
+            services={linkedin.services}
           />
         ))}
       {linkedinOptimizers && visibleLinkedIn < linkedinOptimizers.length && (

@@ -33,8 +33,8 @@ export default function CvWriterCard({
             <h2 className="text-left font-bold text-lg">{name}</h2>
             <p className="text-sm text-left text-gray-600">{specialization}</p>
             <div className="flex items-center text-yellow-500 text-sm">
-              <span className="font-semibold">{rating}</span>
-              <span className="ml-1">⭐</span>
+            <span className="font-semibold">{rating.toFixed(1)}</span>
+            <span className="ml-1">⭐</span>
             </div>
             <p className="w-full lg:w-[60%] text-sm text-left overflow-hidden line-clamp-2">
               {bio}

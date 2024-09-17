@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import CustomButton from "../CustomButton";
 import { useLocation } from "react-router-dom";
-import { useGetJobAppQuery, useHireMutation } from "../../redux/appData";
+import {
+  useGetJobAppQuery,
+  useHireMutation,
+  useRejectMutation,
+  useShortlistMutation,
+} from "../../redux/appData";
 import { Dialog } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 
@@ -39,6 +44,7 @@ export default function Applications() {
 
   const handleHireCandidate = async (e) => {
     e.preventDefault();
+
     const data = {
       id: selectedApplication._id,
       // status: selectedApplication.status,
@@ -61,6 +67,72 @@ export default function Applications() {
       toast.error(`failed to hire, ${hireError.data.message}`);
     }
   }, [isSuccess, hireError]);
+
+  const [
+    shortlist,
+    {
+      isSuccess: isShortlistSuccess,
+      isLoading: isShortlisting,
+      error: shortlistError,
+    },
+  ] = useShortlistMutation();
+
+  const handleShortlistCandidate = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      jobId: jobId,
+      // status: selectedApplication.status,
+      userId: selectedApplication.userId,
+    };
+    console.log(data);
+    try {
+      await shortlist({ data, id: selectedApplication._id });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isShortlistSuccess) {
+      setOpenDialog(false);
+      toast.success("Shortlisted Successfully!");
+    } else if (shortlistError) {
+      setOpenDialog(false);
+      toast.error(`failed to Shortlist, ${shortlistError.data.message}`);
+    }
+  }, [isShortlistSuccess, shortlistError]);
+
+  const [
+    reject,
+    { isSuccess: isRejectSuccess, isLoading: isRejecting, error: rejectError },
+  ] = useRejectMutation();
+
+  const handleRejectCandidate = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      jobId: jobId,
+      // status: selectedApplication.status,
+      userId: selectedApplication.userId,
+    };
+    console.log(data);
+    try {
+      await reject({ data, id: selectedApplication._id });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isRejectSuccess) {
+      setOpenDialog(false);
+      toast.success("Rejected Successfully!");
+    } else if (rejectError) {
+      setOpenDialog(false);
+      toast.error(`failed to reject, ${rejectError.data.message}`);
+    }
+  }, [isRejectSuccess, rejectError]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading applications: {error.message}</p>;
@@ -152,11 +224,33 @@ export default function Applications() {
               onClick={handleCloseDialog}
               className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition duration-200"
             />
-            <CustomButton
-              text={isHiring ? "Hiring" : "Hire"}
-              onClick={handleHireCandidate}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
-            />
+
+            {selectedApplication && (
+              <>
+                {selectedApplication.status === "shortlisted" && (
+                  <>
+                    <CustomButton
+                      text={isHiring ? "Hiring..." : "Hire"}
+                      onClick={handleHireCandidate}
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                    />
+                    <CustomButton
+                      text={isRejecting ? "Rejecting..." : "Reject"}
+                      onClick={handleRejectCandidate}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+                    />
+                  </>
+                )}
+
+                {selectedApplication.status === "applied" && (
+                  <CustomButton
+                    text={isShortlisting ? "Shortlisting..." : "Shortlist"}
+                    onClick={handleShortlistCandidate}
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                  />
+                )}
+              </>
+            )}
           </div>
         </div>
       </Dialog>

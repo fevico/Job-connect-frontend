@@ -133,7 +133,9 @@ export default function UserDashboard() {
                 // onClick={() => handleJobClick(job)}
                 // id={job._id}
                 status={service.serviceStatus}
+                vendorId={service.vendorId}
                 userDashboard
+                services
               />
             ))}
         </div>

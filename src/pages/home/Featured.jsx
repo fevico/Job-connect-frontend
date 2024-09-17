@@ -21,6 +21,8 @@ export default function Featured() {
 
   console.log(allJobs);
 
+  const featured = allJobs && allJobs.filter((job) => job.isFeatured === true);
+
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
   };
@@ -50,8 +52,8 @@ export default function Featured() {
             </div>
           ) : (
             <div className="space-y-4">
-              {allJobs &&
-                allJobs
+              {featured &&
+                featured
                   .slice(0, visibleJobs)
                   .map((job, index) => (
                     <JobCard
@@ -72,7 +74,7 @@ export default function Featured() {
             </div>
           )}
         </div>
-        {allJobs && visibleJobs < allJobs.length && (
+        {featured && visibleJobs < featured.length && (
           <div
             onClick={handleSeeMore}
             className="flex justify-end my-5 w-[95%]"

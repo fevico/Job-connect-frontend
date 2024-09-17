@@ -39,7 +39,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
         </NavLink>
       )}
       {/* Admin and Employer */}
-      {(role === "admin" || role === "employer") && (
+      {(role === "admin" || role === "employer" || role === "jobPoster") && (
         <>
           <NavLink
             onClick={handleClose}
@@ -164,7 +164,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       {/* Admin, Employer, CV Writer, LinkedIn Optimizer */}
       {role !== "jobseeker" && (
         <>
-          <NavLink
+          {/* <NavLink
             onClick={handleClose}
             to=""
             className={({ isActive }) =>
@@ -177,7 +177,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
               </ListItemPrefix>
               Settings
             </ListItem>
-          </NavLink>
+          </NavLink> */}
 
           <NavLink
             onClick={handleClose}
@@ -233,8 +233,8 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
           <p
             className="text-red-400 font-bold text-left px-4 py-2"
             onClick={() => {
-              handleClose();
               signOut();
+              window.location.reload();
             }}
           >
             Logout

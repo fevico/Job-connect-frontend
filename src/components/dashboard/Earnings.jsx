@@ -10,10 +10,12 @@ import {
 import { toast } from "react-toastify";
 import {
   useGetBalanceQuery,
+  useGetAdminBalanceQuery,
   useGetBankQuery,
   useLazyGetBankAccountNameQuery,
   useWithdrawMutation,
 } from "../../redux/appData";
+import useSession from "../hooks/useSession";
 
 export default function Earnings() {
   const [withdrawEnabled, setWithdrawEnabled] = useState(false);
@@ -24,6 +26,7 @@ export default function Earnings() {
   const [amount, setAmount] = useState("");
   const [narration, setNarration] = useState("");
   const [verificationInProgress, setVerificationInProgress] = useState(false);
+  const { userDetails } = useSession();
 
   const {
     data: balance,
@@ -35,6 +38,15 @@ export default function Earnings() {
     refetchOnReconnect: false,
   });
 
+  const {
+    data: adminBalance,
+    isLoading: isLoadingAdmin,
+    error: adminError,
+  } = useGetAdminBalanceQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
   // console.log(balance);
 
   const {
@@ -134,49 +146,65 @@ export default function Earnings() {
     }
   };
 
+  console.log(adminBalance);
+
   return (
     <>
       <p className="font-bold my-3">EARNINGS</p>
 
       <div className="bg-[#E2F0FF] p-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Total Amount Earned */}
-          {/* <div className="bg-white shadow-md p-4 flex flex-col">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-sm">Total Amount Earned</p>
-            </div>
-            <div className="flex flex-col items-center gap-2 mt-4">
-              <h2 className="font-bold text-4xl">$5,200</h2>
-              <p className="text-sm">As of 27th August</p>
-              <p className="flex items-center gap-2 font-bold">
-                <BsArrowUp className="text-green-300" /> +20% from last month
-              </p>
-            </div>
-          </div> */}
+          {userDetails && userDetails.role === "admin" && (
+            <>
+              <div className="bg-white shadow-md p-4 flex flex-col">
+                <p className="font-semibold text-sm">Total Balance</p>
+                <div className="flex flex-col items-center gap-2 mt-4">
+                  <h2 className="font-bold text-4xl">
+                    &#8358;{adminBalance && adminBalance.totalSales}
+                  </h2>
+                  {/* <p className="text-sm">Available for Withdrawal</p> */}
+                </div>
+              </div>
 
+              <div className="bg-white shadow-md p-4 flex flex-col">
+                <p className="font-semibold text-sm">Actual Balance (20%)</p>
+                <div className="flex flex-col items-center gap-2 mt-4">
+                  <h2 className="font-bold text-4xl">
+                    &#8358;{adminBalance && adminBalance.balance}
+                  </h2>
+                  {/* <p className="text-sm">Available for Withdrawal</p> */}
+                </div>
+              </div>
+            </>
+          )}
           {/* Current Balance */}
-          <div className="bg-white shadow-md p-4 flex flex-col">
-            <p className="font-semibold text-sm">Current Balance</p>
-            <div className="flex flex-col items-center gap-2 mt-4">
-              <h2 className="font-bold text-4xl">
-                &#8358;{balance && balance}
-              </h2>
-              <p className="text-sm">Available for Withdrawal</p>
+
+          {userDetails && userDetails.role != "admin" && (
+            <div className="bg-white shadow-md p-4 flex flex-col">
+              <p className="font-semibold text-sm">Current Balance</p>
+              <div className="flex flex-col items-center gap-2 mt-4">
+                <h2 className="font-bold text-4xl">
+                  &#8358;{balance && balance}
+                </h2>
+                <p className="text-sm">Available for Withdrawal</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Withdrawal Button */}
-        <div className="mt-6 flex justify-center">
-          <CustomButton
-            text="Withdraw"
-            disabled={!withdrawEnabled}
-            onClick={handleWithdraw}
-            className={`w-full lg:w-1/4 ${
-              withdrawEnabled ? "bg-primary text-white" : "bg-gray-300"
-            }`}
-          />
-        </div>
+        {userDetails && userDetails.role != "admin" && (
+          <div className="mt-6 flex justify-center">
+            <CustomButton
+              text="Withdraw"
+              disabled={!withdrawEnabled}
+              onClick={handleWithdraw}
+              className={`w-full lg:w-1/4 ${
+                withdrawEnabled ? "bg-primary text-white" : "bg-gray-300"
+              }`}
+            />
+          </div>
+        )}
 
         {!withdrawEnabled && (
           <p className="text-center text-sm text-red-500 mt-2">

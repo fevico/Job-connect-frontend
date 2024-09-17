@@ -56,9 +56,9 @@ const CvWriterList = ({ searchQuery }) => {
             name={cvWriter.name}
             image={cvWriter.image}
             bio={cvWriter.bio}
-            specialization="Resume Writing & Career Coaching"
-            rating="4.8"
-            services="Resume writing, cover letter creation, LinkedIn profile optimization"
+            specialization={cvWriter.specialization}
+            rating={cvWriter.averageRating}
+            services={cvWriter.services}
             id={cvWriter.id}
             onClick={() => handleCvWriterClick(cvWriter)}
           />
