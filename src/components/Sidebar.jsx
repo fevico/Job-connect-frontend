@@ -8,9 +8,9 @@ import {
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import useSession from "./hooks/useSession";
-import { BsArrow90DegLeft, BsCashStack,  } from "react-icons/bs";
+import { BsArrow90DegLeft, BsCashStack } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 
 export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
   const role = userDetails.role;
@@ -72,6 +72,25 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
         </>
       )}
 
+      {(role === "admin" || role === "jobPoster") && (
+        <>
+          <NavLink
+            onClick={handleClose}
+            to="/all-messages"
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <MdOutlineInventory className="h-5 w-5" />
+              </ListItemPrefix>
+              Messages
+            </ListItem>
+          </NavLink>
+        </>
+      )}
+
       {/* Admin only */}
       {(role === "admin" ||
         role === "cvwriter" ||
@@ -113,8 +132,6 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       {/* Admin, CV Writer, LinkedIn Optimizer */}
       {(role === "cvwriter" || role === "linkdinOptimizer") && (
         <>
-          
-
           <NavLink
             onClick={handleClose}
             to="/create-package"
@@ -150,8 +167,6 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       {/* Admin, Employer, CV Writer, LinkedIn Optimizer */}
       {role !== "jobseeker" && (
         <>
-          
-
           <NavLink
             onClick={handleClose}
             to="/"
@@ -189,7 +204,6 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
 
       {/* All roles except jobseeker */}
       {role !== "jobseeker" && (
-    
         <ListItem className="focus:bg-transparent text-white">
           <ListItemPrefix>
             <BiLogOut className="h-5 w-5" />
@@ -209,7 +223,6 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
     </List>
   );
 }
-
 
 SidebarLinks.propTypes = {
   closeDrawer: PropTypes.func.isRequired,
@@ -246,7 +259,6 @@ export default function Sidebar({ mobile, closeDrawer }) {
     </div>
   );
 }
-
 
 Sidebar.propTypes = {
   mobile: PropTypes.bool.isRequired,

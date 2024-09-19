@@ -37,6 +37,7 @@ import AllPackage from "./components/dashboard/AllPackage";
 import CreatePackage from "./components/dashboard/CreatePackage";
 import Subscription from "./components/dashboard/Subscription";
 import UserDashboard from "./pages/UserDashboard";
+import Messages from "./components/dashboard/Messages";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
           <Route path="/earnings" element={<Earnings />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/all-users" element={<AllUsers />} />
+          <Route path="/all-messages" element={<Messages />} />
           <Route path="/all-package" element={<AllPackage />} />
           <Route path="/create-package" element={<CreatePackage />} />
 

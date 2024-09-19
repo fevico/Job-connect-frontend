@@ -51,7 +51,7 @@ const baseQuery = fetchBaseQuery({
 export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
-  tagTypes: ["AllUsers", "AllJobApp"],
+  tagTypes: ["AllUsers", "AllJobApp", "Messages"],
   endpoints: (builder) => ({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
@@ -123,6 +123,26 @@ export const productsApi = createApi({
     getAllUsers: builder.query({
       query: () => "user/all-users",
       providesTags: ["AllUsers"],
+    }),
+    getAllMessages: builder.query({
+      query: () => "contact/messages",
+      providesTags: ["Messages"],
+    }),
+    updateMessage: builder.mutation({
+      query: ({ credentials, contactId }) => ({
+        url: `contact/${contactId}`,
+        method: "PATCH",
+        body: credentials,
+      }),
+
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to update message status:", err);
+        }
+      },
+      invalidatesTags: ["Messages"],
     }),
     getVerifyPayment: builder.query({
       query: (reference) => `payment/verify-payment/${reference}`,
@@ -377,6 +397,7 @@ export const {
   useGetAllAppliedJobsQuery,
   useGetAllCategoryQuery,
   useGetAllUsersQuery,
+  useGetAllMessagesQuery,
   useGetAllJobsByEmployerQuery,
   useGetJobAppQuery,
   useAddJobMutation,
@@ -401,7 +422,7 @@ export const {
   useGetEmployerPlanQuery,
   useGetBankQuery,
   useLazyGetBankAccountNameQuery,
-
+  useUpdateMessageMutation,
   // untreated
   useGetAllOrdersQuery,
   useGetUserOrdersQuery,
