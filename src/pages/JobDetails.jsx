@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import {
-  FaEnvelope,
-  FaFacebook,
-  FaFacebookMessenger,
-  FaLink,
-  FaWhatsapp,
+FaLink
 } from "react-icons/fa";
 import jobImage from "@/assets/images/job.png";
 import mark from "@/assets/images/mark.png";
-import { Link, useLocation } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
 import {
@@ -21,16 +17,15 @@ import {
   Spinner,
 } from "@material-tailwind/react";
 import { ImCancelCircle } from "react-icons/im";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
-import useAxios from "../components/hooks/AxiosInstance";
 import useSession from "../components/hooks/useSession";
 import { useApplyJobMutation, useShareJobMutation } from "../redux/appData";
+import PropTypes from "prop-types";
 
-export function ApplySuccess({ open, setOpen, handleOpen }) {
+
+export function ApplySuccess({ open, handleOpen }) {
   return (
     <>
       <Dialog open={open} handler={handleOpen}>
@@ -51,7 +46,7 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
             </h2>
             <div className="p-3 bg-[#DEEEFF] w-[95%] lg:w-[70%] rounded-t-md mt-5">
               <h2 className="text-left text-primary font-bold lg:text-lg">
-                WHAT'S NEXT?
+                WHAT&apos;S NEXT?
               </h2>
               <li className="text-primary">
                 You will receive an email confirmation shortly with the details
@@ -76,6 +71,13 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
   );
 }
 
+
+ApplySuccess.propTypes = {
+  open: PropTypes.string.isRequired,
+  handleOpen: PropTypes.func.isRequired,
+};
+
+
 export default function JobDetails() {
   const location = useLocation();
   const { job } = location.state;
@@ -83,10 +85,8 @@ export default function JobDetails() {
   const [open, setOpen] = useState(false);
   // const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState(null);
   const navigate = useNavigate();
   // const [cookies] = useCookies(["authToken"]);
-  const axiosInstance = useAxios();
   const { isSignedIn, userDetails } = useSession();
   const [formOpen, setFormOpen] = useState(false); // Toggle form modal
 
@@ -131,7 +131,7 @@ export default function JobDetails() {
   // }
 
   // console.log(getJobById);
-  const [applyJob, { isSuccess, isLoading: isLoadingApply, error }] =
+  const [applyJob, { isSuccess, error }] =
     useApplyJobMutation();
 
   const handleInputChange = (e) => {
@@ -143,7 +143,7 @@ export default function JobDetails() {
     { isSuccess: isSuccessShare, isLoading: isLoadingShare, error: errorShare },
   ] = useShareJobMutation();
 
-  const handleShare = async (e) => {
+  const handleShare = async () => {
     // e.preventDefault();
 
     setIsLoading(true);
@@ -172,7 +172,7 @@ export default function JobDetails() {
   };
 
   console.log(userDetails);
-  const handleApply = async (e) => {
+  const handleApply = async () => {
     // e.preventDefault();
 
     setIsLoading(true);
@@ -214,18 +214,16 @@ export default function JobDetails() {
       setOpen(true);
     } else {
       toast.error(error?.data?.message);
-      setErrors(error?.data?.message);
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate, error]);
 
   React.useEffect(() => {
     if (isSuccessShare) {
       toast.success("Referal Successful");
     } else {
-      toast.error(error?.data?.message);
-      setErrors(error?.data?.message);
+      toast.error(errorShare?.data?.message);
     }
-  }, [isSuccessShare]);
+  }, [isSuccessShare, errorShare]);
 
   return (
     <>

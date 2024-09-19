@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -47,7 +47,7 @@ const VerifyAccount = () => {
   
     try {
       // Send verification request to the server
-      const response = await axios.post(`https://jobkonnecta.com/api/user/verify-email/${id}`, { token: code });
+       await axios.post(`https://jobkonnecta.com/api/user/verify-email/${id}`, { token: code });
   
       // Assuming the server returns the verification token in response.data.token
       navigate("/login"); // Redirect to login page on success
@@ -63,7 +63,7 @@ const VerifyAccount = () => {
 
   const handleResend = async () => {
     try {
-      await resendCode().unwrap();
+      // await resendCode().unwrap();
       toast.success("Code resent successfully!");
     } catch (err) {
       toast.error("Failed to resend code");

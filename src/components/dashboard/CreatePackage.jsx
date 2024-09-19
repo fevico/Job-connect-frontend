@@ -10,10 +10,10 @@ export default function CreatePackage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const [addPackage, { isSuccess, isLoading, error }] = useAddPackageMutation();
+  const [addPackage, { isSuccess, error }] = useAddPackageMutation();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     setErrors({ ...errors, [name]: undefined });
   };
 

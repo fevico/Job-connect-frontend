@@ -1,20 +1,15 @@
 import React from "react";
-import CustomButton from "../CustomButton";
 import { Spinner } from "@material-tailwind/react"; // Assuming you're using this Spinner component
 import {
-  useGetAllJobsByEmployerQuery,
   useGetAllUsersQuery,
   useSuspendMutation,
 } from "../../redux/appData";
-import useSession from "@/components/hooks/useSession";
-import { BiChevronRight, BiPencil, BiTrash } from "react-icons/bi";
-import { Link } from "react-router-dom";
 import { Switch } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+
 
 export default function AllUsers() {
-  const { userDetails } = useSession(); // Get the user session details
-  const [suspend, { isSuccess, isLoading, error }] = useSuspendMutation();
-  const [loading, setLoading] = React.useState(false);
+  const [suspend, { isLoading}] = useSuspendMutation();
 
   const [loadingStates, setLoadingStates] = React.useState({}); // To track loading per user
 

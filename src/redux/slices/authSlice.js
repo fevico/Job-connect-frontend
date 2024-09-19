@@ -15,7 +15,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.isAdmin = action.payload.isAdmin;
     },
-    clearCredentials: (state) => {
+    clearCredentials: () => {
       return initialState;
     },
   },

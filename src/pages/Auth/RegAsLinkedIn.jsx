@@ -1,87 +1,16 @@
-import React, { useState } from "react";
-import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import Breadcrumb from "../../components/Breadcrumb";
 import CustomButton from "../../components/CustomButton";
-import { BiUpload } from "react-icons/bi";
-import { useRegisterMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function CVUpload() {
-  const [file, setFile] = useState(null);
-  const [dragging, setDragging] = useState(false);
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    setDragging(false);
-    setFile(event.dataTransfer.files[0]);
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-    setDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragging(false);
-  };
-
-  const handleClick = () => {
-    document.getElementById("file-input").click();
-  };
-
-  return (
-    <div
-      className={`border-2 rounded-md py-4 px-[60px] text-center border-dotted bg-gray-300 ${
-        dragging ? "border-blue-500" : "border-gray-400"
-      }`}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-    >
-      <div className="flex flex-col justify-center items-center">
-        <p className="mb-2 text-lg font-semibold">Upload your CV</p>
-        <BiUpload className="w-8 h-8 " />
-        <p className="mb-2 text-sm text-gray-500">
-          Drag and drop file or{" "}
-          <button
-            type="button"
-            className="text-blue-500 underline"
-            onClick={handleClick}
-          >
-            Click Here
-          </button>
-        </p>
-      </div>
-      <input
-        id="file-input"
-        type="file"
-        accept=".pdf,.doc,.docx"
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
-      {file && (
-        <div className="mt-4">
-          <p className="text-sm font-medium">Selected File:</p>
-          <p className="text-sm text-gray-700">{file.name}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function RegAsLinkedIn() {
   const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -89,23 +18,11 @@ export default function RegAsLinkedIn() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-
   const role = "linkedinOptimizer";
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
-  };
-
-  const handleCountryChange = (val) => {
-    setCountry(val);
-    setErrors({ ...errors, country: undefined });
-    setState("");
-  };
-
-  const handleStateChange = (val) => {
-    setState(val);
-    setErrors({ ...errors, state: undefined });
   };
 
   const togglePasswordVisibility = () => {
@@ -120,7 +37,6 @@ export default function RegAsLinkedIn() {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
-      setImagePreviewUrl(URL.createObjectURL(file)); // Create a preview URL
     }
   };
 
@@ -159,8 +75,6 @@ export default function RegAsLinkedIn() {
     }
 
     setIsLoading(true);
-
-   
 
     let imageUrl = "";
 

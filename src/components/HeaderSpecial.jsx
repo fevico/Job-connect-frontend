@@ -2,18 +2,16 @@ import {
   Navbar,
   Typography,
   IconButton,
-  Button,
   Drawer,
 } from "@material-tailwind/react";
-import { BiBell } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
+
 import useSession from "./hooks/useSession";
 import { GiHamburgerMenu } from "react-icons/gi";
 import React from "react";
 import Sidebar from "./Sidebar";
-import Logo from "./Logo";
+import PropTypes from "prop-types";
 
-export function MobileSidebar({ open, openDrawer, closeDrawer, setOpen }) {
+export function MobileSidebar({ open, closeDrawer }) {
   return (
     <React.Fragment>
       <Drawer open={open} onClose={closeDrawer} className="p-4">
@@ -49,7 +47,7 @@ export default function HeaderSpecial() {
 
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
-  console.log(userDetails)
+  console.log(userDetails);
 
   return (
     <Navbar
@@ -75,7 +73,7 @@ export default function HeaderSpecial() {
         </div>
 
         <div className="ml-auto flex gap-1 md:mr-4 items-center">
-       <p className="font-bold text-white uppercase">{userDetails.role}</p> 
+          <p className="font-bold text-white uppercase">{userDetails.role}</p>
           {/* <IconButton variant="text" color="white">
             <BiBell className="h-6 w-6" />
           </IconButton>
@@ -93,3 +91,8 @@ export default function HeaderSpecial() {
     </Navbar>
   );
 }
+
+MobileSidebar.propTypes = {
+  open: PropTypes.bool.isRequired, // Boolean indicating if the user is signed in
+  closeDrawer: PropTypes.func.isRequired, // Function to sign out the user
+};

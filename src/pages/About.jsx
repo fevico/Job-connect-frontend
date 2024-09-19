@@ -1,4 +1,3 @@
-import React from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import about from "@/assets/images/about.png";
 import about1 from "@/assets/images/about1.png";

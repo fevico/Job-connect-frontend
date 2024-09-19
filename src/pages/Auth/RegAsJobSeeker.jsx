@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import Breadcrumb from "../../components/Breadcrumb";
 import CustomButton from "../../components/CustomButton";
 import { BiUpload } from "react-icons/bi";
-import { useRegisterMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../components/hooks/firebase";
+
+import PropTypes from 'prop-types'; // Import PropTypes
 
 function CVUpload({ cvFile, setCvFile }) {
   const [dragging, setDragging] = useState(false);
@@ -25,7 +26,7 @@ function CVUpload({ cvFile, setCvFile }) {
   const handleDrop = (event) => {
     event.preventDefault();
     setDragging(false);
-    setFile(event.dataTransfer.files[0]);
+    setCvFile(event.dataTransfer.files[0]); // Fixed: Use setCvFile instead of setFile
   };
 
   const handleDragOver = (event) => {
@@ -52,7 +53,7 @@ function CVUpload({ cvFile, setCvFile }) {
     >
       <div className="flex flex-col justify-center items-center">
         <p className="mb-2 text-lg font-semibold">Upload your CV</p>
-        <BiUpload className="w-8 h-8 " />
+        <BiUpload className="w-8 h-8" />
         <p className="mb-2 text-sm text-gray-500">
           Drag and drop file or{" "}
           <button
@@ -81,6 +82,15 @@ function CVUpload({ cvFile, setCvFile }) {
   );
 }
 
+// Define prop types for the CVUpload component
+CVUpload.propTypes = {
+  cvFile: PropTypes.instanceOf(File), // Expect a File object
+  setCvFile: PropTypes.func.isRequired, // Expect a function to set the file
+};
+
+
+
+
 export default function RegAsJobSeeker() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
@@ -97,7 +107,7 @@ export default function RegAsJobSeeker() {
   const role = "jobseeker";
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
 

@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
 import offers1 from "@/assets/images/offers1.png";
 import offers2 from "@/assets/images/offers2.png";
 import offers3 from "@/assets/images/offers3.png";
 import offers4 from "@/assets/images/offers4.png";
-import CustomButton from "@/components/CustomButton";
 import Slider from "react-slick";
 
 const data = [
@@ -58,17 +56,6 @@ const data = [
 ];
 
 export default function Offers() {
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 960);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 960);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const settings = {
     dots: true,
     infinite: true,
@@ -115,16 +102,17 @@ export default function Offers() {
         <p className="text-[12px] lg:text-[18px]">
           Your Future, Our Priority: Discover Opportunities, Land Your Dream Job
         </p>
-        {/* {isDesktop ? (
-          <div className="w-[90%] mx-auto flex flex-col lg:flex-row flex-wrap items-center p-5 gap-5 justify-between mt-5">
+
+        <div className="slider-container p-2 mt-5">
+          <Slider {...settings}>
             {data.map((offer, index) => (
-              <div key={index} className="max-w-[250px] ">
+              <div key={index} className="">
                 <img
                   src={offer.image}
                   alt={offer.title}
-                  className="w-full h-auto"
+                  className="w-[300px] h-auto"
                 />
-                <div className="rounded-b-xl flex flex-col bg-[#464545] px-3 py-4 text-white text-[14px] gap-3 h-[300px]">
+                <div className="rounded-b-xl flex flex-col bg-[#464545] px-3 py-4 text-white text-[14px] gap-3 h-[300px] w-[300px]">
                   <h2 className="text-center text-[18px] font-semibold">
                     {offer.title}
                   </h2>
@@ -137,32 +125,8 @@ export default function Offers() {
                 </div>
               </div>
             ))}
-          </div>
-         ) : ( */}
-          <div className="slider-container p-2 mt-5">
-            <Slider {...settings}>
-              {data.map((offer, index) => (
-                <div key={index} className="">
-                  <img
-                    src={offer.image}
-                    alt={offer.title}
-                    className="w-[300px] h-auto"
-                  />
-                  <div className="rounded-b-xl flex flex-col bg-[#464545] px-3 py-4 text-white text-[14px] gap-3 h-[300px] w-[300px]">
-                    <h2 className="text-center text-[18px] font-semibold">
-                      {offer.title}
-                    </h2>
-                    <p className="text-center h-[60%]">{offer.paragraph}</p>
-                    {offer.features.map((feature, i) => (
-                      <li key={i} className="text-left leading-3">
-                        {feature}
-                      </li>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </Slider>
-          </div>
+          </Slider>
+        </div>
         {/* )} */}
         {/* <div className="flex justify-end w-[90%] mx-auto ">
           <CustomButton link={"#"} text={"READ MORE"} />

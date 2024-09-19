@@ -1,4 +1,3 @@
-import React from "react";
 import CustomButton from "../../components/CustomButton";
 import jobseeker from "@/assets/images/jobseeker.png";
 import employer from "@/assets/images/employer.png";

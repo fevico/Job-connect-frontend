@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import CustomButton from "../../components/CustomButton";
 import JobCard from "../../components/JobCard";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,6 @@ export default function Featured() {
   const {
     data: allJobs,
     isLoading,
-    error,
   } = useGetAllJobsQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,

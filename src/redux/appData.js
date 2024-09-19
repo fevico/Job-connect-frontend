@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserInfo } from "./slices/userSlice";
+import { setCredentials } from "./slices/authSlice";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: "http://localhost:5000/",
   baseUrl: "https://jobkonnecta.com/api/",
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers) => {
     headers.set("Content-Type", "application/json");
     const token = Cookies.get("authToken");
     if (token) {
@@ -19,8 +20,7 @@ const baseQuery = fetchBaseQuery({
     const text = await response.text();
     try {
       const jsonResponse = JSON.parse(text);
-      // console.log(jsonResponse)
-      // Check for token expiration
+
       if (jsonResponse && jsonResponse.message === "Token has expired") {
         // Handle expired token here, e.g., clear credentials and user info
         // You can dispatch actions or handle the logic here
@@ -204,6 +204,21 @@ export const productsApi = createApi({
       },
       invalidatesTags: ["AllJobApp"],
     }),
+    sendMessage: builder.mutation({
+      query: (credentials) => ({
+        url: `contact/send-message`,
+        method: "POST",
+        body: credentials,
+      }),
+
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to create job:", err);
+        }
+      },
+    }),
     addRating: builder.mutation({
       query: ({ data, owner }) => ({
         url: `user/add-rating/${owner}`,
@@ -289,20 +304,6 @@ export const productsApi = createApi({
         }
       },
     }),
-    // verifyPayment: builder.mutation({
-    //   query: ({credentials, reference}) => ({
-    //     url: `payment/verify-payment/${reference}`,
-    //     method: "POST",
-    //     body: credentials,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error(" failed to verify payment:", err);
-    //     }
-    //   },
-    // }),
 
     suspend: builder.mutation({
       query: (credentials) => ({
@@ -319,66 +320,6 @@ export const productsApi = createApi({
       },
       invalidatesTags: ["AllUsers"],
     }),
-    // getOneProduct: builder.query({
-    //       query: (id) => `products/${id}`,
-    //     }),
-    //     updateProduct: builder.mutation({
-    //       query: ({ id, updatedProduct }) => ({
-    //         url: `products/${id}`,
-    //         method: "PUT",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: updatedProduct,
-    //       }),
-    //     }),
-    // getProfile: builder.query({
-    //   query: () => ({ url: "/profile", method: "GET" }),
-    //   async onQueryStarted(_, { dispatch, queryFulfilled }) {
-    //     try {
-    //       const { data } = await queryFulfilled;
-    //       dispatch(setUserInfo(data));
-    //     } catch (error) {
-    //       console.error("Failed to fetch profile:", error);
-    //     }
-    //   },
-    // }),
-    // editProfile: builder.mutation({
-    //   query: (updatedProfile) => ({
-    //     url: `edit_account`,
-    //     method: "POST",
-    //     body: updatedProfile,
-    //   }),
-    //   onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-    //     try {
-    //       const { data } = await queryFulfilled;
-    //       // const response = await queryFulfilled;
-
-    //       dispatch(setUserInfo(data));
-    //       console.log("update successful:", data);
-    //     } catch (err) {
-    //       console.error("update failed:", err);
-    //     }
-    //   },
-    // }),
-
-    // editWidgetConfig: builder.mutation({
-    //   query: (updatedConfig) => ({
-    //     url: `edit_widget_config`,
-    //     method: "POST",
-    //     body: updatedConfig,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-
-    //       // const { data } = await queryFulfilled;
-    //       // console.log("update widget config successful:");
-    //     } catch (err) {
-    //       console.error("save failed:", err);
-    //     }
-    //   },
-    // }),
 
     login: builder.mutation({
       query: (credentials) => ({
@@ -423,120 +364,10 @@ export const productsApi = createApi({
         }
       },
     }),
-
-    // logout: builder.mutation({
-    //   queryFn: () => ({ data: null }), // No API call, just return success
-    //   onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //       dispatch(clearCredentials());
-    //       dispatch(clearUserInfo());
-    //     } catch (err) {
-    //       console.error("Logout failed:", err);
-    //     }
-    //   },
-    // }),
-    // getAllQuestionnaires: builder.query({
-    //   query: () => "categories",
-    // }),
-    // getAllClients: builder.query({
-    //   query: () => "clients",
-    // }),
-
-    // markAsHomeWork: builder.mutation({
-    //   query: ({ code, credential }) => ({
-    //     url: `/categories/${code}/mark_as_homework`,
-    //     method: "POST",
-    //     body: credential,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error("Register failed:", err);
-    //     }
-    //   },
-    // }),
-    // generateAiClinicalNote: builder.mutation({
-    //   query: (credentials) => ({
-    //     url: "get_ai_clinical_recommendation",
-    //     method: "POST",
-    //     body: credentials,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error("Text generate failed:", err);
-    //     }
-    //   },
-    // }),
-    // addNote: builder.mutation({
-    //   query: ({ client, credentials }) => ({
-    //     url: `clients/${client}/generate_client_clinical_recommendation_note`,
-    //     method: "POST",
-    //     body: credentials,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error("Register failed:", err);
-    //     }
-    //   },
-    // }),
-    // getAllNotes: builder.mutation({
-    //   query: ({ client }) => ({
-    //     url: `clients/${client}/get_client_clinical_notes`,
-    //     method: "GET",
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error("fetch failed:", err);
-    //     }
-    //   },
-    // }),
-    // editNote: builder.mutation({
-    //   query: ({ credentials }) => ({
-    //     url: `clients/${credentials.pk}/edit_client_clinical_notes`,
-    //     method: "POST",
-    //     body: credentials,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error("fetch failed:", err);
-    //     }
-    //   },
-    // }),
-    // deleteNote: builder.mutation({
-    //   query: ({ credentials }) => ({
-    //     url: `clients/${credentials.pk}/delete_client_clinical_notes`,
-    //     method: "POST",
-    //     body: credentials,
-    //   }),
-    //   onQueryStarted: async (arg, { queryFulfilled }) => {
-    //     try {
-    //       await queryFulfilled;
-    //     } catch (err) {
-    //       console.error("fetch failed:", err);
-    //     }
-    //   },
-    // }),
   }),
 });
 
 export const {
-  // useGetAllQuestionnairesQuery,
-  // useGetAllClientsQuery,
-  // useMarkAsHomeWorkMutation,
-  // useEditProfileMutation,
-  // useEditWidgetConfigMutation,
-  // useGetProfileQuery,
-  // useGetAllNotesMutation,
   useLoginMutation,
   useWithdrawMutation,
   useRegisterMutation,
@@ -561,6 +392,7 @@ export const {
   useShareJobMutation,
   usePaymentMutation,
   useSubscribeMutation,
+  useSendMessageMutation,
   useSuspendMutation,
   useGetAllPackagesQuery,
   useGetAllPackagesGlobalQuery,

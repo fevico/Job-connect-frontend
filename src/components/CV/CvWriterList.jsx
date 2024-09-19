@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import CvWriterCard from "./CvWriterCard";
 import { useNavigate } from "react-router-dom";
 import { useGetAllUsersQuery } from "../../redux/appData";
 
-const CvWriterList = ({ searchQuery }) => {
+const CvWriterList = () => {
   const [visibleCvWriters, setVisibleCvWriters] = useState(10);
-  const {
-    data: users,
-    isLoading: fetchingUsers,
-    error: errorUsers,
-  } = useGetAllUsersQuery(undefined, {
+  const { data: users } = useGetAllUsersQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
-  const cvWriters = users && users.filter((user) => user.role === "cvwriter");
+  const cvWriters =
+    users &&
+    users.filter((user) => user.role === "cvwriter" && user.suspend === false);
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
 
-  console.log(cvWriters);
-  console.log(users);
+  // console.log(cvWriters);
+  // console.log(users);
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
 
   // useEffect(() => {

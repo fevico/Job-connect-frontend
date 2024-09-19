@@ -19,7 +19,7 @@ const userSlice = createSlice({
       state._id = action.payload._id;
       state.isAuthenticated = true;
     },
-    clearUserInfo: (state) => {
+    clearUserInfo: () => {
       return initialState; // Reset state to initial state when clearing user info
     },
   },

@@ -1,4 +1,3 @@
-import React from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import { Helmet } from "react-helmet";
 import CvWriterList from "../../components/CV/CvWriterList";

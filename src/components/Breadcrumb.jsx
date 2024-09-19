@@ -1,5 +1,5 @@
-import React from "react";
 import breadcrumbImage from "@/assets/images/breadcrumbImage.png";
+import PropTypes from "prop-types";
 
 export default function Breadcrumb({ title1, title2, auth }) {
   return (
@@ -10,13 +10,13 @@ export default function Breadcrumb({ title1, title2, auth }) {
             src={breadcrumbImage}
             alt="breadcrumb"
             className="absolute left-0 top-1/2 transform -translate-y-1/2"
-            style={{ height: '100%' }} // Adjust height as needed
+            style={{ height: "100%" }} // Adjust height as needed
           />
           <img
             src={breadcrumbImage}
             alt="breadcrumb"
             className="absolute right-0 top-1/2 transform -translate-y-1/2"
-            style={{ height: '100%' }} // Adjust height as needed
+            style={{ height: "100%" }} // Adjust height as needed
           />
         </>
       )}
@@ -29,3 +29,9 @@ export default function Breadcrumb({ title1, title2, auth }) {
     </div>
   );
 }
+
+Breadcrumb.propTypes = {
+  title1: PropTypes.string.isRequired, // title1 should be a required string
+  title2: PropTypes.string.isRequired, // title2 should be a required string
+  auth: PropTypes.bool, // auth is optional, default is false
+};

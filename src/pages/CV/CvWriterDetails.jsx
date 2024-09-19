@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import { Helmet } from "react-helmet";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
@@ -17,7 +17,7 @@ import {
 import useSession from "../../components/hooks/useSession";
 
 export default function CvWriterDetails() {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [formOpen, setFormOpen] = useState(false); // Toggle form modal
   const [selectedPackage, setSelectedPackage] = useState(null);
   const { userDetails } = useSession();
@@ -37,16 +37,13 @@ export default function CvWriterDetails() {
 
   const {
     data: allPackages,
-    isLoading,
-    error,
+  
   } = useGetAllPackagesGlobalQuery();
   const packages = allPackages?.filter((pkg) => pkg.userId === cvwriter._id);
   const [
     payment,
     {
-      isSuccess: isSuccessPayment,
       isLoading: isLoadingPayment,
-      error: errorPayment,
     },
   ] = usePaymentMutation();
 
@@ -59,7 +56,7 @@ export default function CvWriterDetails() {
     if (!selectedPackage) return;
 
     try {
-      setLoading(true);
+      // setLoading(true);
       const metadata = {
         ...formData,
         packageTitle: selectedPackage.title,
@@ -80,7 +77,7 @@ export default function CvWriterDetails() {
 
       // console.log(credentials);
       const response = await payment(credentials);
-      setLoading(false);
+      // setLoading(false);
       // console.log(response);
 
       if (response?.data?.data?.authorization_url) {
@@ -90,7 +87,7 @@ export default function CvWriterDetails() {
       }
     } catch (error) {
       console.error("Payment Error: ", error);
-      setLoading(false);
+      // setLoading(false);
     }
   };
 

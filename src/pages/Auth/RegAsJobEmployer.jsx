@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import Breadcrumb from "../../components/Breadcrumb";
 import CustomButton from "../../components/CustomButton";
-import { BiUpload } from "react-icons/bi";
-import { useRegisterMutation } from "../../redux/appData";
+
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +24,7 @@ export default function RegAsJobEmployer() {
   const role = "employer";
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
 

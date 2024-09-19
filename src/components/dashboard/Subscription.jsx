@@ -8,6 +8,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import useSession from "../hooks/useSession";
+import PropTypes from "prop-types";
 import {
   useSubscribeMutation,
   useGetEmployerPlanQuery,
@@ -19,9 +20,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
-} from "@material-tailwind/react"; 
-
-
+} from "@material-tailwind/react";
 
 function CheckIcon() {
   return (
@@ -107,9 +106,22 @@ function PricingCard({ plan, isActive, onSelect, disabled }) {
   );
 }
 
+PricingCard.propTypes = {
+  plan: PropTypes.shape({
+    id: PropTypes.string.isRequired, // Assuming plan.id is a string
+    name: PropTypes.string.isRequired,
+    priceNGN: PropTypes.number.isRequired, // Assuming price is a number
+    priceUSD: PropTypes.number.isRequired,
+    features: PropTypes.arrayOf(PropTypes.string).isRequired, // Array of feature strings
+  }).isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func.isRequired, // onSelect should be a function
+  disabled: PropTypes.bool, // Optional, defaults to false
+};
+
 export default function Subscription() {
   const [currentPlan, setCurrentPlan] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { userDetails } = useSession();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -120,7 +132,6 @@ export default function Subscription() {
   const {
     data: paymentData,
     isSuccess: isSuccessVPayment,
-    isLoading: isLoadingVPayment,
     error: errorVPayment,
   } = useGetSubscriptionVerifyPaymentQuery(reference, {
     skip: !reference, // Skip the query if there is no reference
@@ -138,9 +149,9 @@ export default function Subscription() {
 
   // Fetch current plan from server (this should return plan details including expiry date)
   const { data: currentPlanDetails } = useGetEmployerPlanQuery();
-  console.log(currentPlanDetails);
+  // console.log(currentPlanDetails);
 
-  const [subscribe ] = useSubscribeMutation();
+  const [subscribe] = useSubscribeMutation();
 
   const userEmail = userDetails?.email;
 
@@ -153,7 +164,7 @@ export default function Subscription() {
 
   const handleSelectPlan = async (planId) => {
     const plan = plans.find((p) => p.id === planId);
-    setLoading(true);
+    // setLoading(true);
 
     try {
       const metadata = {
@@ -168,8 +179,8 @@ export default function Subscription() {
       };
 
       const response = await subscribe(credentials);
-      setLoading(false);
-      console.log(response)
+      // setLoading(false);
+      console.log(response);
 
       if (response?.data?.data?.authorization_url) {
         window.location.href = response.data.data.authorization_url;
@@ -178,14 +189,14 @@ export default function Subscription() {
       }
     } catch (error) {
       console.error("Payment Error: ", error);
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
   const hasActivePlan = !!currentPlanDetails?.expiryDate; // Check if a plan is active
   const expiryDate = new Date(currentPlanDetails?.expiryDate);
 
-  const isPlanExpired = expiryDate && expiryDate < new Date();
+  // const isPlanExpired = expiryDate && expiryDate < new Date();
 
   // Updated plan data
   const plans = [
@@ -194,7 +205,7 @@ export default function Subscription() {
       name: "Basic",
       priceNGN: 10000,
       priceUSD: 15,
-      features: ["1 Job Post", "14 days Job Visibility", "Email Support"],
+      features: ["3 Jobs Post", "14 days Job Visibility", "Email Support"],
     },
     {
       id: "standard",
@@ -202,7 +213,7 @@ export default function Subscription() {
       priceNGN: 25000,
       priceUSD: 35,
       features: [
-        "3 Job Posts",
+        "5 Job Posts",
         "30 days Job Visibility",
         "Featured Job Listing",
         "Social Media Promotion",
@@ -219,7 +230,7 @@ export default function Subscription() {
       priceNGN: 50000,
       priceUSD: 70,
       features: [
-        "5 Job Posts",
+        "10 Job Posts",
         "45 days Job Visibility",
         "Featured Job Listing",
         "Social Media Promotion",

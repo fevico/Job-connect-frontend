@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 export default function useAxios() {
-  const [cookies, setCookie, removeCookie] = useCookies(["authToken"]);
+  const [cookies, removeCookie] = useCookies(["authToken"]);
   const navigate = useNavigate();
 
   const axiosInstance = axios.create({

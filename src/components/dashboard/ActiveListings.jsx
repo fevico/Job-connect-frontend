@@ -1,9 +1,8 @@
-import React from "react";
-import CustomButton from "../CustomButton";
+
 import { Spinner } from "@material-tailwind/react"; // Assuming you're using this Spinner component
 import { useGetAllJobsByEmployerQuery } from "../../redux/appData";
 import useSession from "@/components/hooks/useSession";
-import { BiChevronRight, BiPencil, BiTrash } from "react-icons/bi";
+import { BiChevronRight} from "react-icons/bi";
 import { Link } from "react-router-dom";
 
 export default function ActiveListings() {
@@ -103,10 +102,3 @@ export default function ActiveListings() {
   );
 }
 
-function handleJobClick(job) {
-  // Logic to handle job click and navigate to the job details page
-  console.log("Job clicked:", job);
-  // navigate(`/job/${job?._id}`, { state: { job } }); // Example using react-router's navigate with state
-}
-
-// navigaey to applcatons page with

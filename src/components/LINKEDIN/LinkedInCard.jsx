@@ -1,5 +1,5 @@
-import React from "react";
 import CustomButton from "../CustomButton";
+import PropTypes from "prop-types"
 
 export default function LinkedInOptimizerCard({ 
   name, 
@@ -45,3 +45,13 @@ export default function LinkedInOptimizerCard({
     </div>
   );
 }
+LinkedInOptimizerCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  bio: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  specialization: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired,
+  services: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomButton from "../../components/CustomButton";
-import { useLoginMutation } from "../../redux/appData";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -13,11 +12,10 @@ export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const { signIn } = useSession();
 
-  const [login, { isLoading, isSuccess, error }] = useLoginMutation(); // Using the useRegisterMutation hook
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
 
@@ -134,7 +132,7 @@ export default function Login() {
                 to={"/signup/home"}
                 className="cursor-pointer underline lg:text-xl"
               >
-                I don't have an account
+                I don&apos;t have an account
               </Link>
             </div>
           </div>

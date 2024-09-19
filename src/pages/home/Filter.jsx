@@ -1,27 +1,24 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetAllJobsQuery } from "../../redux/appData";
 
 export default function Filter() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const {
-    data: allJobs,
-    isLoading,
-    error,
-  } = useGetAllJobsQuery(undefined, {
+  const { data: allJobs } = useGetAllJobsQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
   // Filter products based on search query
-  const filteredJobs = allJobs && allJobs.filter(
-    (job) =>
-      job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredJobs =
+    allJobs &&
+    allJobs.filter(
+      (job) =>
+        job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const handleSearch = (e) => {
     e.preventDefault();

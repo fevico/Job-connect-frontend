@@ -12,16 +12,11 @@ import mark from "@/assets/images/mark.png";
 import { Link } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
-import {
-  Button,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
+import { Dialog, DialogBody } from "@material-tailwind/react";
 import { ImCancelCircle } from "react-icons/im";
+import PropTypes from "prop-types";
 
-export function ApplySuccess({ open, setOpen, handleOpen }) {
+export function ApplySuccess({ open, handleOpen }) {
   return (
     <>
       <Dialog open={open} handler={handleOpen}>
@@ -42,7 +37,7 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
             </h2>
             <div className="p-3 bg-[#DEEEFF] w-[95%] lg:w-[70%] rounded-t-md mt-5">
               <h2 className="text-left text-primary font-bold lg:text-lg">
-                WHAT'S NEXT?
+                WHAT&apos;S NEXT?
               </h2>
               <li className="text-primary">
                 You will receive an email confirmation shortly with the details
@@ -66,6 +61,11 @@ export function ApplySuccess({ open, setOpen, handleOpen }) {
     </>
   );
 }
+
+ApplySuccess.propTypes = {
+  open: PropTypes.string.isRequired,
+  handleOpen: PropTypes.func.isRequired,
+};
 
 export default function CareerProfile() {
   const [open, setOpen] = React.useState(false);

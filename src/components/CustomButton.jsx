@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const CustomButton = ({ link, text, onClick }) => {

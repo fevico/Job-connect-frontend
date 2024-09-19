@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CustomButton from "../CustomButton";
-import { BsArrowUp } from "react-icons/bs";
 import {
   Dialog,
   DialogBody,
@@ -28,32 +27,20 @@ export default function Earnings() {
   const [verificationInProgress, setVerificationInProgress] = useState(false);
   const { userDetails } = useSession();
 
-  const {
-    data: balance,
-    isLoading,
-    error,
-  } = useGetBalanceQuery(undefined, {
+  const { data: balance } = useGetBalanceQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
-  const {
-    data: adminBalance,
-    isLoading: isLoadingAdmin,
-    error: adminError,
-  } = useGetAdminBalanceQuery(undefined, {
+  const { data: adminBalance } = useGetAdminBalanceQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
   // console.log(balance);
 
-  const {
-    data: allBanks,
-    isLoading: isLoadingBanks,
-    error: errorBanks,
-  } = useGetBankQuery(undefined, {
+  const { data: allBanks } = useGetBankQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -72,23 +59,20 @@ export default function Earnings() {
   //   }
   // );
 
-  const [
-    getBankAccountName,
-    { data: account, isLoading: isLoadingAccount, error: errorAccount },
-  ] = useLazyGetBankAccountNameQuery();
+  const [getBankAccountName, { data: account }] =
+    useLazyGetBankAccountNameQuery();
 
   // console.log(account);
 
-  const [banks, setBanks] = useState(allBanks ? allBanks?.data?.bank_list : []);
   // console.log(allBanks && allBanks?.data?.bank_list);
 
   // Fetch banks when the component mounts
   useEffect(() => {
     const today = new Date();
-    // if (today.getDate() === 27) {
-    //   setWithdrawEnabled(true);
-    // }
-    setWithdrawEnabled(true);
+    if (today.getDate() === 27) {
+      setWithdrawEnabled(true);
+    }
+    // setWithdrawEnabled(true);
   }, []);
 
   const handleWithdraw = () => {
@@ -118,10 +102,7 @@ export default function Earnings() {
       }
     }
   };
-  const [
-    withdraw,
-    { data: withdrawSuccess, isLoading: withdrawLoading, error: withdrawError },
-  ] = useWithdrawMutation();
+  const [withdraw] = useWithdrawMutation();
 
   const completeWithdrawal = async () => {
     try {
@@ -146,7 +127,7 @@ export default function Earnings() {
     }
   };
 
-  console.log(adminBalance);
+  // console.log(adminBalance);
 
   const isCurrentMonth = (date) => {
     const transactionDate = new Date(date);

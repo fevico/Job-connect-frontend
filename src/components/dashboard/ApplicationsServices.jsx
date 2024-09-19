@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import CustomButton from "../CustomButton";
 import { useLocation } from "react-router-dom";
 import {
-  useGetJobAppQuery,
   useGetSuccessfulOrdersQuery,
-  useHireMutation,
+
   useSendCVMutation,
 } from "../../redux/appData";
 import { Dialog } from "@material-tailwind/react";
@@ -50,7 +49,7 @@ export default function ApplicationsServices() {
 
   const [
     sendCV,
-    { isSuccess: isSendingSuccess, isLoading: isSending, error: sendError },
+    { isSuccess: isSendingSuccess, error: sendError },
   ] = useSendCVMutation();
 
   const handleUploadCV = async (e) => {

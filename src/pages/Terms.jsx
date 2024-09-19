@@ -1,4 +1,3 @@
-import React from "react";
 import Breadcrumb from "../components/Breadcrumb";
 import { Helmet } from "react-helmet";
 
@@ -144,7 +143,7 @@ export default function Terms() {
             applications. We do not endorse any employer or job seeker.
           </li>
           <li>
-            <strong>No Warranty:</strong> The website is provided "as is"
+            <strong>No Warranty:</strong> The website is provided &quot;as is&quot;
             without any warranties of any kind. JobKonnectaNG disclaims all
             warranties, express or implied, including, but not limited to,
             warranties of merchantability and fitness for a particular purpose.
@@ -167,7 +166,7 @@ export default function Terms() {
           You agree to indemnify, defend, and hold harmless JobKonnectaNG, its
           affiliates, and their respective officers, directors, employees, and
           agents from any claims, liabilities, damages, losses, and expenses,
-          including reasonable attorneys' fees, arising out of or related to
+          including reasonable attorneys&apos; fees, arising out of or related to
           your use of the website or violation of these terms.
         </p>
 

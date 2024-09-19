@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import "../node_modules/slick-carousel/slick/slick.css";
@@ -7,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Home from "./pages/home";
 import About from "./pages/About";
-import Search from "./pages/Search";
+// import Search from "./pages/Search";
 import Contact from "./pages/Contact";
 import JobDetails from "./pages/JobDetails";
 import Terms from "./pages/Terms";
@@ -25,7 +24,6 @@ import PostJobs from "./components/dashboard/PostJobs";
 import Applications from "./components/dashboard/Applications";
 import ApplicationsServices from "./components/dashboard/ApplicationsServices";
 import ActiveListings from "./components/dashboard/ActiveListings";
-import LoggedInLayout from "./components/LoggedInLayout";
 import RegAsLinkedIn from "./pages/Auth/RegAsLinkedIn";
 import RegAsCVWriter from "./pages/Auth/RegAsCVWriter";
 import AllCVWriters from "./pages/CV/AllCvWriters";
@@ -48,7 +46,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/:reference" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/search" element={<Search />} />
+          {/* <Route path="/search" element={<Search />} /> */}
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

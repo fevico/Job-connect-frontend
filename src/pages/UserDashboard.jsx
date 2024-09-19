@@ -1,4 +1,3 @@
-import React from "react";
 import JobCard from "../components/JobCard";
 import { Helmet } from "react-helmet";
 import { Spinner } from "@material-tailwind/react";
@@ -10,28 +9,23 @@ import Breadcrumb from "../components/Breadcrumb";
 import useSession from "../components/hooks/useSession";
 
 export default function UserDashboard() {
-  const {
-    data: allJobs,
-    isLoading,
-    error,
-  } = useGetAllAppliedJobsQuery(undefined, {
+  const { userDetails } = useSession();
+
+  const { data: allJobs, isLoading } = useGetAllAppliedJobsQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
-  const {
-    data: allServices,
-    isLoading: isLoadingServices,
-    error: errorServices,
-  } = useGetUserOrdersQuery(undefined, {
-    refetchOnMountOrArgChange: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data: allServices, isLoading: isLoadingServices } =
+    useGetUserOrdersQuery(undefined, {
+      refetchOnMountOrArgChange: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    });
 
   // console.log("applied", allJobs);
-  console.log("applied", allServices);
+  // console.log("applied", allServices);
 
   if (isLoading) {
     return (
@@ -48,8 +42,6 @@ export default function UserDashboard() {
       </div>
     );
   }
-
-  const { userDetails } = useSession();
 
   return (
     <>

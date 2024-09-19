@@ -1,5 +1,4 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import PropTypes from 'prop-types'; // Import PropTypes
 import CustomButton from "../CustomButton";
 
 export default function CvWriterCard({
@@ -12,8 +11,6 @@ export default function CvWriterCard({
   services,
   onClick,
 }) {
-
-
   return (
     <div
       className="border-[#001F3F]/40 border rounded-[30px] p-5 w-full"
@@ -33,8 +30,8 @@ export default function CvWriterCard({
             <h2 className="text-left font-bold text-lg">{name}</h2>
             <p className="text-sm text-left text-gray-600">{specialization}</p>
             <div className="flex items-center text-yellow-500 text-sm">
-            <span className="font-semibold">{rating.toFixed(1)}</span>
-            <span className="ml-1">⭐</span>
+              <span className="font-semibold">{rating.toFixed(1)}</span>
+              <span className="ml-1">⭐</span>
             </div>
             <p className="w-full lg:w-[60%] text-sm text-left overflow-hidden line-clamp-2">
               {bio}
@@ -50,3 +47,15 @@ export default function CvWriterCard({
     </div>
   );
 }
+
+// Define prop types
+CvWriterCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  bio: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  specialization: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired,
+  services: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};

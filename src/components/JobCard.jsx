@@ -1,22 +1,21 @@
 import React from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import CustomButton from "./CustomButton";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
-import {
-  useAddRatingMutation,
-} from "../redux/appData";
+import { useAddRatingMutation } from "../redux/appData";
 import Rating from "react-rating";
 
 function formatDate(dateString) {
   const date = new Date(dateString);
   const options = {
     year: "numeric",
-    month: "long", // 'short' for abbreviated month
+    month: "long",
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
     second: "numeric",
-    hour12: true, // Use 12-hour format; set to false for 24-hour
+    hour12: true,
   };
   return date.toLocaleDateString(undefined, options);
 }
@@ -38,9 +37,9 @@ export default function JobCard({
   referal,
   vendorId,
 }) {
-  const [rating, setRating] = React.useState(3); // Default initial rating
+  const [rating, setRating] = React.useState(3);
 
-  const [addRating, { isSuccess, isLoading, error }] = useAddRatingMutation();
+  const [addRating, { isSuccess, error }] = useAddRatingMutation();
 
   const handleRating = async (rate) => {
     setRating(rate);
@@ -50,7 +49,7 @@ export default function JobCard({
     };
     console.log(data);
     try {
-      await addRating({ data, owner: vendorId  });
+      await addRating({ data, owner: vendorId });
     } catch (error) {
       console.log("error", error);
     }
@@ -124,3 +123,23 @@ export default function JobCard({
     </div>
   );
 }
+
+// Define PropTypes for JobCard
+JobCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  companyName: PropTypes.string.isRequired,
+  priceFrom: PropTypes.number.isRequired,
+  priceTo: PropTypes.number.isRequired,
+  jobType: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
+  postedTime: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  userDashboard: PropTypes.bool.isRequired,
+  services: PropTypes.bool,
+  status: PropTypes.string,
+  referal: PropTypes.string,
+  vendorId: PropTypes.string.isRequired,
+};
+

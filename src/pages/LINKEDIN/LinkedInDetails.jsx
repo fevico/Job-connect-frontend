@@ -1,36 +1,10 @@
-import React, { useEffect, useState } from "react";
 import CustomButton from "@/components/CustomButton";
-import {
-  FaEnvelope,
-  FaFacebook,
-  FaFacebookMessenger,
-  FaLink,
-  FaWhatsapp,
-} from "react-icons/fa";
-import job from "@/assets/images/job.png";
-import mark from "@/assets/images/mark.png";
+
 import { Link } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
-import {
-  Button,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
-import { ImCancelCircle } from "react-icons/im";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 export default function LinkedInDetails() {
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
- 
-
-  
   return (
     <>
       <Helmet>

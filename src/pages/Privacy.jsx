@@ -1,4 +1,3 @@
-import React from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import { Helmet } from "react-helmet";
 
@@ -22,10 +21,10 @@ export default function Privacy() {
       <Breadcrumb title1="Privacy Policy" title2={""} />
       <div className="w-[95%] mx-auto my-5 flex flex-col gap-3 text-left">
         <p className="text-primary font-[400]">
-          JobKonnectaNG ("we," "our," "us") is committed to protecting your
+          JobKonnectaNG is committed to protecting your
           privacy. This Privacy Policy explains how we collect, use, disclose,
           and safeguard your information when you visit our website
-          [www.jobkonnectaNG.com] (the "Site"). Please read this Privacy Policy
+          [www.jobkonnectaNG.com] . Please read this Privacy Policy
           carefully. If you do not agree with the terms of this Privacy Policy,
           please do not access the Site.
         </p>

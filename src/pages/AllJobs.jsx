@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CustomButton from "@/components/CustomButton";
-import JobList from "@/components/JobList";
 import JobCard from "../components/JobCard";
-import axios from "axios";
-// import { jobs } from "../DB/Data";
 import { Helmet } from "react-helmet";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Spinner } from "@material-tailwind/react";
@@ -18,14 +15,10 @@ export default function AllJobs() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const isSearch = searchParams.get("search");
-  const searchResults = location.state?.SearchResults || [];
-  console.log(searchResults)
+  const searchResults = location.state?.SearchResults;
+  console.log(searchResults);
 
-  const {
-    data: allJobs,
-    isLoading,
-    error,
-  } = useGetAllJobsQuery(undefined, {
+  const { data: allJobs, isLoading } = useGetAllJobsQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -111,21 +104,24 @@ export default function AllJobs() {
       </div>
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
-          {filteredJobs && filteredJobs.slice(0, visibleJobs).map((job, index) => (
-            <JobCard
-              key={index}
-              title={job.title}
-              companyName={job?.companyName || "companyName"}
-              description={job.description}
-              priceFrom={job.priceFrom || 20888}
-              priceTo={job.priceTo || 60300}
-              jobType={job.jobType || "Remote"}
-              location={`${job.location.state}, ${job.location.country}`}
-              postedTime={job.postedAt}
-              onClick={() => handleJobClick(job)}
-              id={job._id}
-            />
-          ))}
+          {filteredJobs &&
+            filteredJobs
+              .slice(0, visibleJobs)
+              .map((job, index) => (
+                <JobCard
+                  key={index}
+                  title={job.title}
+                  companyName={job?.companyName || "companyName"}
+                  description={job.description}
+                  priceFrom={job.priceFrom || 20888}
+                  priceTo={job.priceTo || 60300}
+                  jobType={job.jobType || "Remote"}
+                  location={`${job.location.state}, ${job.location.country}`}
+                  postedTime={job.postedAt}
+                  onClick={() => handleJobClick(job)}
+                  id={job._id}
+                />
+              ))}
         </div>
       </div>
       {allJobs && visibleJobs < allJobs.length && (

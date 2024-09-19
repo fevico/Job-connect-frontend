@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Navbar,
-  Collapse,
-  Typography,
-  IconButton,
-} from "@material-tailwind/react";
+import { Collapse, Typography, IconButton } from "@material-tailwind/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoCloseSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -13,8 +8,8 @@ import CustomButton from "./CustomButton";
 import Logo from "./Logo";
 import useSession from "./hooks/useSession";
 import { BiUserCircle } from "react-icons/bi";
-import { BsArrowDown } from "react-icons/bs";
 import { FaAngleDown } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 function NavList({ setOpenNav, isSignedIn, signOut, userDetails }) {
   const [openMenu, setOpenMenu] = React.useState(false);
@@ -88,7 +83,7 @@ function NavList({ setOpenNav, isSignedIn, signOut, userDetails }) {
 
       <Typography
         as="li"
-        variant="medium"
+        variant="small"
         color="blue-gray"
         className="p-1 font-semibold relative"
         onMouseEnter={toggleMenu}
@@ -191,7 +186,7 @@ function NavList({ setOpenNav, isSignedIn, signOut, userDetails }) {
         ) : (
           <Typography
             as="li"
-            variant="medium"
+            variant="small"
             color="white"
             className="p-1 font-semibold relative"
             onMouseEnter={toggleProfile}
@@ -293,8 +288,24 @@ export default function Header() {
         </IconButton>
       </div>
       <Collapse open={openNav}>
-        <NavList setOpenNav={setOpenNav} />
+        <NavList
+          setOpenNav={setOpenNav}
+          signOut={signOut}
+          isSignedIn={isSignedIn}
+          userDetails={userDetails}
+        />
       </Collapse>
     </div>
   );
 }
+
+NavList.propTypes = {
+  setOpenNav: PropTypes.func.isRequired, // Function to set navigation state
+  isSignedIn: PropTypes.bool.isRequired, // Boolean indicating if the user is signed in
+  signOut: PropTypes.func.isRequired, // Function to sign out the user
+  userDetails: PropTypes.shape({
+    // Object for user details
+    role: PropTypes.string,
+    // Add any other user properties you need here
+  }), // userDetails can be an object or undefined/null
+};

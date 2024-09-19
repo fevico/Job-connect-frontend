@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
-import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import Breadcrumb from "../../components/Breadcrumb";
 import CustomButton from "../../components/CustomButton";
-import { BiUpload } from "react-icons/bi";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAddJobMutation, useGetAllCategoryQuery } from "../../redux/appData";
-import useSession from "../hooks/useSession";
+
+
 
 export default function PostJobs() {
   const [country, setCountry] = useState("");
@@ -39,17 +36,13 @@ export default function PostJobs() {
     setErrors({ ...errors, state: undefined });
   };
 
-  const {
-    data: categories,
-    isLoading: fetchingCat,
-    error: errorCat,
-  } = useGetAllCategoryQuery(undefined, {
+  const { data: categories } = useGetAllCategoryQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
-  const [addJob, { isSuccess, isLoading, error }] = useAddJobMutation();
+  const [addJob, { isSuccess, error }] = useAddJobMutation();
 
   async function handleSubmit(e) {
     // console.log("samsonnnnnnnnnn");
@@ -98,8 +91,6 @@ export default function PostJobs() {
     }
   }
 
-  const { signOut } = useSession();
-
   React.useEffect(() => {
     if (isSuccess) {
       toast.success("Job Posted Successfully!");
@@ -109,7 +100,7 @@ export default function PostJobs() {
       toast.error("failed to post job");
       setErrors(error);
     }
-  }, [isSuccess]);
+  }, [isSuccess, error, navigate]);
 
   return (
     <>
@@ -299,16 +290,16 @@ export default function PostJobs() {
             </div>
           </div>
           <div className="flex flex-col items-start gap-1 w-full ">
-                <label className="">About Company</label>
-                <textarea
-                  className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
-                  name="aboutCompany"
-                  type="text"
-                  placeholder="Enter brief company info"
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+            <label className="">About Company</label>
+            <textarea
+              className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
+              name="aboutCompany"
+              type="text"
+              placeholder="Enter brief company info"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
           {errors && (
             <div className="text-red-600 text-center">

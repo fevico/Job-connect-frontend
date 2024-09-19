@@ -1,17 +1,16 @@
-import React from "react";
 import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { AiOutlineProduct } from "react-icons/ai";
 import {
   MdDashboard,
-  MdOutlineCategory,
   MdOutlineInventory,
   MdSubscriptions,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import useSession from "./hooks/useSession";
-import { BsArrow90DegLeft, BsCashStack, BsGear } from "react-icons/bs";
+import { BsArrow90DegLeft, BsCashStack,  } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
+import PropTypes from "prop-types"
 
 export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
   const role = userDetails.role;
@@ -114,20 +113,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       {/* Admin, CV Writer, LinkedIn Optimizer */}
       {(role === "cvwriter" || role === "linkdinOptimizer") && (
         <>
-          {/* <NavLink
-            onClick={handleClose}
-            to="/service-applications"
-            className={({ isActive }) =>
-              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-            }
-          >
-            <ListItem className="focus:bg-transparent text-white">
-              <ListItemPrefix>
-                <AiOutlineProduct className="h-5 w-5" />
-              </ListItemPrefix>
-              Applications
-            </ListItem>
-          </NavLink> */}
+          
 
           <NavLink
             onClick={handleClose}
@@ -164,20 +150,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       {/* Admin, Employer, CV Writer, LinkedIn Optimizer */}
       {role !== "jobseeker" && (
         <>
-          {/* <NavLink
-            onClick={handleClose}
-            to=""
-            className={({ isActive }) =>
-              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-            }
-          >
-            <ListItem className="focus:bg-transparent text-white">
-              <ListItemPrefix>
-                <BsGear className="h-5 w-5" />
-              </ListItemPrefix>
-              Settings
-            </ListItem>
-          </NavLink> */}
+          
 
           <NavLink
             onClick={handleClose}
@@ -216,16 +189,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
 
       {/* All roles except jobseeker */}
       {role !== "jobseeker" && (
-        // <NavLink
-        //   to=""
-        //   onClick={() => {
-        //     handleClose();
-        //     signOut();
-        //   }}
-        //   className={({ isActive }) =>
-        //     isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-        //   }
-        // >
+    
         <ListItem className="focus:bg-transparent text-white">
           <ListItemPrefix>
             <BiLogOut className="h-5 w-5" />
@@ -245,6 +209,15 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
     </List>
   );
 }
+
+
+SidebarLinks.propTypes = {
+  closeDrawer: PropTypes.func.isRequired,
+  userDetails: PropTypes.shape({
+    role: PropTypes.string.isRequired,
+  }).isRequired,
+  signOut: PropTypes.func.isRequired,
+};
 
 export default function Sidebar({ mobile, closeDrawer }) {
   const { userDetails, signOut } = useSession();
@@ -273,3 +246,9 @@ export default function Sidebar({ mobile, closeDrawer }) {
     </div>
   );
 }
+
+
+Sidebar.propTypes = {
+  mobile: PropTypes.bool.isRequired,
+  closeDrawer: PropTypes.func.isRequired,
+};

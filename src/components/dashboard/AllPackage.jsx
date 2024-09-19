@@ -1,9 +1,7 @@
-import React from "react";
-import CustomButton from "../CustomButton";
 import { Spinner } from "@material-tailwind/react"; // Assuming you're using this Spinner component
 import { useGetAllPackagesQuery } from "../../redux/appData"; // Assuming you're fetching packages
 import useSession from "@/components/hooks/useSession";
-import { BiChevronRight, BiPencil, BiTrash } from "react-icons/bi";
+import { BiChevronRight } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
 export default function AllPackages() {
@@ -28,7 +26,7 @@ export default function AllPackages() {
     );
   }
 
-  console.log(allPackages);
+  // console.log(allPackages);
 
   if (error) {
     return (
@@ -74,7 +72,7 @@ export default function AllPackages() {
                   </p> */}
                   <p className="text-sm font-normal w-[20%] pr-2">
                     <Link
-                        state={{ productId: pkg?._id }}
+                      state={{ productId: pkg?._id }}
                       to={"/applications-services"}
                       className="flex gap-1 items-center justify-center rounded-lg bg-primary p-2 text-white font-semibold"
                     >
@@ -110,13 +108,3 @@ export default function AllPackages() {
   );
 }
 
-// Handle package actions
-function handleEditPackage(packageId) {
-  console.log("Edit package:", packageId);
-  // Implement package edit functionality
-}
-
-function handleDeletePackage(packageId) {
-  console.log("Delete package:", packageId);
-  // Implement package delete functionality
-}
