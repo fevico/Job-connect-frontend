@@ -12,7 +12,7 @@ import axios from "axios";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../components/hooks/firebase";
 
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from "prop-types"; // Import PropTypes
 
 function CVUpload({ cvFile, setCvFile }) {
   const [dragging, setDragging] = useState(false);
@@ -87,9 +87,6 @@ CVUpload.propTypes = {
   cvFile: PropTypes.instanceOf(File), // Expect a File object
   setCvFile: PropTypes.func.isRequired, // Expect a function to set the file
 };
-
-
-
 
 export default function RegAsJobSeeker() {
   const [country, setCountry] = useState("");
@@ -182,16 +179,14 @@ export default function RegAsJobSeeker() {
       name: formData.get("name"),
       email: formData.get("email"),
       gender: formData.get("gender"),
-      location: {
-        country: formData.get("country"),
-        state: formData.get("state"),
-      },
+      country: formData.get("country"),
+      state: formData.get("state"),
       phone: formData.get("phone"),
       qualification: formData.get("qualification"),
       yearsOfExperience: experience,
       password: formData.get("password"),
       role: role,
-      Cv: cvUrl, // Ensure cvUrl is included
+      cv: cvUrl, // Ensure cvUrl is included
     };
 
     console.log(data);

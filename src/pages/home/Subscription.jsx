@@ -30,7 +30,7 @@ function PricingCard({ plan, isActive, onSelect }) {
     <Card
       variant="gradient"
       className={`h-[600px] p-8 ${
-        isActive ? "bg-gray-900 text-white" : "bg-gray-500"
+        isActive ? "bg-gray-900 text-white" : "bg-white"
       }`}
       onClick={() => onSelect(plan.id)}
     >

@@ -7,9 +7,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "react-phone-number-input/style.css";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 export default function RegAsLinkedIn() {
   const [errors, setErrors] = useState({});
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
   const [image, setImage] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -23,6 +27,17 @@ export default function RegAsLinkedIn() {
   const handleInputChange = (e) => {
     const { name } = e.target;
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
+  };
+
+  const handleCountryChange = (val) => {
+    setCountry(val);
+    setErrors({ ...errors, country: undefined });
+    setState("");
+  };
+
+  const handleStateChange = (val) => {
+    setState(val);
+    setErrors({ ...errors, state: undefined });
   };
 
   const togglePasswordVisibility = () => {
@@ -57,6 +72,7 @@ export default function RegAsLinkedIn() {
       return response.data.secure_url; // Return the secure URL of the uploaded file
     } catch (error) {
       setIsLoading(false);
+      toast.error("failed to register")
 
       console.error("Error uploading file:", error);
       throw new Error("Failed to upload file to Cloudinary");
@@ -91,18 +107,21 @@ export default function RegAsLinkedIn() {
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
-      // gender: formData.get("gender"),
-      // nationality: country,
-      location: formData.get("location"),
+
+      gender: formData.get("gender"),
+      country: formData.get("country"),
+      state: formData.get("state"),
       phone: formData.get("phone"),
-      linkdinUrl: formData.get("linkedinUrl"),
+      linkedinProfile: formData.get("linkedinUrl"),
       currentJob: formData.get("currentJob"),
-      keySkills: formData.get("keySkills"),
+      skills: formData.get("keySkills"),
+      workHours: formData.get("workHours"),
       yearsOfExperience: formData.get("yearsOfExperience"),
       industry: formData.get("industry"),
+      responseTime: formData.get("responseTime"),
       optimizationGoal: formData.get("optimizationGoal"),
       targetAudience: formData.get("targetAudience"),
-      profileSection: formData.get("profileSection"),
+      optimizeSections: formData.get("profileSection"),
       password: formData.get("password"),
       role: role,
       avatar: imageUrl,
@@ -111,6 +130,7 @@ export default function RegAsLinkedIn() {
     try {
       const response = await axios.post(
         "https://jobkonnecta.com/api/user/register",
+        // "http://localhost:5000/user/register",
         data
       );
       setIsLoading(false);
@@ -204,15 +224,19 @@ export default function RegAsLinkedIn() {
           </div>
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
-              <label htmlFor="location">Location</label>
-              <input
+              <label className="">Gender</label>
+              <select
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="location"
-                type="text"
-                placeholder="City, State, Country"
+                name="gender"
                 onChange={handleInputChange}
                 required
-              />
+              >
+                <option value="" disabled selected>
+                  Select Gender
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
               <label htmlFor="profilePhoto">Profile Photo</label>
@@ -221,6 +245,36 @@ export default function RegAsLinkedIn() {
                 type="file"
                 name="image"
                 onChange={handleImageChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="" htmlFor="country">
+                Country
+              </label>
+              <CountryDropdown
+                value={country}
+                onChange={handleCountryChange}
+                className={`p-2 w-full border-2 rounded-md "border-gray-400"
+                `}
+                name="country"
+                required
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="" htmlFor="state">
+                State
+              </label>
+              <RegionDropdown
+                country={country}
+                value={state}
+                onChange={handleStateChange}
+                name="state"
+                className={`p-2 w-full border-2 rounded-md "border-gray-400"
+                `}
                 required
               />
             </div>
@@ -267,15 +321,47 @@ export default function RegAsLinkedIn() {
           </div>
           <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
             <div className="flex flex-col items-start gap-1 w-full">
-              <label>Industry</label>
-              <input
+              <label className="">Industry</label>
+              <select
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="industry"
-                type="text"
-                placeholder="Industry (e.g., Tech, Finance)"
                 onChange={handleInputChange}
                 required
-              />
+              >
+                <option value="" disabled selected>
+                  Select Industry
+                </option>
+                <option value="information_technology">
+                  Information Technology (IT)
+                </option>
+                <option value="finance">Finance & Banking</option>
+                <option value="construction">Construction</option>
+                <option value="healthcare">Healthcare & Medical</option>
+                <option value="education">Education</option>
+                <option value="manufacturing">Manufacturing</option>
+                <option value="retail">Retail & E-commerce</option>
+                <option value="hospitality">Hospitality & Tourism</option>
+                <option value="transportation">
+                  Transportation & Logistics
+                </option>
+                <option value="real_estate">Real Estate</option>
+                <option value="media">Media & Entertainment</option>
+                <option value="telecommunications">Telecommunications</option>
+                <option value="agriculture">Agriculture</option>
+                <option value="legal">Legal Services</option>
+                <option value="energy">Energy & Utilities</option>
+                <option value="government">Government & Public Sector</option>
+                <option value="non_profit">Non-profit & NGOs</option>
+                <option value="consulting">Consulting</option>
+                <option value="automotive">Automotive</option>
+                <option value="fashion">Fashion & Apparel</option>
+                <option value="pharmaceutical">
+                  Pharmaceutical & Biotechnology
+                </option>
+                <option value="marketing">Marketing & Advertising</option>
+                <option value="arts">Arts & Creative Services</option>
+                <option value="others">Others</option>
+              </select>
             </div>
             <div className="flex flex-col items-start gap-1 w-full">
               <label>Years of Experience</label>

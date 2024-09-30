@@ -39,7 +39,7 @@ export default function LinkedInOptimizerCard({
         <CustomButton
           text={"VIEW INFO"}
           onClick={onClick}
-          link={`/linkedin/${id}`}
+          // link={`/linkedin/${id}`}
         />
       </div>
     </div>

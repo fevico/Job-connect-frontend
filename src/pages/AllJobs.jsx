@@ -8,15 +8,14 @@ import { useGetAllJobsQuery } from "../redux/appData";
 
 export default function AllJobs() {
   const [visibleJobs, setVisibleJobs] = useState(10);
-  // const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const [filterOption, setFilterOption] = useState(""); // State for filtering by date
   const navigate = useNavigate();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const isSearch = searchParams.get("search");
   const searchResults = location.state?.SearchResults;
-  console.log(searchResults);
 
   const { data: allJobs, isLoading } = useGetAllJobsQuery(undefined, {
     refetchOnMountOrArgChange: false,
@@ -25,14 +24,45 @@ export default function AllJobs() {
   });
 
   useEffect(() => {
-    // Determine the products to use: search results, all products, or filtered by category
     let jobsToUse = allJobs;
 
-    if (isSearch && searchResults.length > 0) {
-      jobsToUse = searchResults; // Use search results if available
+    if (isSearch && searchResults?.length > 0) {
+      jobsToUse = searchResults;
     }
     setFilteredJobs(jobsToUse);
   }, [allJobs, searchResults, isSearch]);
+
+  // Function to filter jobs based on time frame
+  const filterJobsByDate = (timeFrame) => {
+    const now = new Date();
+    let filteredJobs = [];
+
+    if (allJobs && allJobs.length > 0) {
+      filteredJobs = allJobs.filter((job) => {
+        const postedAt = new Date(job.postedAt);
+
+        if (timeFrame === "24hrs") {
+          return now - postedAt <= 24 * 60 * 60 * 1000; // Last 24 hours
+        } else if (timeFrame === "7days") {
+          return now - postedAt <= 7 * 24 * 60 * 60 * 1000; // Last 7 days
+        } else if (timeFrame === "2weeks") {
+          return now - postedAt <= 14 * 24 * 60 * 60 * 1000; // Last 2 weeks
+        } else {
+          return true; // No filter, return all jobs
+        }
+      });
+
+    }
+    setFilteredJobs(filteredJobs);
+  };
+
+  const handleFilterChange = (event) => {
+    const selectedOption = event.target.value;
+    setFilterOption(selectedOption);
+    filterJobsByDate(selectedOption);
+    console.log(selectedOption)
+  };
+
   const handleSeeMore = () => {
     setVisibleJobs((prevVisibleJobs) => prevVisibleJobs + 5);
   };
@@ -59,35 +89,11 @@ export default function AllJobs() {
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
-      {/* filter start */}
-      {/* job found start */}
-      <div className="mt-4 lg:mt-8 flex flex-col gap-5 items-center">
-        {/* <div className="bg-[#2C2F4E] p-4 w-full flex flex-col lg:flex-row gap-3 justify-around items-center ">
-          <div className="flex items-center lg:justify-between gap-4 lg:overflow-x-hidden w-full lg:w-[70%] mx-auto overflow-x-scroll ">
-            <select className="py-3 px-5 w-full  rounded-lg bg-gray-200">
-              <option value="">Select job location</option>
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
-            <select className="py-3 px-5 w-full rounded-lg bg-gray-200">
-              <option value="">Select job type</option>
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
-            <div className="w-full">
-              <button className="py-2 px-4  font-medium text-white  text-center border-[#ACD4FF] hover:bg-blue-500 rounded-lg border-2 w-full bg-primary ">
-                Search
-              </button>{" "}
-            </div>
-          </div>
-        </div> */}
-      </div>
 
-      {/* filter end */}
       <div className="flex justify-between w-[90%] mx-auto mt-5 items-center">
         <div className="flex flex-col items-center leading-5 mb-3">
           <h2 className="text-primary font-bold text-[16px] lg:text-[24px]">
-            All Jobs
+            All Jobs ({filteredJobs && filteredJobs.length})
           </h2>
           <span className="flex items-center w-full justify-end">
             <hr className="border-2 border-primary w-1/2" />
@@ -95,13 +101,19 @@ export default function AllJobs() {
           </span>
         </div>
         <div className="">
-          <select className="py-3 px-5 w-full rounded-lg bg-gray-200">
-            <option value="">Last 7 days</option>
-            <option value="">1</option>
-            <option value="">2</option>
+          <select
+            className="py-3 px-5 w-full rounded-lg bg-gray-200"
+            onChange={handleFilterChange}
+            value={filterOption}
+          >
+            <option value="">All Time</option>
+            <option value="24hrs">Last 24 hrs</option>
+            <option value="7days">Last 7 days</option>
+            <option value="2weeks">Last 2 weeks</option>
           </select>
         </div>
       </div>
+
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
           {filteredJobs &&
@@ -124,7 +136,7 @@ export default function AllJobs() {
               ))}
         </div>
       </div>
-      {allJobs && visibleJobs < allJobs.length && (
+      {filteredJobs && visibleJobs < filteredJobs.length && (
         <div className="flex justify-end  my-5 w-[95%]">
           <CustomButton onClick={handleSeeMore} text={"Explore more jobs"} />
         </div>

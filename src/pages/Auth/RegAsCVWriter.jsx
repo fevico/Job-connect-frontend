@@ -7,11 +7,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 export default function RegAsCVWriter() {
   const [image, setImage] = useState(null);
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
   // const [imagePreviewUrl, setImagePreviewUrl] = useState(null); // For image preview
   const [errors, setErrors] = useState({});
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -22,6 +23,17 @@ export default function RegAsCVWriter() {
   const navigate = useNavigate();
 
   const role = "cvWriter";
+
+  const handleCountryChange = (val) => {
+    setCountry(val);
+    setErrors({ ...errors, country: undefined });
+    setState("");
+  };
+
+  const handleStateChange = (val) => {
+    setState(val);
+    setErrors({ ...errors, state: undefined });
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -34,13 +46,13 @@ export default function RegAsCVWriter() {
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "dnj3mn6et");
+    formData.append("upload_preset", "db0zguvf");
     formData.append("folder", "jobkonnect");
     setIsLoading(true);
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dnj3mn6et/auto/upload",
+        "https://api.cloudinary.com/v1_1/dgz5bgdzc/auto/upload",
         formData
       );
       setIsLoading(false);
@@ -58,8 +70,6 @@ export default function RegAsCVWriter() {
     const { name } = e.target;
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
-
-
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -82,16 +92,15 @@ export default function RegAsCVWriter() {
       return;
     }
 
- 
-
     let imageUrl = "";
 
     if (image) {
       try {
         imageUrl = await uploadFile(image);
-        console.log(imageUrl);
+        // console.log(imageUrl);
       } catch (error) {
         setErrors("Failed to upload image. Please try again.");
+        toast.error("failed to register");
         return;
       }
     }
@@ -100,7 +109,8 @@ export default function RegAsCVWriter() {
       name: formData.get("name"),
       email: formData.get("email"),
       gender: formData.get("gender"),
-      location: formData.get("location"),
+      country: formData.get("country"),
+      state: formData.get("state"),
       phone: formData.get("phone"),
       bio: formData.get("bio"),
       education: formData.get("education"),
@@ -110,7 +120,7 @@ export default function RegAsCVWriter() {
       role: role,
       portfolio: formData.get("portfolio"),
       yearsOfExperience: formData.get("experience"),
-      specializations: formData.get("specializations"),
+      specialization: formData.get("specializations"),
       avatar: imageUrl,
     };
 
@@ -119,6 +129,8 @@ export default function RegAsCVWriter() {
     try {
       const response = await axios.post(
         "https://jobkonnecta.com/api/user/register",
+        // "http://localhost:5000/user/register",
+
         data
       );
 
@@ -227,17 +239,7 @@ export default function RegAsCVWriter() {
                 <option value="female">Female</option>
               </select>
             </div>
-            <div className="flex flex-col items-start gap-1 w-full">
-              <label htmlFor="location">Location</label>
-              <input
-                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="location"
-                type="text"
-                placeholder="City, State, Country"
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+
             <div className="flex flex-col items-start gap-1 w-full">
               <label htmlFor="profilePhoto">Profile Photo</label>
               <input
@@ -245,6 +247,35 @@ export default function RegAsCVWriter() {
                 type="file"
                 name="image"
                 onChange={handleImageChange}
+                required
+              />
+            </div>
+          </div>
+          <div className="flex lg:flex-row flex-col w-full justify-between gap-4 items-center">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="" htmlFor="country">
+                Country
+              </label>
+              <CountryDropdown
+                value={country}
+                onChange={handleCountryChange}
+                className={`p-2 w-full border-2 rounded-md "border-gray-400"
+                `}
+                name="country"
+                required
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="" htmlFor="state">
+                State
+              </label>
+              <RegionDropdown
+                country={country}
+                value={state}
+                onChange={handleStateChange}
+                name="state"
+                className={`p-2 w-full border-2 rounded-md "border-gray-400"
+                `}
                 required
               />
             </div>

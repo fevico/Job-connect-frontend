@@ -63,6 +63,8 @@ export default function Offers() {
     slidesToShow: 3,
     slidesToScroll: 1,
     initialSlide: 0,
+    autoplay: true,
+    autoplaySpeed: 3000,
     // **Responsive adjustments for centering:**
     responsive: [
       {
