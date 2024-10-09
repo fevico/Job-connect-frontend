@@ -4,6 +4,7 @@ import { Spinner } from "@material-tailwind/react";
 import {
   useGetAllAppliedJobsQuery,
   useGetAllUsersQuery,
+  useGetMyReferalsQuery,
   useGetUserOrdersQuery,
 } from "../redux/appData";
 import Breadcrumb from "../components/Breadcrumb";
@@ -31,6 +32,34 @@ export default function UserDashboard() {
     refetchOnReconnect: false,
   });
 
+  const {
+    data: allUsers,
+    isLoading: fetchingUsers,
+    error: errorUsers,
+  } = useGetMyReferalsQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  // if (fetchingUsers) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       <Spinner className="w-8 h-8" />
+  //     </div>
+  //   );
+  // }
+
+  // if (errorUsers) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       <p className="text-red-500">Failed to load referrals. Please try again.</p>
+  //     </div>
+  //   );
+  // }
+
+  console.log(allUsers);
+
   // console.log(userDetails.id)
 
   const jobseeker =
@@ -41,21 +70,21 @@ export default function UserDashboard() {
   // console.log("applied", jobseeker);
   // console.log("applied", allServices);
 
-  if (isLoading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <Spinner className="w-8 h-8" />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       <Spinner className="w-8 h-8" />
+  //     </div>
+  //   );
+  // }
 
-  if (isLoadingServices) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <Spinner className="w-8 h-8" />
-      </div>
-    );
-  }
+  // if (isLoadingServices) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       <Spinner className="w-8 h-8" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -94,6 +123,11 @@ export default function UserDashboard() {
           </span>
         </div>
       </div>
+      {isLoading && (
+        <div className="h-screen flex items-center justify-center">
+          <Spinner className="w-8 h-8" />
+        </div>
+      )}
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
           {allJobs &&
@@ -128,6 +162,11 @@ export default function UserDashboard() {
           </span>
         </div>
       </div>
+      {isLoadingServices && (
+        <div className="h-screen flex items-center justify-center">
+          <Spinner className="w-8 h-8" />
+        </div>
+      )}
       <div className="flex flex-col gap-3  w-[90%] mx-auto  my-5">
         <div className="space-y-4">
           {allServices &&
@@ -154,6 +193,83 @@ export default function UserDashboard() {
                 services
               />
             ))}
+        </div>
+      </div>
+
+      <div className="flex justify-between w-[90%] mx-auto mt-5 items-center">
+        <div className="flex flex-col items-center leading-5 mb-3">
+          <h2 className="text-primary font-bold text-[16px] lg:text-[24px]">
+            My Referrals
+          </h2>
+          <span className="flex items-center w-full justify-end">
+            <hr className="border-2 border-primary w-1/2" />
+            <hr className="rounded-full p-1 bg-primary border-none" />
+          </span>
+        </div>
+      </div>
+      
+      <div className="overflow-x-auto w-[80%] mx-auto mb-5">
+        <div className="min-w-[800px]">
+          <div className="bg-[#E2F0FF] p-5">
+            {/* Header Row */}
+            <div className="flex items-center w-full px-4 py-2 mb-4 border-b-2 border-primary">
+              <p className="text-xs font-normal w-[30%] pr-2">Name</p>
+              {/* <p className="text-xs font-normal w-[20%] pr-2">Location</p> */}
+              <p className="text-xs font-normal w-[30%] pr-2">Email</p>
+              {/* <p className="text-xs font-normal w-[14%] pr-2">Role</p> */}
+              <p className="text-xs font-normal w-[30%] pr-2">Status</p>
+              {/* <p className="text-xs font-normal w-[15%]"></p> */}
+            </div>
+            {fetchingUsers && (
+        <div className="h-screen flex items-center justify-center">
+          <Spinner className="w-8 h-8" />
+        </div>
+      )}
+            {/* Jobs Data Rows */}
+            {allUsers && allUsers.length > 0 ? (
+              allUsers.map((users) => (
+                <div
+                  key={users?._id}
+                  className="flex items-center w-full px-4 py-2 mb-4"
+                >
+                  <p className="text-sm font-normal w-[30%] pr-2">
+                    {users?.name}
+                  </p>
+                  {/* <p className="text-sm font-normal w-[18%] pr-2">
+                    {users?.location?.state
+                      ? users?.location?.state
+                      : users?.location}
+                    , {users?.location?.country ? users?.location?.country : ""}
+                  </p> */}
+                  <p className="text-sm font-normal w-[30%] pr-2">
+                    {users?.email}
+                  </p>
+                  {/* <p className="text-sm font-normal w-[14%] pr-2">
+                    {users?.role}
+                  </p> */}
+                  <p className="text-sm font-normal w-[30%] pr-2">
+                    {users?.status}
+                  </p>
+                  {/* <p className="text-sm font-normal w-[15%] flex items-center gap-4">
+              {isLoading && loadingStates[users?._id]  ? (
+                      <Spinner className="w-4 h-4" />
+                    ) : (
+                      <Switch
+                        checked={users?.suspend}
+                        label="suspend"
+                        onChange={() => handleSubmit(users?._id)}
+                        disabled={loadingStates[users?._id]} // Disable switch while loading
+                      />
+                    )}
+                  </p> */}
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center w-full py-10">
+                <p className="text-sm font-normal">No referals yet.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

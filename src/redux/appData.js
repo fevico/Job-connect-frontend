@@ -153,6 +153,10 @@ export const productsApi = createApi({
     getUnapprovedUsers: builder.query({
       query: () => `user/all-unapproved-users`,
     }),
+    getMyReferals: builder.query({
+      query: () => `referal/user-referrals`,
+    }),
+
     approveUser: builder.mutation({
       query: (credentials) => ({
         url: `user/approve-user`,
@@ -440,6 +444,7 @@ export const {
   useGetEmployerPlanQuery,
   useGetBankQuery,
   useLazyGetBankAccountNameQuery,
+  useGetMyReferalsQuery,
   useUpdateMessageMutation,
 
   useGetUnapprovedUsersQuery,
