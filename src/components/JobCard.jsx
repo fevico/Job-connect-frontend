@@ -5,6 +5,8 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useAddRatingMutation } from "../redux/appData";
 import Rating from "react-rating";
+import DOMPurify from "dompurify";
+
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -89,7 +91,12 @@ export default function JobCard({
             </>
           )}
           <p className="line-clamp-2 overflow-hidden text-left text-[12px] lg:text-[16px]">
-            {description}
+          <div
+            className="text-left"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(description)
+            }}
+          />
           </p>
           <p className="text-xs text-red-500">{formatDate(postedTime)}</p>
           {services && userDashboard ? (

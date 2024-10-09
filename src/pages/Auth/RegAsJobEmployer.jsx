@@ -54,7 +54,9 @@ function CVUpload({ regFile, setRegFile }) {
       onDragLeave={handleDragLeave}
     >
       <div className="flex flex-col justify-center items-center">
-        <p className="mb-2 text-lg font-semibold">Upload your CAC registration document</p>
+        <p className="mb-2 text-lg font-semibold">
+          Upload your CAC registration document
+        </p>
         <BiUpload className="w-8 h-8" />
         <p className="mb-2 text-sm text-gray-500">
           Drag and drop file or{" "}
@@ -90,7 +92,6 @@ CVUpload.propTypes = {
   setRegFile: PropTypes.func.isRequired, // Expect a function to set the file
 };
 
-
 export default function RegAsJobEmployer() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
@@ -121,8 +122,6 @@ export default function RegAsJobEmployer() {
     setErrors({ ...errors, state: undefined });
   };
 
-
-
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -147,7 +146,7 @@ export default function RegAsJobEmployer() {
     if (!regFile) {
       setErrors({ message: "Please upload your Reg Document." });
       toast.error("Please upload your Reg Document.");
-      setIsLoading(false)
+      setIsLoading(false);
       return;
     }
 
@@ -181,6 +180,7 @@ export default function RegAsJobEmployer() {
 
       phone: formData.get("phone"),
       companyName: formData.get("companyName"),
+      aboutCompany: formData.get("aboutCompany"),
       comapanyAddress: formData.get("address"),
       registrationNumber: formData.get("regNo"),
       registrationImage: regFileUrl,
@@ -461,9 +461,19 @@ export default function RegAsJobEmployer() {
               </select>
             </div>
           </div>
+          <div className="flex flex-col items-start gap-1 w-full ">
+            <label className="">About Company</label>
+            <textarea
+              className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
+              name="aboutCompany"
+              type="text"
+              placeholder="Enter brief company info"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
           <CVUpload regFile={regFile} setRegFile={setRegFile} />
-
         </div>
 
         <div className="flex flex-col gap-3 items-start w-[90%] mx-auto mt-4">

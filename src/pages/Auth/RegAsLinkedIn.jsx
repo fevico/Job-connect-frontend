@@ -129,8 +129,8 @@ export default function RegAsLinkedIn() {
 
     try {
       const response = await axios.post(
-        "https://jobkonnecta.com/api/user/register",
-        // "http://localhost:5000/user/register",
+        // "https://jobkonnecta.com/api/user/register",
+        "http://localhost:5000/user/register",
         data
       );
       setIsLoading(false);

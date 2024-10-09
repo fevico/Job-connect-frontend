@@ -50,3 +50,18 @@ body {
 .animate-fadeIn {
   animation: fadeIn 2s ease forwards;
 }
+
+.editor-container {
+  /* height: 200px; Fixed height */
+  width: 100%; /* Full width */
+  /* overflow-y: auto; Enable vertical scrolling */
+}
+
+.ql-editor {
+  height: 200px; /* Make the editor take full height */
+  /* overflow-y: auto; Enable scrolling within the editor */
+}
+.ql-container.ql-snow {
+  min-height: 200px;
+}
+

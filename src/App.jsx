@@ -38,6 +38,7 @@ import CreatePackage from "./components/dashboard/CreatePackage";
 import Subscription from "./components/dashboard/Subscription";
 import UserDashboard from "./pages/UserDashboard";
 import Messages from "./components/dashboard/Messages";
+import Unapproved from "./components/dashboard/Unaprroved";
 
 function App() {
   return (
@@ -73,11 +74,15 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/active-listing" element={<ActiveListings />} />
           <Route path="/applications" element={<Applications />} />
-          <Route path="/applications-services" element={<ApplicationsServices />} />
+          <Route
+            path="/applications-services"
+            element={<ApplicationsServices />}
+          />
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/earnings" element={<Earnings />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/all-users" element={<AllUsers />} />
+          <Route path="/unapproved-users" element={<Unapproved />} />
           <Route path="/all-messages" element={<Messages />} />
           <Route path="/all-package" element={<AllPackage />} />
           <Route path="/create-package" element={<CreatePackage />} />

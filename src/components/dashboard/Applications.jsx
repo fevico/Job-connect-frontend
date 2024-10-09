@@ -50,7 +50,7 @@ export default function Applications() {
       // status: selectedApplication.status,
       applicantId: selectedApplication.userId,
     };
-    console.log(data);
+    // console.log(data);
     try {
       await hire({ data, id: jobId });
     } catch (error) {

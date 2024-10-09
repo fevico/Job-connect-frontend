@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { Spinner } from "@material-tailwind/react";
 import {
   useGetAllAppliedJobsQuery,
+  useGetAllUsersQuery,
   useGetUserOrdersQuery,
 } from "../redux/appData";
 import Breadcrumb from "../components/Breadcrumb";
@@ -24,7 +25,20 @@ export default function UserDashboard() {
       refetchOnReconnect: false,
     });
 
-  // console.log("applied", allJobs);
+  const { data: users } = useGetAllUsersQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  // console.log(userDetails.id)
+
+  const jobseeker =
+    users &&
+    users.filter(
+      (user) => user.role === "jobseeker" && user._id === userDetails.id
+    );
+  // console.log("applied", jobseeker);
   // console.log("applied", allServices);
 
   if (isLoading) {
@@ -58,6 +72,16 @@ export default function UserDashboard() {
         title1={`Hello ${userDetails?.email}, Welcome to Your Dashboard`}
         title2={"Check out what’s happening"}
       />
+
+      <div className="bg-white shadow-md shadow-gray-500 p-4 flex flex-col w-[70%] mx-auto mt-5 items-center">
+        <p className="font-semibold text-sm">Referral Balance</p>
+        <div className="flex flex-col items-center gap-2 mt-4">
+          <h2 className="font-bold text-4xl">
+            &#8358;{(jobseeker && jobseeker?.referralBalance) || 0}
+          </h2>
+          {/* <p className="text-sm">Available for Withdrawal</p> */}
+        </div>
+      </div>
 
       <div className="flex justify-between w-[90%] mx-auto mt-5 items-center">
         <div className="flex flex-col items-center leading-5 mb-3">

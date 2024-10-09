@@ -2,6 +2,7 @@ import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { AiOutlineProduct } from "react-icons/ai";
 import {
   MdDashboard,
+  MdNotAccessible,
   MdOutlineInventory,
   MdSubscriptions,
 } from "react-icons/md";
@@ -113,20 +114,37 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
 
       {/* Admin only */}
       {role === "admin" && (
-        <NavLink
-          onClick={handleClose}
-          to="/all-users"
-          className={({ isActive }) =>
-            isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
-          }
-        >
-          <ListItem className="focus:bg-transparent text-white">
-            <ListItemPrefix>
-              <BsCashStack className="h-5 w-5" />
-            </ListItemPrefix>
-            All Users
-          </ListItem>
-        </NavLink>
+        <>
+          <NavLink
+            onClick={handleClose}
+            to="/unapproved-users"
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <MdNotAccessible className="h-5 w-5" />
+              </ListItemPrefix>
+              Unapproved Users
+            </ListItem>
+          </NavLink>
+
+          <NavLink
+            onClick={handleClose}
+            to="/all-users"
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <BsCashStack className="h-5 w-5" />
+              </ListItemPrefix>
+              All Users
+            </ListItem>
+          </NavLink>
+        </>
       )}
 
       {/* Admin, CV Writer, LinkedIn Optimizer */}

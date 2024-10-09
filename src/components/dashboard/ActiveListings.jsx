@@ -27,7 +27,7 @@ export default function ActiveListings() {
     );
   }
 
-  console.log(allJobs);
+  // console.log(allJobs);
 
   if (error) {
     return (

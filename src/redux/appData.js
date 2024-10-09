@@ -150,6 +150,24 @@ export const productsApi = createApi({
     getSubscriptionVerifyPayment: builder.query({
       query: (reference) => `subscription/verify-payment/${reference}`,
     }),
+    getUnapprovedUsers: builder.query({
+      query: () => `user/all-unapproved-users`,
+    }),
+    approveUser: builder.mutation({
+      query: (credentials) => ({
+        url: `user/approve-user`,
+        method: "POST",
+        body: credentials,
+      }),
+
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to uapprove:", err);
+        }
+      },
+    }),
     addJob: builder.mutation({
       query: (credentials) => ({
         url: `job/create`,
@@ -423,6 +441,10 @@ export const {
   useGetBankQuery,
   useLazyGetBankAccountNameQuery,
   useUpdateMessageMutation,
+
+  useGetUnapprovedUsersQuery,
+  useApproveUserMutation,
+
   // untreated
   useGetAllOrdersQuery,
   useGetUserOrdersQuery,

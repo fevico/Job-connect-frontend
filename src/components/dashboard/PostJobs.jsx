@@ -5,18 +5,39 @@ import CustomButton from "../../components/CustomButton";
 
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useAddJobMutation, useGetAllCategoryQuery } from "../../redux/appData";
-
-
+import {
+  useAddJobMutation,
+  useGetAllCategoryQuery,
+  useGetAllUsersQuery,
+} from "../../redux/appData";
+import useSession from "../hooks/useSession";
+import JobSummaryEditor from "../JobSummaryEditor";
 
 export default function PostJobs() {
   const [country, setCountry] = useState("");
+  const [summary, setSummary] = useState("");
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
   const [categoryId, setcategoryId] = useState("");
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
 
+
+  const { data: users } = useGetAllUsersQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const { userDetails } = useSession();
+
+  // console.log(userDetails.id)
+
+  const employer =
+    users &&
+    users.filter(
+      (user) => user.role === "employer" && user._id === userDetails.id
+    );
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "categoryId") {
@@ -66,8 +87,19 @@ export default function PostJobs() {
 
     const data = {
       title: formData.get("title"),
-      description: formData.get("summary"),
-      aboutCompany: formData.get("aboutCompany"),
+      // description: formData.get("summary"),
+      description: summary,
+      aboutCompany:
+        userDetails && userDetails.role === "employer"
+          ? employer?.aboutCompany
+          : formData.get("aboutCompany"),
+      companyName:
+        userDetails && userDetails.role === "employer"
+          ? employer?.companyName
+          : formData.get("companyName"),
+      // aboutCompany: "FFFF",
+      // companyName: "F",
+      industry: formData.get("industry"),
       priceFrom: priceFrom,
       priceTo: priceTo,
       location: {
@@ -75,11 +107,13 @@ export default function PostJobs() {
         state: formData.get("state"),
       },
       skills: formData.get("skills"),
+      currency: formData.get("currency"),
       categoryId: categoryId,
       duration: formData.get("duration"),
     };
 
     try {
+      // console.log(data);
       await addJob(data);
       setLoading(false);
     } catch (err) {
@@ -220,28 +254,62 @@ export default function PostJobs() {
               </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row items-start gap-2 w-full">
-              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+            <div className="flex flex-col lg:flex-row items-center gap-2 w-full">
+              <div className="flex flex-col items-start gap-1 w-full">
                 <label className="">Job Summary</label>
-                <textarea
+                {/* <textarea
                   className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
                   name="summary"
                   type="text"
                   placeholder="Enter Job Summary"
                   onChange={handleInputChange}
                   required
-                />
+                /> */}
+              <JobSummaryEditor onChange={setSummary} />{" "}
+
               </div>
-              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+            </div>
+            <div className="flex flex-col lg:flex-row items-center gap-2 w-full">
+              {userDetails && userDetails.role != "employer" && (
+                <div className="flex flex-col items-start gap-1 w-full lg:w-1/2  ">
+                  <label className="">Company name</label>
+                  <input
+                    className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                    name="companyName"
+                    type="text"
+                    placeholder="company Name"
+                    onChange={handleInputChange}
+                    required
+                    // disabled={userDetails && userDetails.role === "employer"}
+                  />
+                </div>
+              )}
+              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2  ">
                 <label className="">Required Skills</label>
-                <textarea
-                  className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
+                <input
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                   name="skills"
                   type="text"
                   placeholder="Required Skills"
                   onChange={handleInputChange}
                   required
                 />
+              </div>
+
+              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+                <label className="">Payment Currency</label>
+                <select
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="currency"
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled selected>
+                    Select Currency
+                  </option>
+                  <option value="naira">Naira</option>
+                  <option value="dollar">Dollar</option>
+                </select>
               </div>
             </div>
           </div>
@@ -289,17 +357,19 @@ export default function PostJobs() {
               </select>
             </div>
           </div>
-          <div className="flex flex-col items-start gap-1 w-full ">
-            <label className="">About Company</label>
-            <textarea
-              className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
-              name="aboutCompany"
-              type="text"
-              placeholder="Enter brief company info"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
+          {userDetails && userDetails.role != "employer" && (
+            <div className="flex flex-col items-start gap-1 w-full ">
+              <label className="">About Company</label>
+              <textarea
+                className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
+                name="aboutCompany"
+                type="text"
+                placeholder="Enter brief company info"
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          )}
 
           {errors && (
             <div className="text-red-600 text-center">

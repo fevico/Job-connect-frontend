@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
-import {
-FaLink
-} from "react-icons/fa";
+import { FaLink } from "react-icons/fa";
 import jobImage from "@/assets/images/job.png";
 import mark from "@/assets/images/mark.png";
-import {  useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
+import DOMPurify from "dompurify";
 import {
   Button,
   Dialog,
@@ -23,7 +22,6 @@ import { toast } from "react-toastify";
 import useSession from "../components/hooks/useSession";
 import { useApplyJobMutation, useShareJobMutation } from "../redux/appData";
 import PropTypes from "prop-types";
-
 
 export function ApplySuccess({ open, handleOpen }) {
   return (
@@ -71,12 +69,10 @@ export function ApplySuccess({ open, handleOpen }) {
   );
 }
 
-
 ApplySuccess.propTypes = {
   open: PropTypes.string.isRequired,
   handleOpen: PropTypes.func.isRequired,
 };
-
 
 export default function JobDetails() {
   const location = useLocation();
@@ -131,8 +127,7 @@ export default function JobDetails() {
   // }
 
   // console.log(getJobById);
-  const [applyJob, { isSuccess, error }] =
-    useApplyJobMutation();
+  const [applyJob, { isSuccess, error }] = useApplyJobMutation();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -171,7 +166,7 @@ export default function JobDetails() {
     }
   };
 
-  console.log(userDetails);
+  // console.log(userDetails);
   const handleApply = async () => {
     // e.preventDefault();
 
@@ -224,6 +219,12 @@ export default function JobDetails() {
       toast.error(errorShare?.data?.message);
     }
   }, [isSuccessShare, errorShare]);
+
+  // const decodeHTML = (html) => {
+  //   const txt = document.createElement("textarea");
+  //   txt.innerHTML = html;
+  //   return txt.value;
+  // };
 
   return (
     <>
@@ -326,7 +327,12 @@ export default function JobDetails() {
               Job Summary
             </h1>
           </div>
-          <p className="text-left">{job.description}</p>
+          <div
+            className="text-left"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(job.description),
+            }}
+          />
         </div>
 
         {/* <div className="flex flex-col gap-3 p-4">
@@ -401,6 +407,17 @@ export default function JobDetails() {
           </div>
           <div className="text-left">
             <p className=""> {job.skills}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 p-4">
+          <div className="p-3 lg:h-[50px] w bg-[#D5D5DC]">
+            <h1 className="text-primary/50 shadow-[#000000/25%] lg:text-[16px] text-left font-[800]">
+              Company Info
+            </h1>
+          </div>
+          <div className="text-left">
+            <p className=""> {job?.aboutCompany}</p>
           </div>
         </div>
       </div>
