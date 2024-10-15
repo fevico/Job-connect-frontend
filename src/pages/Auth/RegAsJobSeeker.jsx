@@ -185,6 +185,7 @@ export default function RegAsJobSeeker() {
       qualification: formData.get("qualification"),
       yearsOfExperience: experience,
       password: formData.get("password"),
+      linkedInProfile: formData.get("linkedInProfile"),
       role: role,
       cv: cvUrl, // Ensure cvUrl is included
     };
@@ -372,6 +373,18 @@ export default function RegAsJobSeeker() {
                 name="experience"
                 type="number"
                 placeholder="Experience"
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div className="flex flex-col items-start gap-1 w-full">
+              <label className="">LinkedIn Profile URL</label>
+              <input
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="linkedInProfile"
+                type="text"
+                placeholder="Enter your LinkedIn Profile Url"
                 onChange={handleInputChange}
                 required
               />

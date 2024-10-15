@@ -19,6 +19,7 @@ export default function PostJobs() {
   const [state, setState] = useState("");
   const [errors, setErrors] = useState({});
   const [categoryId, setcategoryId] = useState("");
+  const [referralValue, setReferralValue] = useState("");
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
 
@@ -42,6 +43,9 @@ export default function PostJobs() {
     const { name, value } = e.target;
     if (name === "categoryId") {
       setcategoryId(value);
+    }
+    if (name === "referral"){
+      setReferralValue(value)
     }
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
@@ -109,7 +113,8 @@ export default function PostJobs() {
       skills: formData.get("skills"),
       currency: formData.get("currency"),
       categoryId: categoryId,
-      duration: formData.get("duration"),
+      referral: formData.get("referral") || "no",
+      referralAmount: formData.get("referralAmount") || 0,
     };
 
     try {
@@ -296,21 +301,7 @@ export default function PostJobs() {
                 />
               </div>
 
-              <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
-                <label className="">Payment Currency</label>
-                <select
-                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="currency"
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled selected>
-                    Select Currency
-                  </option>
-                  <option value="naira">Naira</option>
-                  <option value="dollar">Dollar</option>
-                </select>
-              </div>
+           
             </div>
           </div>
 
@@ -337,6 +328,22 @@ export default function PostJobs() {
             </div>
 
             <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+                <label className="">Payment Currency</label>
+                <select
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="currency"
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled selected>
+                    Select Currency
+                  </option>
+                  <option value="naira">Naira</option>
+                  <option value="dollar">Dollar</option>
+                </select>
+              </div>
+
+            {/* <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
               <label className="">Duration</label>
               <select
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
@@ -355,10 +362,44 @@ export default function PostJobs() {
                 <option value="1 year">1 year</option>
                 <option value="ongoing">Ongoing</option>
               </select>
-            </div>
+            </div> */}
           </div>
-          {userDetails && userDetails.role != "employer" && (
-            <div className="flex flex-col items-start gap-1 w-full ">
+
+
+          {userDetails && userDetails.role != "employer" && (<>
+           
+
+            <div className="flex flex-col lg:flex-row items-start gap-2 w-full">
+            <div className={`flex flex-col items-start gap-1 w-full ${referralValue === "yes" ? "lg:w-1/2" : "lg:w-full"} `}>
+              <label className="">Referral</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="referral"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                Is this a referral job?
+                </option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              
+              </select>
+            </div>
+{referralValue === "yes" &&
+            <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+              <label className="">Referral Amount</label>
+              <input
+                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                  name="referralAmount"
+                  type="number"
+                  placeholder="Enter Referall amount"
+                  onChange={handleInputChange}
+                  required
+                />
+            </div>}
+          </div>
+          <div className="flex flex-col items-start gap-1 w-full ">
               <label className="">About Company</label>
               <textarea
                 className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
@@ -369,6 +410,7 @@ export default function PostJobs() {
                 required
               />
             </div>
+            </>
           )}
 
           {errors && (

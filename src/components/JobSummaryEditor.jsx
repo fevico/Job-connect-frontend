@@ -1,52 +1,4 @@
-// import React, { useRef, useEffect } from 'react';
-// import Quill from 'quill';
-// import 'quill/dist/quill.snow.css';
 
-// export default function JobSummaryEditor({ onChange }) {
-//   const quillRef = useRef(null);
-//   const editorInstance = useRef(null); // Ref to store the Quill instance
-
-//   useEffect(() => {
-//     if (!editorInstance.current) {
-//       // Initialize the Quill editor only if it's not already initialized
-//       editorInstance.current = new Quill(quillRef.current, {
-//         modules: {
-//           toolbar: [
-//             ['bold', 'italic', 'underline', 'strike'],
-//             [{ header: 1 }, { header: 2 }, { header: 3 }],
-//             ['blockquote', 'code-block'],
-//             [{ list: 'ordered' }, { list: 'bullet' }],
-//             [{ script: 'super' }, { script: 'sub' }],
-//             [{ indent: '+1' }, { indent: '-1' }],
-//             [{ direction: 'rtl' }],
-//             [{ size: ['small', 'medium', 'large', 'x-large'] }],
-//             [{ color: [] }, { background: [] }],
-//             ['link', 'image', 'video'],
-//             ['clean'],
-//           ],
-//         },
-//         theme: 'snow',
-//       });
-
-//       // Listen to text changes in the Quill editor
-//       editorInstance.current.on('text-change', () => {
-//         const summary = editorInstance.current.root.innerHTML;
-//         if (onChange) {
-//           onChange(summary);
-//         }
-//       });
-//     }
-
-//     return () => {
-//       // Clean up event listener on unmount
-//       if (editorInstance.current) {
-//         editorInstance.current.off('text-change');
-//       }
-//     };
-//   }, [onChange]);
-
-//   return <div ref={quillRef} style={{ height: '200px', width: '100%' }} />;
-// }
 
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
@@ -71,10 +23,7 @@ const JobSummaryEditor = ({ onChange }) => {
         formats={JobSummaryEditor.formats}
       />
 
-<div
-        className="preview-container bg-white p-4"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(editorHtml) }} // Use DOMPurify for security
-      />
+ {/* <div className="preview-container bg-white p-4" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(editorHtml) }} /> */}
     </div>
   );
 };
