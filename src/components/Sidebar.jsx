@@ -22,7 +22,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
 
   return (
     <List>
-      {role !== "jobseeker" && (
+      {role !== "jobSeeker" && (
         <NavLink
           onClick={handleClose}
           to="/dashboard"
@@ -94,8 +94,8 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
 
       {/* Admin only */}
       {(role === "admin" ||
-        role === "cvwriter" ||
-        role === "linkdinOptimizer") && (
+        role === "cvWriter" ||
+        role === "linkedinOptimizer") && (
         <NavLink
           onClick={handleClose}
           to="/earnings"
@@ -144,11 +144,13 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
               All Users
             </ListItem>
           </NavLink>
+
+          
         </>
       )}
 
       {/* Admin, CV Writer, LinkedIn Optimizer */}
-      {(role === "cvwriter" || role === "linkdinOptimizer") && (
+      {(role === "cvWriter" || role === "linkedinOptimizer") && (
         <>
           <NavLink
             onClick={handleClose}
@@ -183,7 +185,7 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
       )}
 
       {/* Admin, Employer, CV Writer, LinkedIn Optimizer */}
-      {role !== "jobseeker" && (
+      {role !== "jobSeeker" && (
         <>
           <NavLink
             onClick={handleClose}
@@ -220,8 +222,8 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
         </NavLink>
       )}
 
-      {/* All roles except jobseeker */}
-      {role !== "jobseeker" && (
+      {/* All roles except jobSeeker */}
+      {role !== "jobSeeker" && (
         <ListItem className="focus:bg-transparent text-white">
           <ListItemPrefix>
             <BiLogOut className="h-5 w-5" />

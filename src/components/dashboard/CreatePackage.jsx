@@ -28,13 +28,16 @@ export default function CreatePackage() {
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "db0zguvf");
+    // formData.append("upload_preset", "db0zguvf");
+    formData.append("upload_preset", "ok80dmew");
+
     formData.append("folder", "jobkonnect");
     setLoading(true);
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dgz5bgdzc/auto/upload",
+        // "https://api.cloudinary.com/v1_1/dgz5bgdzc/auto/upload",
+        "https://api.cloudinary.com/v1_1/dnj3mn6et/auto/upload",
         formData
       );
       return response.data.secure_url;
@@ -66,11 +69,11 @@ export default function CreatePackage() {
       }
     }
 
-    console.log(credentials)
+    // console.log(credentials);
 
     // Submit the packageData to your API
     try {
-      // Post to API logic here
+          // Post to API logic here
       await addPackage(credentials);
 
       setLoading(false);
@@ -79,7 +82,6 @@ export default function CreatePackage() {
       toast.error(error.data.message);
       setErrors({ message: "An error occurred while creating the package." });
       console.error(error);
-
     }
   };
 

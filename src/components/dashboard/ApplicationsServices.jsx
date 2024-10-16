@@ -26,7 +26,7 @@ export default function ApplicationsServices() {
     refetchOnReconnect: false,
   });
 
-  console.log("jja", applications);
+  // console.log("jja", applications);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);

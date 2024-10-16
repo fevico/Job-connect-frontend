@@ -1,12 +1,27 @@
-
-import { Spinner } from "@material-tailwind/react"; // Assuming you're using this Spinner component
-import { useGetAllJobsByEmployerQuery } from "../../redux/appData";
+import React, { useState } from "react";
+import {
+  Spinner,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+import {
+  useGetAllJobsByEmployerQuery,
+  // useEditJobMutation,
+  // useDeleteJobMutation,
+} from "../../redux/appData";
 import useSession from "@/components/hooks/useSession";
-import { BiChevronRight} from "react-icons/bi";
+import { BiChevronRight, BiPencil, BiTrash } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import PostJobs from "./PostJobs"; // Assuming this is the add/edit job form component
 
 export default function ActiveListings() {
   const { userDetails } = useSession(); // Get the user session details
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  // const [deleteJob] = useDeleteJobMutation();
+  // const [editJob] = useEditJobMutation();
 
   // Fetch jobs by employer using the user's ID
   const {
@@ -27,8 +42,6 @@ export default function ActiveListings() {
     );
   }
 
-  // console.log(allJobs);
-
   if (error) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -37,6 +50,29 @@ export default function ActiveListings() {
     );
   }
 const role = (userDetails.role);
+
+  const handleOpenDialog = (job) => {
+    setSelectedJob(job);
+    setOpenDialog(true);
+  };
+
+  // const handleDeleteJob = async (jobId) => {
+  //   try {
+  //     await deleteJob(jobId); // Call delete mutation
+  //   } catch (error) {
+  //     console.error("Failed to delete job", error);
+  //   }
+  // };
+
+  // const handleEditJob = async (updatedJobData) => {
+  //   try {
+  //     await editJob({ id: selectedJob._id, ...updatedJobData }); // Call edit mutation
+  //     setOpenDialog(false); // Close dialog after edit
+  //   } catch (error) {
+  //     console.error("Failed to update job", error);
+  //   }
+  // };
+
   return (
     <>
       <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
@@ -82,11 +118,14 @@ const role = (userDetails.role);
                     {job?.status}
                   </p>
                   <p className="text-sm font-normal w-[15%] flex items-center gap-4">
-                    {/* <BiPencil onClick={""} className="w-5 h-5 cursor-pointer" />
+                    <BiPencil
+                      onClick={() => handleOpenDialog(job)}
+                      className="w-5 h-5 cursor-pointer"
+                    />
                     <BiTrash
-                      onClick={""}
+                      // onClick={() => handleDeleteJob(job?._id)}
                       className="w-5 h-5 text-red-400 cursor-pointer"
-                    /> */}
+                    />
                   </p>
                 </div>
               ))
@@ -98,7 +137,28 @@ const role = (userDetails.role);
           </div>
         </div>
       </div>
+
+      {/* Dialog for editing job */}
+      <Dialog size="xl" className="h-[90%] overflow-y-auto" open={openDialog} handler={() => setOpenDialog(false)}>
+        <DialogHeader>Edit Job</DialogHeader>
+        <DialogBody divider>
+          {selectedJob && (
+            <PostJobs // Reusing the PostJobs component for editing
+              initialData={selectedJob}
+              onSubmit={""}
+              // onSubmit={handleEditJob} // Custom handler for job editing
+            />
+          )}
+        </DialogBody>
+        <DialogFooter>
+          <button
+            className="bg-gray-500 text-white px-4 py-2 rounded"
+            onClick={() => setOpenDialog(false)}
+          >
+            Cancel
+          </button>
+        </DialogFooter>
+      </Dialog>
     </>
   );
 }
-
