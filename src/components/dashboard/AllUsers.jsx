@@ -6,10 +6,14 @@ import {
 } from "../../redux/appData";
 import { Switch } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import useSession from "../hooks/useSession";
 
 
 export default function AllUsers() {
   const [suspend, { isLoading}] = useSuspendMutation();
+  const { userDetails } = useSession(); // Get the user session details
+  const role = (userDetails.role);
+
 
   const [loadingStates, setLoadingStates] = React.useState({}); // To track loading per user
 
@@ -20,7 +24,7 @@ export default function AllUsers() {
     const credentials = {
       userId: userId,
     };
-    console.log(credentials);
+    // console.log(credentials);
 
     try {
       await suspend(credentials).unwrap();
@@ -63,7 +67,7 @@ export default function AllUsers() {
   console.log(allUsers);
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p>
+      <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           <div className="bg-[#E2F0FF] p-5">

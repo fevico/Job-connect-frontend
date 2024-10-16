@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function AllPackages() {
   const { userDetails } = useSession(); // Get the user session details
-
+  const role = userDetails.role;
   // Fetch all packages
   const {
     data: allPackages,
@@ -40,7 +40,7 @@ export default function AllPackages() {
 
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, USER</p>
+      <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           <div className="bg-[#E2F0FF] p-5">

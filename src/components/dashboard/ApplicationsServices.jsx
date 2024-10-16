@@ -10,6 +10,7 @@ import { Dialog } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { storage } from "../hooks/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import useSession from "../hooks/useSession";
 
 export default function ApplicationsServices() {
   const location = useLocation();
@@ -31,6 +32,10 @@ export default function ApplicationsServices() {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { userDetails } = useSession(); // Get the user session details
+  const role = (userDetails.role);
+
 
   const handleViewInfo = (application) => {
     setSelectedApplication(application);
@@ -114,7 +119,7 @@ export default function ApplicationsServices() {
 
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p>
+      <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           <div className="bg-[#E2F0FF] p-5">

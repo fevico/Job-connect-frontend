@@ -129,14 +129,14 @@ export default function RegAsLinkedIn() {
 
     try {
       const response = await axios.post(
-        // "https://jobkonnecta.com/api/user/register",
-        "http://localhost:5000/user/register",
+        "https://jobkonnecta.com/api/user/register",
+        // "http://localhost:5000/user/register",
         data
       );
       setIsLoading(false);
 
       const userId = response.data.message.id;
-      console.log(userId);
+      // console.log(userId);
 
       localStorage.setItem("userId", userId);
       toast.success("Registration successful!");

@@ -23,7 +23,6 @@ export default function PostJobs() {
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
 
-
   const { data: users } = useGetAllUsersQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
@@ -44,8 +43,8 @@ export default function PostJobs() {
     if (name === "categoryId") {
       setcategoryId(value);
     }
-    if (name === "referral"){
-      setReferralValue(value)
+    if (name === "referral") {
+      setReferralValue(value);
     }
     setErrors({ ...errors, [name]: undefined }); // Clear error on input change
   };
@@ -270,8 +269,7 @@ export default function PostJobs() {
                   onChange={handleInputChange}
                   required
                 /> */}
-              <JobSummaryEditor onChange={setSummary} />{" "}
-
+                <JobSummaryEditor onChange={setSummary} />{" "}
               </div>
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-2 w-full">
@@ -300,8 +298,6 @@ export default function PostJobs() {
                   required
                 />
               </div>
-
-           
             </div>
           </div>
 
@@ -328,20 +324,20 @@ export default function PostJobs() {
             </div>
 
             <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
-                <label className="">Payment Currency</label>
-                <select
-                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="currency"
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled selected>
-                    Select Currency
-                  </option>
-                  <option value="naira">Naira</option>
-                  <option value="dollar">Dollar</option>
-                </select>
-              </div>
+              <label className="">Payment Currency</label>
+              <select
+                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                name="currency"
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled selected>
+                  Select Currency
+                </option>
+                <option value="naira">Naira</option>
+                <option value="dollar">Dollar</option>
+              </select>
+            </div>
 
             {/* <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
               <label className="">Duration</label>
@@ -365,51 +361,53 @@ export default function PostJobs() {
             </div> */}
           </div>
 
-
-          {userDetails && userDetails.role != "employer" && (<>
-           
-
-            <div className="flex flex-col lg:flex-row items-start gap-2 w-full">
-            <div className={`flex flex-col items-start gap-1 w-full ${referralValue === "yes" ? "lg:w-1/2" : "lg:w-full"} `}>
-              <label className="">Referral</label>
-              <select
-                className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                name="referral"
-                onChange={handleInputChange}
-                required
-              >
-                <option value="" disabled selected>
-                Is this a referral job?
-                </option>
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-              
-              </select>
-            </div>
-{referralValue === "yes" &&
-            <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
-              <label className="">Referral Amount</label>
-              <input
-                  className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
-                  name="referralAmount"
-                  type="number"
-                  placeholder="Enter Referall amount"
+          {userDetails && userDetails.role != "employer" && (
+            <>
+              <div className="flex flex-col lg:flex-row items-start gap-2 w-full">
+                <div
+                  className={`flex flex-col items-start gap-1 w-full ${
+                    referralValue === "yes" ? "lg:w-1/2" : "lg:w-full"
+                  } `}
+                >
+                  <label className="">Referral</label>
+                  <select
+                    className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                    name="referral"
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Is this a referral job?
+                    </option>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                  </select>
+                </div>
+                {referralValue === "yes" && (
+                  <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
+                    <label className="">Referral Amount</label>
+                    <input
+                      className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
+                      name="referralAmount"
+                      type="number"
+                      placeholder="Enter Referral amount"
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col items-start gap-1 w-full ">
+                <label className="">About Company</label>
+                <textarea
+                  className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
+                  name="aboutCompany"
+                  type="text"
+                  placeholder="Enter brief company info"
                   onChange={handleInputChange}
                   required
                 />
-            </div>}
-          </div>
-          <div className="flex flex-col items-start gap-1 w-full ">
-              <label className="">About Company</label>
-              <textarea
-                className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
-                name="aboutCompany"
-                type="text"
-                placeholder="Enter brief company info"
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+              </div>
             </>
           )}
 

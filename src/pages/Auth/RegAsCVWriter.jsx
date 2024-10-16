@@ -124,7 +124,7 @@ export default function RegAsCVWriter() {
       avatar: imageUrl,
     };
 
-    console.log(data);
+    // console.log(data);
 
     try {
       const response = await axios.post(
@@ -137,16 +137,16 @@ export default function RegAsCVWriter() {
       setIsLoading(false);
 
       const userId = response.data.message.id;
-      console.log(userId);
+      // console.log(userId);
 
       localStorage.setItem("userId", userId);
       toast.success("Registration successful!");
       navigate("/signup/verify");
-      // console.log(response.data.message);
+      // console.log("response", response);
     } catch (err) {
       // Handle error
       setIsLoading(false);
-
+      // console.log("error", err);
       toast.error(err.response?.data?.message || "Registration failed");
       setErrors(err.response?.data || {});
       console.error(err.response?.data?.message || err.message);

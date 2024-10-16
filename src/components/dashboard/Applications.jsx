@@ -9,10 +9,14 @@ import {
 } from "../../redux/appData";
 import { Dialog } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import useSession from "../hooks/useSession";
 
 export default function Applications() {
   const location = useLocation();
   const jobId = location.state?.jobId;
+  const { userDetails } = useSession(); // Get the user session details
+  const role = (userDetails.role);
+
 
   const {
     data: applications,
@@ -24,7 +28,7 @@ export default function Applications() {
     refetchOnReconnect: false,
   });
 
-  console.log(applications);
+  // console.log(applications);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -139,7 +143,7 @@ export default function Applications() {
 
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p>
+      <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           <div className="bg-[#E2F0FF] p-5">
@@ -199,6 +203,10 @@ export default function Applications() {
               </p>
               <p className="text-gray-700">
                 <strong>Status:</strong> {selectedApplication.status}
+              </p>
+              <p className="text-gray-700">
+                <strong>LinkedIn Profile:</strong>{" "}
+                {selectedApplication.linkedIn}
               </p>
               <p className="text-gray-700">
                 <strong>Company Name:</strong> {selectedApplication.companyName}

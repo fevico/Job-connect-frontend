@@ -36,10 +36,10 @@ export default function ActiveListings() {
       </div>
     );
   }
-
+const role = (userDetails.role);
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p>
+      <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           <div className="bg-[#E2F0FF] p-5">

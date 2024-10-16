@@ -6,9 +6,12 @@ import {
 } from "../../redux/appData";
 import { toast } from "react-toastify";
 import CustomButton from "../CustomButton";
+import useSession from "../hooks/useSession";
 
 export default function Unapproved() {
   const [approveUser, { isLoading }] = useApproveUserMutation();
+  const { userDetails } = useSession(); // Get the user session details
+  const role = userDetails.role;
 
   // const [loadingStates, setLoadingStates] = React.useState({}); // To track loading per user
 
@@ -88,7 +91,7 @@ export default function Unapproved() {
 
   return (
     <>
-      <p className="font-bold my-3">WELCOME BACK, EMPLOYER</p>
+      <p className="font-bold my-3 uppercase">WELCOME BACK, {role}</p>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           <div className="bg-[#E2F0FF] p-5">
@@ -162,12 +165,12 @@ export default function Unapproved() {
           {selectedUser && (
             <>
               <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-                {selectedUser.companyName}
+                {selectedUser.role === "employer"
+                  ? selectedUser.companyName
+                  : selectedUser.name}
               </h2>
 
-              <p className="text-gray-700">
-                <strong>Employer Name:</strong> {selectedUser.name}
-              </p>
+              {/* Common fields for all users */}
               <p className="text-gray-700">
                 <strong>Email:</strong> {selectedUser.email}
               </p>
@@ -175,31 +178,7 @@ export default function Unapproved() {
                 <strong>Phone:</strong> {selectedUser.phone}
               </p>
               <p className="text-gray-700">
-                <strong>Company Address:</strong> {selectedUser.companyAddress}
-              </p>
-              <p className="text-gray-700">
-                <strong>Industry:</strong> {selectedUser.industry}
-              </p>
-              <p className="text-gray-700">
-                <strong>Employer Type:</strong> {selectedUser.employerType}
-              </p>
-              <p className="text-gray-700">
                 <strong>State:</strong> {selectedUser.state}
-              </p>
-              <p className="text-gray-700">
-                <strong>Number of Employees:</strong>{" "}
-                {selectedUser.numberOfEmployees}
-              </p>
-              <p className="text-gray-700">
-                <strong>Registration Number:</strong>{" "}
-                {selectedUser.registrationNumber}
-              </p>
-              <p className="text-gray-700">
-                <strong>Website:</strong> {selectedUser.website}
-              </p>
-              <p className="text-gray-700">
-                <strong>Account Status:</strong>{" "}
-                {selectedUser.isApproved ? "Approved" : "Pending Approval"}
               </p>
               <p className="text-gray-700">
                 <strong>Account Verification:</strong>{" "}
@@ -209,14 +188,72 @@ export default function Unapproved() {
                 <strong>Suspended:</strong>{" "}
                 {selectedUser.suspended ? "Yes" : "No"}
               </p>
-              {/* <p className="text-gray-700">
-                <strong>Created At:</strong>{" "}
-                {new Date(selectedUser.createdAt).toLocaleDateString()}
-              </p>
               <p className="text-gray-700">
-                <strong>Last Updated:</strong>{" "}
-                {new Date(selectedUser.updatedAt).toLocaleDateString()}
-              </p> */}
+                <strong>Account Status:</strong>{" "}
+                {selectedUser.isApproved ? "Approved" : "Pending Approval"}
+              </p>
+
+              {/* Employer-specific fields */}
+              {selectedUser.role === "employer" && (
+                <>
+                  <p className="text-gray-700">
+                    <strong>Employer Name:</strong> {selectedUser.name}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Company Address:</strong>{" "}
+                    {selectedUser.companyAddress}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Industry:</strong> {selectedUser.industry}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Employer Type:</strong> {selectedUser.employerType}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Number of Employees:</strong>{" "}
+                    {selectedUser.numberOfEmployees}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Registration Number:</strong>{" "}
+                    {selectedUser.registrationNumber}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Website:</strong> {selectedUser.website}
+                  </p>
+                </>
+              )}
+
+              {/* Linkedin Optimizer-specific fields */}
+              {selectedUser.role === "linkedinOptimizer" && (
+                <>
+                  <p className="text-gray-700">
+                    <strong>Years of Experience:</strong>{" "}
+                    {selectedUser.yearsOfExperience}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Work Hours:</strong> {selectedUser.workHours}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Response Time:</strong> {selectedUser.responseTime}
+                  </p>
+                </>
+              )}
+
+              {/* CV Writer-specific fields */}
+              {selectedUser.role === "cvWriter" && (
+                <>
+                  <p className="text-gray-700">
+                    <strong>Years of Experience:</strong>{" "}
+                    {selectedUser.yearsOfExperience}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Work Hours:</strong> {selectedUser.workHours}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Response Time:</strong> {selectedUser.responseTime}
+                  </p>
+                </>
+              )}
             </>
           )}
 
