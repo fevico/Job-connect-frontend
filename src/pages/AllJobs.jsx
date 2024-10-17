@@ -132,6 +132,8 @@ export default function AllJobs() {
                   postedTime={job.postedAt}
                   onClick={() => handleJobClick(job)}
                   id={job._id}
+                  currency={job.currency}
+
                 />
               ))}
         </div>

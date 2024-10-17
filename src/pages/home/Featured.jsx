@@ -67,7 +67,8 @@ export default function Featured() {
                       postedTime={job.postedAt}
                       onClick={() => handleJobClick(job)}
                       id={job._id}
-                      referal={job.referal}
+                      referral={job.referral}
+                      currency={job.currency}
                     />
                   ))}
             </div>

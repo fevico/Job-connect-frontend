@@ -7,7 +7,6 @@ import { useAddRatingMutation } from "../redux/appData";
 import Rating from "react-rating";
 import DOMPurify from "dompurify";
 
-
 function formatDate(dateString) {
   const date = new Date(dateString);
   const options = {
@@ -36,8 +35,9 @@ export default function JobCard({
   userDashboard,
   services,
   status,
-  referal,
+  referral,
   vendorId,
+  currency,
 }) {
   const [rating, setRating] = React.useState(3);
 
@@ -70,7 +70,7 @@ export default function JobCard({
       className="border-[#001F3F]/40 border rounded-[30px] px-5 py-3 lg:py-10 w-full relative"
       id={id}
     >
-      {referal === "yes" && (
+      {referral === "yes" && (
         <div className="absolute top-0 right-0 bg-gray-300 rounded-tr-[30px] p-3 font-semibold italic text-sm">
           referral
         </div>
@@ -83,20 +83,23 @@ export default function JobCard({
           {!userDashboard && (
             <>
               <button className="p-2 bg-[#2C2F4E]/70 text-center text-white rounded">
-                &#8358;{priceFrom} - &#8358;{priceTo}
+                {currency === "dollar" ? "$" : "₦"}
+                {priceFrom} - {currency === "dollar" ? "$" : "₦"}
+                {priceTo}
               </button>
+
               <p className="">
                 {jobType} | {location}
               </p>
             </>
           )}
           <p className="line-clamp-2 overflow-hidden text-left text-[12px] lg:text-[16px]">
-          <div
-            className="text-left"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(description)
-            }}
-          />
+            <div
+              className="text-left"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(description),
+              }}
+            />
           </p>
           <p className="text-xs text-red-500">{formatDate(postedTime)}</p>
           {services && userDashboard ? (
@@ -146,7 +149,6 @@ JobCard.propTypes = {
   userDashboard: PropTypes.bool.isRequired,
   services: PropTypes.bool,
   status: PropTypes.string,
-  referal: PropTypes.string,
+  referral: PropTypes.string,
   vendorId: PropTypes.string.isRequired,
 };
-

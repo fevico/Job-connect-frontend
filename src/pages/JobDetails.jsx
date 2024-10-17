@@ -225,7 +225,7 @@ export default function JobDetails() {
   //   txt.innerHTML = html;
   //   return txt.value;
   // };
-
+console.log(job)
   return (
     <>
       <Helmet>
@@ -277,7 +277,7 @@ export default function JobDetails() {
                   onClick={handleButtonClick}
                 />
               )}
-              {job && job.referal === "yes" && (
+              {job && job.referral === "yes" && (
                 <>
                   <p className="text-left text-sm text-[#001F3F80]/50">
                     click to refer this job:
