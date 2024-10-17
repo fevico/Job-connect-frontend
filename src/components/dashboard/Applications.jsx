@@ -15,8 +15,7 @@ export default function Applications() {
   const location = useLocation();
   const jobId = location.state?.jobId;
   const { userDetails } = useSession(); // Get the user session details
-  const role = (userDetails.role);
-
+  const role = userDetails.role;
 
   const {
     data: applications,
@@ -206,8 +205,17 @@ export default function Applications() {
               </p>
               <p className="text-gray-700">
                 <strong>LinkedIn Profile:</strong>{" "}
-                {selectedApplication.linkedIn}
+                {selectedApplication.linkedIn && (
+                  <CustomButton
+                    text="View LinkedIn Profile"
+                    onClick={() =>
+                      window.open(selectedApplication.linkedIn, "_blank")
+                    }
+                    className="ml-2 mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                  />
+                )}
               </p>
+
               <p className="text-gray-700">
                 <strong>Company Name:</strong> {selectedApplication.companyName}
               </p>

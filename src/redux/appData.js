@@ -5,8 +5,8 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/",
-  // baseUrl: "https://jobkonnecta.com/api/",
+  // baseUrl: "http://localhost:5000/",
+  baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers) => {
     headers.set("Content-Type", "application/json");
     const token = Cookies.get("authToken");
@@ -51,7 +51,7 @@ const baseQuery = fetchBaseQuery({
 export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
-  tagTypes: ["AllUsers", "AllJobApp", "Messages"],
+  tagTypes: ["AllUsers", "AllJobApp", "Messages", "Jobs"],
   endpoints: (builder) => ({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
@@ -61,6 +61,7 @@ export const productsApi = createApi({
     }),
     getAllJobsByEmployer: builder.query({
       query: (id) => `job/get-jobs-by-employer/${id}`,
+      providesTags: ["Jobs"],
     }),
     getAllPackages: builder.query({
       query: () => `product/user/product`,
@@ -81,6 +82,7 @@ export const productsApi = createApi({
       query: ({ bank_code, account_number }) =>
         `wallet/get-account-name?bank_code=${bank_code}&account_number=${account_number}`,
     }),
+   
     withdraw: builder.mutation({
       query: ({
         bank_code,
@@ -215,6 +217,37 @@ export const productsApi = createApi({
           console.error(" failed to hire:", err);
         }
       },
+    }),
+    deleteJob: builder.mutation({
+      query: ( id ) => ({
+        url: `job/${id}`,
+        method: "DELETE",
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to delete job:", err);
+        }
+      },
+      invalidatesTags: ["Jobs"],
+
+    }),
+    updateJob: builder.mutation({
+      query: ({updatedJob, id }) => ({
+        url: `job/${id}`,
+        method: "PATCH",
+        body: updatedJob,
+      }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to update job:", err);
+        }
+      },
+      invalidatesTags: ["Jobs"],
+
     }),
     shortlist: builder.mutation({
       query: ({ data, id }) => ({
@@ -449,6 +482,8 @@ export const {
 
   useGetUnapprovedUsersQuery,
   useApproveUserMutation,
+  useDeleteJobMutation,
+  useUpdateJobMutation,
 
   // untreated
   useGetAllOrdersQuery,

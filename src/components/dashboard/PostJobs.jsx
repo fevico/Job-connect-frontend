@@ -13,12 +13,18 @@ import {
 import useSession from "../hooks/useSession";
 import JobSummaryEditor from "../JobSummaryEditor";
 
-export default function PostJobs() {
-  const [country, setCountry] = useState("");
+export default function PostJobs({ initialData = {}, onSubmit, isUpdating }) {
+  const [country, setCountry] = useState(
+    initialData.title ? initialData?.location.country : ""
+  );
   const [summary, setSummary] = useState("");
-  const [state, setState] = useState("");
+  const [state, setState] = useState(
+    initialData.title ? initialData?.location?.state : ""
+  );
   const [errors, setErrors] = useState({});
-  const [categoryId, setcategoryId] = useState("");
+  const [categoryId, setcategoryId] = useState(
+    initialData.title ? initialData?.categoryId : ""
+  );
   const [referralValue, setReferralValue] = useState("");
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
@@ -66,11 +72,12 @@ export default function PostJobs() {
     refetchOnReconnect: false,
   });
 
-  const [addJob, { isSuccess, error }] = useAddJobMutation();
+  const [addJob, { isSuccess, error, isLoading: isPosting }] =
+    useAddJobMutation();
 
   async function handleSubmit(e) {
     // console.log("samsonnnnnnnnnn");
-    setLoading(true);
+    // setLoading(true);
     e.preventDefault();
     const formData = new FormData(e.target);
 
@@ -113,20 +120,27 @@ export default function PostJobs() {
       currency: formData.get("currency"),
       categoryId: categoryId,
       referral: formData.get("referral") || "no",
-      referralAmount: formData.get("referralAmount") || 0,
+      referralAmount: Number(formData.get("referralAmount")) || 0,
     };
 
-    try {
-      // console.log(data);
+    // try {
+    if (initialData.title) {
+      onSubmit(data);
+      // return;
+    } else {
       await addJob(data);
-      setLoading(false);
-    } catch (err) {
-      toast.error("Job posting failed");
-
-      // setErrors({ message: "An error occurred while posting the job." });
-      console.error(err);
-      setLoading(false);
     }
+    // await addJob(data);
+
+    // console.log(data);
+    // setLoading(false);
+    //   } catch (err) {
+    //     toast.error("Job posting failed");
+
+    //     // setErrors({ message: "An error occurred while posting the job." });
+    //     console.error(err);
+    //     setLoading(false);
+    //   }
   }
 
   React.useEffect(() => {
@@ -166,6 +180,7 @@ export default function PostJobs() {
                   <input
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                     name="title"
+                    defaultValue={initialData.title || ""}
                     type="text"
                     placeholder="Job Title"
                     onChange={handleInputChange}
@@ -177,6 +192,7 @@ export default function PostJobs() {
                   <select
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                     name="industry"
+                    defaultValue={initialData.industry || ""}
                     onChange={handleInputChange}
                   >
                     <option value="" disabled selected>
@@ -226,6 +242,7 @@ export default function PostJobs() {
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                     name="priceFrom"
                     type="number"
+                    defaultValue={initialData.priceFrom || ""}
                     placeholder="2,000"
                     onChange={handleInputChange}
                     required
@@ -234,6 +251,7 @@ export default function PostJobs() {
                 <div className="flex flex-col items-start gap-1 w-full">
                   <label className="">Salary to</label>
                   <input
+                    defaultValue={initialData.priceTo || ""}
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                     name="priceTo"
                     type="number"
@@ -269,7 +287,10 @@ export default function PostJobs() {
                   onChange={handleInputChange}
                   required
                 /> */}
-                <JobSummaryEditor onChange={setSummary} />{" "}
+                <JobSummaryEditor
+                  onChange={setSummary}
+                  data={initialData.description || ""}
+                />{" "}
               </div>
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-2 w-full">
@@ -280,6 +301,7 @@ export default function PostJobs() {
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                     name="companyName"
                     type="text"
+                    defaultValue={initialData.companyName || ""}
                     placeholder="company Name"
                     onChange={handleInputChange}
                     required
@@ -292,6 +314,7 @@ export default function PostJobs() {
                 <input
                   className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                   name="skills"
+                  defaultValue={initialData.skills || ""}
                   type="text"
                   placeholder="Required Skills"
                   onChange={handleInputChange}
@@ -310,9 +333,10 @@ export default function PostJobs() {
                 onChange={handleInputChange}
                 id="categoryId"
                 required
+                defaultValue={categoryId || ""}
               >
                 <option value="" disabled selected>
-                  Select Job Type
+                  Select job Type
                 </option>
                 {categories &&
                   categories.map((category) => (
@@ -330,6 +354,7 @@ export default function PostJobs() {
                 name="currency"
                 onChange={handleInputChange}
                 required
+                defaultValue={initialData.currency || ""}
               >
                 <option value="" disabled selected>
                   Select Currency
@@ -373,6 +398,7 @@ export default function PostJobs() {
                   <select
                     className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                     name="referral"
+                    defaultValue={initialData.referral || ""}
                     onChange={handleInputChange}
                     required
                   >
@@ -387,6 +413,7 @@ export default function PostJobs() {
                   <div className="flex flex-col items-start gap-1 w-full lg:w-1/2 ">
                     <label className="">Referral Amount</label>
                     <input
+                      defaultValue={initialData.referralAmount || ""}
                       className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                       name="referralAmount"
                       type="number"
@@ -400,6 +427,7 @@ export default function PostJobs() {
               <div className="flex flex-col items-start gap-1 w-full ">
                 <label className="">About Company</label>
                 <textarea
+                  defaultValue={initialData.aboutCompany || ""}
                   className="w-full bg-gray-100 border-gray-400 outline-none border-2 rounded-md h-[100px] p-3 lg:p-5"
                   name="aboutCompany"
                   type="text"
@@ -421,7 +449,15 @@ export default function PostJobs() {
             <CustomButton
               title="Submit"
               type="submit"
-              text={loading ? "Posting..." : "Post Job"}
+              text={
+                isPosting
+                  ? "Posting..."
+                  : isUpdating
+                  ? "Updating..."
+                  : initialData.title
+                  ? "Edit Job"
+                  : "Post Job"
+              }
               className="w-[40%] lg:w-[20%] text-center flex justify-center"
             />
           </div>

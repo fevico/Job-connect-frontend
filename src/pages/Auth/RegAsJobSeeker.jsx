@@ -383,12 +383,15 @@ export default function RegAsJobSeeker() {
               <input
                 className="w-full border-gray-400 outline-none border-2 rounded-md p-2"
                 name="linkedInProfile"
-                type="text"
-                placeholder="Enter your LinkedIn Profile Url"
+                type="url"
+                placeholder="Enter your LinkedIn Profile URL"
                 onChange={handleInputChange}
+                pattern="https?://.+"
+                title="Please enter a valid URL that starts with http:// or https://"
                 required
               />
             </div>
+
             {/* <div className="flex flex-col items-start gap-1 w-full">
               <label className="">Current Position</label>
               <input

@@ -1,13 +1,17 @@
 
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
 import DOMPurify from 'dompurify';
 
 
-const JobSummaryEditor = ({ onChange }) => {
-  const [editorHtml, setEditorHtml] = useState("");
+const JobSummaryEditor = ({ onChange, data }) => {
+  const [editorHtml, setEditorHtml] = useState(data || "");
+
+  useEffect(() => {
+    onChange(editorHtml || data); // Call onChange with initial data if not modified
+  }, []);
 
   const handleEditorChange = (html) => {
     setEditorHtml(html);
