@@ -147,12 +147,19 @@ export default function JobDetails() {
       //     id: job._id,
       //   });
       //   console.log("Response:", response);
+      // const data = {
+      //   ...formData,
+      //   jobId: job._id,
+      //   candidateName: formData.fullName,
+      //   candidateEmail: formData.email,
+      // };
       const data = {
-        ...formData,
         jobId: job._id,
         candidateName: formData.fullName,
         candidateEmail: formData.email,
       };
+      
+      console.log(data)
       const response = await shareJob(data);
       console.log("Response:", response);
 
