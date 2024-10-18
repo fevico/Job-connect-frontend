@@ -22,7 +22,6 @@ import { toast } from "react-toastify";
 import useSession from "../components/hooks/useSession";
 import { useApplyJobMutation, useShareJobMutation } from "../redux/appData";
 import PropTypes from "prop-types";
-import axios from 'axios'; 
 
 
 export function ApplySuccess({ open, handleOpen }) {
@@ -88,9 +87,6 @@ export default function JobDetails() {
   const { isSignedIn, userDetails } = useSession();
   const [formOpen, setFormOpen] = useState(false); // Toggle form modal
 
-  const { jobId } = useParams(); // Extract jobId from URL
-  const [jobDetails, setJobDetails] = useState(null);
-
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -144,26 +140,7 @@ export default function JobDetails() {
     { isSuccess: isSuccessShare, isLoading: isLoadingShare, error: errorShare },
   ] = useShareJobMutation();
 
-  useEffect(() => {
-    const fetchJobDetails = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`https://jobkonnecta.com/api/job${jobId}`);
-        setJobDetails(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching job details:', error);
-        toast.error('Failed to load job details');
-        setIsLoading(false);
-      }
-    };
-
-    if (jobId) {
-      fetchJobDetails();
-    }
-  }, [jobId]);
-
-
+  
   const handleShare = async () => {
     // e.preventDefault();
 
@@ -185,7 +162,6 @@ export default function JobDetails() {
         candidateEmail: formData.email,
       };
       
-      console.log(data)
       const response = await shareJob(data);
       console.log("Response:", response);
 
