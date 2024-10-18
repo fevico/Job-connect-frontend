@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import { FaLink } from "react-icons/fa";
 import jobImage from "@/assets/images/job.png";
