@@ -79,7 +79,9 @@ ApplySuccess.propTypes = {
 export default function JobDetails() {
   const location = useLocation();
   const { job } = location.state;
-  console.log(job);
+  // console.log(job);
+  const jobId = job._id;
+  console.log(jobId)
   const [open, setOpen] = useState(false);
   // const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,11 +89,8 @@ export default function JobDetails() {
   // const [cookies] = useCookies(["authToken"]);
   const { isSignedIn, userDetails } = useSession();
   const [formOpen, setFormOpen] = useState(false); // Toggle form modal
-  const { jobId } = useParams(); // Extract jobId from URL
+  //  const { jobId } = useParams(); // Extract jobId from URL
   const [jobDetails, setJobDetails] = useState(null);
-
-
-  console.log(jobId)
 
 
 
@@ -152,7 +151,8 @@ export default function JobDetails() {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`https://jobkonnecta.com/api/job/${jobId}`);
+         const response = await axios.get(`https://jobkonnecta.com/api/job/job/${jobId}`);
+        // const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
         console.log('this is the response', response.data)
         setJobDetails(response.data);
         setIsLoading(false);
@@ -262,7 +262,7 @@ export default function JobDetails() {
   //   txt.innerHTML = html;
   //   return txt.value;
   // };
-console.log(job)
+// console.log(job)
   return (
     <>
       <Helmet>
