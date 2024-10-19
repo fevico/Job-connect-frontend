@@ -3,7 +3,7 @@ import CustomButton from "@/components/CustomButton";
 import { FaLink } from "react-icons/fa";
 import jobImage from "@/assets/images/job.png";
 import mark from "@/assets/images/mark.png";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import useSession from "../components/hooks/useSession";
 import { useApplyJobMutation, useShareJobMutation } from "../redux/appData";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 
 export function ApplySuccess({ open, handleOpen }) {
@@ -86,6 +87,12 @@ export default function JobDetails() {
   // const [cookies] = useCookies(["authToken"]);
   const { isSignedIn, userDetails } = useSession();
   const [formOpen, setFormOpen] = useState(false); // Toggle form modal
+  const { jobId } = useParams(); // Extract jobId from URL
+  const [jobDetails, setJobDetails] = useState(null);
+
+
+  console.log(jobId)
+
 
 
   const [formData, setFormData] = useState({
@@ -139,6 +146,27 @@ export default function JobDetails() {
     shareJob,
     { isSuccess: isSuccessShare, isLoading: isLoadingShare, error: errorShare },
   ] = useShareJobMutation();
+
+
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`https://jobkonnecta.com/api/job/${jobId}`);
+        console.log('this is the response', response.data)
+        setJobDetails(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching job details:', error);
+        toast.error('Failed to load job details');
+        setIsLoading(false);
+      }
+    };
+
+    if (jobId) {
+      fetchJobDetails();
+    }
+  }, [jobId]);
 
   
   const handleShare = async () => {
