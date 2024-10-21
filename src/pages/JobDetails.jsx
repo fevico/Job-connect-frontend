@@ -3,7 +3,7 @@ import CustomButton from "@/components/CustomButton";
 import { FaLink } from "react-icons/fa";
 import jobImage from "@/assets/images/job.png";
 import mark from "@/assets/images/mark.png";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
@@ -76,10 +76,9 @@ ApplySuccess.propTypes = {
 };
 
 export default function JobDetails() {
-  const location = useLocation();
-  const { job:jobData } = location.state;
-  // console.log(job);
-  const jobId = jobData._id;
+  const params = useParams();
+  const { id } = params;
+  const jobId = id;
   // console.log(jobId)
   const [open, setOpen] = useState(false);
   // const [loading, setLoading] = useState(true);
