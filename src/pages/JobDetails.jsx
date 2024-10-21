@@ -24,7 +24,6 @@ import { useApplyJobMutation, useShareJobMutation } from "../redux/appData";
 import PropTypes from "prop-types";
 import axios from "axios";
 
-
 export function ApplySuccess({ open, handleOpen }) {
   return (
     <>
@@ -78,10 +77,10 @@ ApplySuccess.propTypes = {
 
 export default function JobDetails() {
   const location = useLocation();
-  const { job } = location.state;
+  const { job:jobData } = location.state;
   // console.log(job);
-  const jobId = job._id;
-  console.log(jobId)
+  const jobId = jobData._id;
+  // console.log(jobId)
   const [open, setOpen] = useState(false);
   // const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,9 +89,8 @@ export default function JobDetails() {
   const { isSignedIn, userDetails } = useSession();
   const [formOpen, setFormOpen] = useState(false); // Toggle form modal
   //  const { jobId } = useParams(); // Extract jobId from URL
-  const [jobDetails, setJobDetails] = useState(null);
-
-
+  const [job, setJob] = useState(null);
+  // const [job, setJob] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -146,19 +144,20 @@ export default function JobDetails() {
     { isSuccess: isSuccessShare, isLoading: isLoadingShare, error: errorShare },
   ] = useShareJobMutation();
 
-
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-         const response = await axios.get(`https://jobkonnecta.com/api/job/job/${jobId}`);
+        const response = await axios.get(
+          `https://jobkonnecta.com/api/job/job/${jobId}`
+        );
         // const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
-        console.log('this is the response', response.data)
-        setJobDetails(response.data);
+        console.log("this is the response", response.data);
+        setJob(response.data);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching job details:', error);
-        toast.error('Failed to load job details');
+        console.error("Error fetching job details:", error);
+        toast.error("Failed to load job details");
         setIsLoading(false);
       }
     };
@@ -168,7 +167,6 @@ export default function JobDetails() {
     }
   }, [jobId]);
 
-  
   const handleShare = async () => {
     // e.preventDefault();
 
@@ -189,9 +187,9 @@ export default function JobDetails() {
         candidateName: formData.fullName,
         candidateEmail: formData.email,
       };
-      
-      const response = await shareJob(data);
-      console.log("Response:", response);
+
+      await shareJob(data);
+      // console.log("Response:", response);
 
       setIsLoading(false);
       //   setOpen(true);
@@ -262,7 +260,14 @@ export default function JobDetails() {
   //   txt.innerHTML = html;
   //   return txt.value;
   // };
-// console.log(job)
+  // console.log(job)
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!job) {
+    return <div>Job Not Found</div>;
+  }
   return (
     <>
       <Helmet>
@@ -274,7 +279,7 @@ export default function JobDetails() {
       </Helmet>
       <div
         className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative"
-        name={job._id}
+        name={job?._id}
       >
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
           <PiArrowBendUpLeftBold
