@@ -65,7 +65,7 @@ export default function AllPackages() {
                     {pkg?.title}
                   </p>
                   <p className="text-sm font-normal w-[26%] pr-2">
-                    ${pkg?.price}
+                  ₦{pkg?.price}
                   </p>
                   {/* <p className="text-sm font-normal w-[17%] pr-2">
                     {pkg?.duration} days

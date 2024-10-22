@@ -268,7 +268,7 @@ export default function LinkedInDetails() {
                   {pkg.description.length > 200 && "..."}
                 </p>
                 <p className="text-[18px] font-semibold text-primary mb-2">
-                  Price: ${pkg.price}
+                  Price: ₦{pkg.price}
                 </p>
                 <CustomButton
                   text="Apply Now"

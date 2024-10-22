@@ -157,6 +157,7 @@ export default function CvWriterDetails() {
                 className="border border-gray-300 rounded-lg p-4 shadow-lg"
               >
                 <img
+                 
                   src={pkg.images}
                   alt={pkg.title}
                   className="w-full h-[150px] object-cover rounded-lg mb-4"
@@ -169,7 +170,7 @@ export default function CvWriterDetails() {
                   {pkg.description.length > 200 && "..."}
                 </p>
                 <p className="text-[18px] font-semibold text-primary mb-2">
-                  Price: ${pkg.price}
+                  Price: ₦{pkg.price}
                 </p>
                 <CustomButton
                   text="Apply Now"
