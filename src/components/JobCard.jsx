@@ -41,6 +41,17 @@ export default function JobCard({
 }) {
   const [rating, setRating] = React.useState(3);
 
+  const currencySymbols = {
+    naira: "₦",
+    dollar: "$",
+    rand: "R",
+    cedi: "₵",
+    shilling: "KSh",
+    gbp: "£",
+    egp: "E£",
+    euro: "€", // Egyptian pound also uses £
+  };
+
   const [addRating, { isSuccess, error }] = useAddRatingMutation();
 
   const handleRating = async (rate) => {
@@ -83,9 +94,8 @@ export default function JobCard({
           {!userDashboard && (
             <>
               <button className="p-2 bg-[#2C2F4E]/70 text-center text-white rounded">
-                {currency === "dollar" ? "$" : "₦"}
-                {priceFrom} - {currency === "dollar" ? "$" : "₦"}
-                {priceTo}
+                {currencySymbols[currency]} {priceFrom} -{" "}
+                {currencySymbols[currency]} {priceTo}
               </button>
 
               <p className="">

@@ -359,8 +359,17 @@ export default function PostJobs({ initialData = {}, onSubmit, isUpdating }) {
                 <option value="" disabled selected>
                   Select Currency
                 </option>
-                <option value="naira">Naira</option>
-                <option value="dollar">Dollar</option>
+                <option value="naira">Naira (₦)</option>{" "}
+                {/* Nigerian currency */}
+                <option value="rand">South African Rand (ZAR)</option>
+                <option value="cedi">Ghanaian Cedi (GHS)</option>
+                <option value="shilling">Kenyan Shilling (KES)</option>
+                <option value="egp">Egyptian Pound (EGP)</option>
+                <option value="gbp">British Pound (GBP)</option>{" "}
+                <option value="euro">Euro (EUR)</option>
+                {/* UK currency */}
+                <option value="dollar">US Dollar (USD)</option>{" "}
+                {/* If you need USD */}
               </select>
             </div>
 
