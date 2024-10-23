@@ -51,7 +51,7 @@ const baseQuery = fetchBaseQuery({
 export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
-  tagTypes: ["AllUsers", "AllJobApp", "Messages", "Jobs"],
+  tagTypes: ["AllUsers", "AllJobApp", "Messages", "Jobs", "UnApprovedUsers"],
   endpoints: (builder) => ({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
@@ -154,6 +154,8 @@ export const productsApi = createApi({
     }),
     getUnapprovedUsers: builder.query({
       query: () => `user/all-unapproved-users`,
+      providesTags: ["UnApprovedUsers"],
+
     }),
     getMyReferals: builder.query({
       query: () => `referal/user-referrals`,
@@ -173,6 +175,8 @@ export const productsApi = createApi({
           console.error(" failed to uapprove:", err);
         }
       },
+      invalidatesTags: ["UnApprovedUsers"],
+
     }),
     addJob: builder.mutation({
       query: (credentials) => ({

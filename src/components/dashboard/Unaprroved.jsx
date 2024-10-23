@@ -9,10 +9,10 @@ import CustomButton from "../CustomButton";
 import useSession from "../hooks/useSession";
 
 export default function Unapproved() {
-  const [approveUser, { isLoading }] = useApproveUserMutation();
+  const [approveUser, { isSuccess, isLoading, error }] =
+    useApproveUserMutation();
   const { userDetails } = useSession(); // Get the user session details
   const role = userDetails.role;
-
   // const [loadingStates, setLoadingStates] = React.useState({}); // To track loading per user
 
   const handleSubmit = async (userId) => {
@@ -35,6 +35,16 @@ export default function Unapproved() {
       // setLoadingStates((prev) => ({ ...prev, [userId]: false }));
     }
   };
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      setOpenDialog(false);
+      toast.success("User Approved Successfully!");
+    } else if (error) {
+      toast.error("failed to approve user");
+      console.log(error);
+    }
+  }, [isSuccess, error]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -59,7 +69,9 @@ export default function Unapproved() {
     refetchOnReconnect: false,
   });
 
-  console.log(allUsers);
+  // console.log(allUsers);
+
+  console.log(errorUsers);
 
   if (fetchingUsers) {
     return (
