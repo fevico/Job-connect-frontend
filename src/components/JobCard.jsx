@@ -39,12 +39,10 @@ export default function JobCard({
   vendorId,
   currency,
 }) {
-
-  
   const { data: currenRating } = useGetRatingQuery(vendorId, {
     skip: !vendorId, // Skip the query if vendorId is not defined
   });
-  
+
   React.useEffect(() => {
     if (vendorId) {
       // console.log(currenRating);
@@ -52,7 +50,6 @@ export default function JobCard({
       // Process or log currenRating data here
     }
   }, [vendorId, currenRating]);
-  
 
   const [rating, setRating] = React.useState(
     vendorId ? currenRating?.averageRating : 3
@@ -110,8 +107,10 @@ export default function JobCard({
           {!userDashboard && (
             <>
               <button className="p-2 bg-[#2C2F4E]/70 text-center text-white rounded">
-                {currencySymbols[currency]} {priceFrom} -{" "}
-                {currencySymbols[currency]} {priceTo}
+                {currencySymbols[currency]}{" "}
+                {new Intl.NumberFormat().format(priceFrom)} -{" "}
+                {currencySymbols[currency]}{" "}
+                {new Intl.NumberFormat().format(priceTo)}
               </button>
 
               <p className="">
