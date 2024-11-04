@@ -26,13 +26,13 @@ export default function AllPackages() {
     );
   }
 
-  // console.log(allPackages);
+  console.log(error);
 
   if (error) {
     return (
       <div className="h-screen flex items-center justify-center">
         <p className="text-red-500">
-          Failed to load packages. Please try again.
+          {error?.data?.message ? error.data.message : "Failed to load packages. Please try again."}
         </p>
       </div>
     );

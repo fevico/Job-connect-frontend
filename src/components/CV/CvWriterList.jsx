@@ -13,10 +13,17 @@ const CvWriterList = () => {
 
   const cvWriters =
     users &&
-    users.filter((user) => user.role === "cvwriter" && user.suspend === false);
+    users.filter(
+      (user) =>
+        user.role === "cvWriter" &&
+        !user.suspend &&
+        user.isApproved &&
+        user.isVerified
+    );
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
 
-  // console.log(cvWriters);
+  console.log("dd", cvWriters);
+  console.log(users);
   // console.log(users);
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
 
@@ -52,12 +59,11 @@ const CvWriterList = () => {
           <CvWriterCard
             key={index}
             name={cvWriter.name}
-            image={cvWriter.image}
+            image={cvWriter.avatar}
             bio={cvWriter.bio}
             specialization={cvWriter.specialization}
-            rating={cvWriter.averageRating}
             services={cvWriter.services}
-            id={cvWriter.id}
+            id={cvWriter._id}
             onClick={() => handleCvWriterClick(cvWriter)}
           />
         ))}

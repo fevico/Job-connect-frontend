@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import CustomButton from "../../components/CustomButton";
 import JobCard from "../../components/JobCard";
 import { useNavigate } from "react-router-dom";
@@ -9,10 +9,7 @@ export default function Featured() {
   const [visibleJobs, setVisibleJobs] = useState(10);
   const navigate = useNavigate();
 
-  const {
-    data: allJobs,
-    isLoading,
-  } = useGetAllJobsQuery(undefined, {
+  const { data: allJobs, isLoading } = useGetAllJobsQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -27,7 +24,7 @@ export default function Featured() {
   };
 
   const handleJobClick = (job) => {
-    navigate(`/job/${job._id}`, { state: { job } });
+    navigate(`/job/${job.id}`, { state: { job } });
   };
 
   return (
@@ -62,11 +59,11 @@ export default function Featured() {
                       description={job.description}
                       priceFrom={job.priceFrom || 20888}
                       priceTo={job.priceTo || 60300}
-                      jobType={job.jobType || "Remote"}
+                      jobType={job.categoryName || "Remote"}
                       location={`${job.location.state}, ${job.location.country}`}
-                      postedTime={job.postedAt}
+                      postedTime={job.createdAt}
                       onClick={() => handleJobClick(job)}
-                      id={job._id}
+                      id={job.id}
                       referral={job.referral}
                       currency={job.currency}
                     />

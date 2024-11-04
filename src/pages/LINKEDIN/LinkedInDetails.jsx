@@ -141,9 +141,10 @@ export default function LinkedInDetails() {
       try {
         setIsLoading(true);
         // Upload the file
-        await uploadBytes(storageRef, cvFile);
+        // await uploadBytes(storageRef, cvFile);
         // Get the download URL
-        cvUrl = await getDownloadURL(storageRef);
+        // cvUrl = await getDownloadURL(storageRef);
+        cvUrl = "testLink";
         console.log("Uploaded CV URL:", cvUrl);
       } catch (error) {
         setIsLoading(false);

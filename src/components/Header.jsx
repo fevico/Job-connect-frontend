@@ -89,16 +89,12 @@ function NavList({ setOpenNav, isSignedIn, signOut, userDetails }) {
         onMouseEnter={toggleMenu}
         onMouseLeave={closeMenu}
       >
-        <Link
-          to="#"
-          onClick={handleNavLinkClick}
-          className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors"
-        >
+        <div className="flex items-center text-white hover:text-blue-500 text-[14px] font-semibold transition-colors">
           Services
           <IoIosArrowDown
             className={`transition-transform ${openMenu ? "rotate-180" : ""}`}
           />
-        </Link>
+        </div>
         {openMenu && (
           <div className="absolute top-8 left-0 py-2 bg-white shadow-lg rounded-lg w-[230px]">
             <Link
@@ -212,13 +208,13 @@ function NavList({ setOpenNav, isSignedIn, signOut, userDetails }) {
                   >
                     Profile
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/settings"
                     onClick={handleNavLinkClick}
                     className="px-4 py-2 hover:bg-gray-200 gap-2 text-[#797B89] text-sm mb-1 no-underline flex items-center"
                   >
                     Settings
-                  </Link>
+                  </Link> */}
                   <p
                     className="text-red-400 font-bold text-left px-4 py-2"
                     onClick={() => {

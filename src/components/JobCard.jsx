@@ -3,7 +3,7 @@ import PropTypes from "prop-types"; // Import PropTypes
 import CustomButton from "./CustomButton";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useAddRatingMutation } from "../redux/appData";
+import { useAddRatingMutation, useGetRatingQuery } from "../redux/appData";
 import Rating from "react-rating";
 import DOMPurify from "dompurify";
 
@@ -39,7 +39,24 @@ export default function JobCard({
   vendorId,
   currency,
 }) {
-  const [rating, setRating] = React.useState(3);
+
+  
+  const { data: currenRating } = useGetRatingQuery(vendorId, {
+    skip: !vendorId, // Skip the query if vendorId is not defined
+  });
+  
+  React.useEffect(() => {
+    if (vendorId) {
+      // console.log(currenRating);
+      setRating(currenRating?.averageRating);
+      // Process or log currenRating data here
+    }
+  }, [vendorId, currenRating]);
+  
+
+  const [rating, setRating] = React.useState(
+    vendorId ? currenRating?.averageRating : 3
+  );
 
   const currencySymbols = {
     naira: "₦",
@@ -53,16 +70,15 @@ export default function JobCard({
   };
 
   const [addRating, { isSuccess, error }] = useAddRatingMutation();
-
   const handleRating = async (rate) => {
     setRating(rate);
 
-    const data = {
-      rating: rate,
+    const credentials = {
+      ratingValue: rate,
     };
-    console.log(data);
+    console.log(credentials);
     try {
-      await addRating({ data, owner: vendorId });
+      await addRating({ credentials, ownerId: vendorId });
     } catch (error) {
       console.log("error", error);
     }

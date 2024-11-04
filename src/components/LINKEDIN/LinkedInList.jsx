@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import LinkedInCard from "./LinkedInCard";
 import { useGetAllUsersQuery } from "../../redux/appData";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,18 @@ const LinkedInList = () => {
     refetchOnReconnect: false,
   });
 
+ 
+
+
   const linkedinOptimizers =
-    users && users.filter((user) => user.role === "linkedinOptimizer");
+    users &&
+    users.filter(
+      (user) =>
+        user.role === "linkedinOptimizer" &&
+        user.suspended === false &&
+        user.isApproved === true &&
+        user.isVerified === true
+    );
   // const [filteredJobs, setFilteredJobs] = useState(jobs);
 
   console.log(linkedinOptimizers);
@@ -52,14 +62,12 @@ const LinkedInList = () => {
           <LinkedInCard
             key={index}
             name={linkedin.name}
-            image={linkedin.image}
+            image={linkedin.avatar}
             bio={linkedin.bio}
-            id={linkedin.id}
+            id={linkedin._id}
             specialization={linkedin.specialization}
-            rating={linkedin.averageRating}
             services={linkedin.services}
             onClick={() => handleLinkedinOptimizerClick(linkedin)}
-
           />
         ))}
       {linkedinOptimizers && visibleLinkedIn < linkedinOptimizers.length && (

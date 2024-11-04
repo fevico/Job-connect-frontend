@@ -147,10 +147,10 @@ export default function JobDetails() {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          `https://jobkonnecta.com/api/job/job/${jobId}`
-        );
-        // const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
+        // const response = await axios.get(
+        //   `https://jobkonnecta.com/api/job/job/${jobId}`
+        // );
+        const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
         console.log("this is the response", response.data);
         setJob(response.data);
         setIsLoading(false);
@@ -182,7 +182,7 @@ export default function JobDetails() {
       //   candidateEmail: formData.email,
       // };
       const data = {
-        jobId: job._id,
+        jobId: job.id,
         candidateName: formData.fullName,
         candidateEmail: formData.email,
       };
@@ -211,7 +211,7 @@ export default function JobDetails() {
       //   });
       //   console.log("Response:", response);
       const data = {
-        id: job._id,
+        id: job.id,
       };
       await applyJob(data);
 
@@ -259,7 +259,7 @@ export default function JobDetails() {
   //   txt.innerHTML = html;
   //   return txt.value;
   // };
-  // console.log(job)
+  console.log(job)
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -278,7 +278,7 @@ export default function JobDetails() {
       </Helmet>
       <div
         className="px-7 lg:px-[70px] pb-[50px] pt-3  w-full mx-auto bg-[#D5D5DC] flex mt-4 relative"
-        name={job?._id}
+        name={job?.id}
       >
         <h1 className="text-primary shadow-[#000000/25%] text-[12px] lg:text-[18px] font-[800] flex items-center gap-2">
           <PiArrowBendUpLeftBold
@@ -297,7 +297,7 @@ export default function JobDetails() {
               </h2>
               <p className=" text-primary text-left"> {job.companyName}</p>
               <p className="flex items-center gap-2  text-primary text-left">
-                {job.jobType || "Remote"}
+              {job.categoryName || ""}
               </p>
               <p className="flex items-center gap-2  text-primary text-left">
                 {job.location.state}, {job.location.country}

@@ -1,5 +1,7 @@
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from "prop-types"; // Import PropTypes
 import CustomButton from "../CustomButton";
+import { useGetRatingQuery } from "../../redux/appData";
+import { useEffect, useState } from "react";
 
 export default function CvWriterCard({
   name,
@@ -7,10 +9,26 @@ export default function CvWriterCard({
   bio,
   id,
   specialization,
-  rating,
   services,
   onClick,
 }) {
+  const { data: currenRating } = useGetRatingQuery(id, {
+    skip: !id, // Skip the query if vendorId is not defined
+  });
+
+  useEffect(() => {
+    if (id) {
+      // console.log(currenRating);
+      setRating(currenRating?.averageRating);
+      // Process or log currenRating data here
+    }
+  }, [id, currenRating]);
+  const [rating, setRating] = useState(
+    id ? currenRating?.averageRating : "0.0"
+  );
+
+  //   const { data: rating } = useGetRatingQuery(id);
+  // console.log(rating)
   return (
     <div
       className="border-[#001F3F]/40 border rounded-[30px] p-5 w-full"
@@ -30,7 +48,9 @@ export default function CvWriterCard({
             <h2 className="text-left font-bold text-lg">{name}</h2>
             <p className="text-sm text-left text-gray-600">{specialization}</p>
             <div className="flex items-center text-yellow-500 text-sm">
-              <span className="font-semibold">{rating.toFixed(1)}</span>
+              <span className="font-semibold">
+              {rating != null ? rating.toFixed(1) : "0.0"}
+              </span>
               <span className="ml-1">⭐</span>
             </div>
             <p className="w-full lg:w-[60%] text-sm text-left overflow-hidden line-clamp-2">

@@ -23,6 +23,8 @@ export default function AllJobs() {
     refetchOnReconnect: false,
   });
 
+  console.log(allJobs)
+
   useEffect(() => {
     let jobsToUse = allJobs;
 
@@ -68,7 +70,7 @@ export default function AllJobs() {
   };
 
   const handleJobClick = (job) => {
-    navigate(`/job/${job._id}`, { state: { job } });
+    navigate(`/job/${job.id}`, { state: { job } });
   };
 
   if (isLoading) {
@@ -127,11 +129,11 @@ export default function AllJobs() {
                   description={job.description}
                   priceFrom={job.priceFrom || 20888}
                   priceTo={job.priceTo || 60300}
-                  jobType={job.jobType || "Remote"}
+                  jobType={job.categoryName || "Remote"}
                   location={`${job.location.state}, ${job.location.country}`}
-                  postedTime={job.postedAt}
+                  postedTime={job.createdAt}
                   onClick={() => handleJobClick(job)}
-                  id={job._id}
+                  id={job.id}
                   currency={job.currency}
 
                 />

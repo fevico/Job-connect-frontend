@@ -55,7 +55,7 @@ function App() {
           <Route path="/all-jobs" element={<AllJobs />} />
           <Route path="/all-cvwriters" element={<AllCVWriters />} />
           <Route path="/all-linkedin" element={<AllLinkedIn />} />
-          <Route path="/settings" element={<CareerProfile />} />
+          {/* <Route path="/settings" element={<CareerProfile />} /> */}
           <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/job/:id" element={<JobDetails />} />
           <Route path="/cvwriter/:id" element={<CvWriterDetails />} />

@@ -25,7 +25,7 @@ export default function UserDashboard() {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     });
-
+console.log(allServices)
   const { data: users } = useGetAllUsersQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,

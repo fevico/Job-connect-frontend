@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-    // baseUrl: "http://localhost:5000/",
+  // baseUrl: "http://localhost:5000/",
    baseUrl: "https://jobkonnecta.com/api/",
   prepareHeaders: (headers) => {
     headers.set("Content-Type", "application/json");
@@ -51,7 +51,14 @@ const baseQuery = fetchBaseQuery({
 export const productsApi = createApi({
   reducerPath: "products",
   baseQuery,
-  tagTypes: ["AllUsers", "AllJobApp", "Messages", "Jobs", "UnApprovedUsers"],
+  tagTypes: [
+    "AllUsers",
+    "AllJobApp",
+    "Messages",
+    "Jobs",
+    "UnApprovedUsers",
+    "Rating",
+  ],
   endpoints: (builder) => ({
     getAllJobs: builder.query({
       query: () => "job/all-jobs",
@@ -62,6 +69,27 @@ export const productsApi = createApi({
     getAllJobsByEmployer: builder.query({
       query: (id) => `job/get-jobs-by-employer/${id}`,
       providesTags: ["Jobs"],
+    }),
+    getRating: builder.query({
+      query: (id) => `review/get-rating/${id}`,
+      providesTags: ["Rating"],
+    }),
+
+    addRating: builder.mutation({
+      query: ({ credentials, ownerId }) => ({
+        url: `review/add-rating/${ownerId}`,
+        method: "POST",
+        body: credentials,
+      }),
+
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(" failed to add rating:", err);
+        }
+      },
+      invalidatesTags: ["Rating"],
     }),
     getAllPackages: builder.query({
       query: () => `product/user/product`,
@@ -82,7 +110,7 @@ export const productsApi = createApi({
       query: ({ bank_code, account_number }) =>
         `wallet/get-account-name?bank_code=${bank_code}&account_number=${account_number}`,
     }),
-   
+
     withdraw: builder.mutation({
       query: ({
         bank_code,
@@ -155,7 +183,6 @@ export const productsApi = createApi({
     getUnapprovedUsers: builder.query({
       query: () => `user/all-unapproved-users`,
       providesTags: ["UnApprovedUsers"],
-
     }),
     getMyReferals: builder.query({
       query: () => `referal/user-referrals`,
@@ -176,7 +203,6 @@ export const productsApi = createApi({
         }
       },
       invalidatesTags: ["UnApprovedUsers"],
-
     }),
     addJob: builder.mutation({
       query: (credentials) => ({
@@ -223,7 +249,7 @@ export const productsApi = createApi({
       },
     }),
     deleteJob: builder.mutation({
-      query: ( id ) => ({
+      query: (id) => ({
         url: `job/${id}`,
         method: "DELETE",
       }),
@@ -235,10 +261,9 @@ export const productsApi = createApi({
         }
       },
       invalidatesTags: ["Jobs"],
-
     }),
     updateJob: builder.mutation({
-      query: ({updatedJob, id }) => ({
+      query: ({ updatedJob, id }) => ({
         url: `job/${id}`,
         method: "PATCH",
         body: updatedJob,
@@ -251,7 +276,6 @@ export const productsApi = createApi({
         }
       },
       invalidatesTags: ["Jobs"],
-
     }),
     shortlist: builder.mutation({
       query: ({ data, id }) => ({
@@ -298,21 +322,21 @@ export const productsApi = createApi({
         }
       },
     }),
-    addRating: builder.mutation({
-      query: ({ data, owner }) => ({
-        url: `user/add-rating/${owner}`,
-        method: "POST",
-        body: data,
-      }),
-      onQueryStarted: async (arg, { queryFulfilled }) => {
-        try {
-          await queryFulfilled;
-        } catch (err) {
-          console.error(" failed to shortlist:", err);
-        }
-      },
-      invalidatesTags: ["AllJobApp"],
-    }),
+    // addRating: builder.mutation({
+    //   query: ({ data, owner }) => ({
+    //     url: `user/add-rating/${owner}`,
+    //     method: "POST",
+    //     body: data,
+    //   }),
+    //   onQueryStarted: async (arg, { queryFulfilled }) => {
+    //     try {
+    //       await queryFulfilled;
+    //     } catch (err) {
+    //       console.error(" failed to shortlist:", err);
+    //     }
+    //   },
+    //   invalidatesTags: ["AllJobApp"],
+    // }),
     sendCV: builder.mutation({
       query: (data) => ({
         url: `/product/upload-cv`,
@@ -463,7 +487,6 @@ export const {
   useAddPackageMutation,
   useHireMutation,
   useShortlistMutation,
-  useAddRatingMutation,
   useRejectMutation,
   useSendCVMutation,
   useGetSubscriptionVerifyPaymentQuery,
@@ -488,6 +511,8 @@ export const {
   useApproveUserMutation,
   useDeleteJobMutation,
   useUpdateJobMutation,
+  useGetRatingQuery,
+  useAddRatingMutation,
 
   // untreated
   useGetAllOrdersQuery,

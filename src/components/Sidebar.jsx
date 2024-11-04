@@ -189,6 +189,20 @@ export function SidebarLinks({ closeDrawer, userDetails, signOut }) {
         <>
           <NavLink
             onClick={handleClose}
+            to="/all-package"
+            className={({ isActive }) =>
+              isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
+            }
+          >
+            <ListItem className="focus:bg-transparent text-white">
+              <ListItemPrefix>
+                <AiOutlineProduct className="h-5 w-5" />
+              </ListItemPrefix>
+              All Packages
+            </ListItem>
+          </NavLink>
+          <NavLink
+            onClick={handleClose}
             to="/"
             className={({ isActive }) =>
               isActive ? "bg-blue-800 rounded-md" : "bg-transparent"
@@ -259,7 +273,7 @@ export default function Sidebar({ mobile, closeDrawer }) {
     <div
       className={`max-w-[300px] ${
         mobile ? "" : "hidden"
-      } lg:flex bg-primary text-white pt-2 p-4 h-full flex-col gap-10 overflow-hidden`}
+      } lg:flex bg-primary text-white pt-2 p-4 h-full flex-col gap-5 overflow-hidden`}
     >
       <div
         className={` ${
