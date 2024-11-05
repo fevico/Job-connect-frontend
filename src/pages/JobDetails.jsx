@@ -147,11 +147,11 @@ export default function JobDetails() {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-        // const response = await axios.get(
-        //   `https://jobkonnecta.com/api/job/job/${jobId}`
-        // );
-        const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
-        console.log("this is the response", response.data);
+        const response = await axios.get(
+          `https://jobkonnecta.com/api/job/job/${jobId}`
+        );
+        // const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
+        // console.log("this is the response", response.data);
         setJob(response.data);
         setIsLoading(false);
       } catch (error) {
