@@ -447,7 +447,7 @@ export default function JobDetails() {
             </h1>
           </div>
           <div className="text-left">
-            <p className=""> {job.skills}</p>
+            <p className=""> {job.skill}</p>
           </div>
         </div>
 

@@ -19,7 +19,7 @@ export default function SignUpHome() {
               <h2 className="mt-6 font-bold">Job Seeker</h2>{" "}
               {/* Add margin-top to avoid overlap */}
               <p className="text-[12px] mb-2 h-10">
-                Create a standout professional profile with Jobberman today.
+                Create a standout professional profile with Jobkonnecta today.
               </p>
               <CustomButton
                 onClick=""
@@ -39,7 +39,7 @@ export default function SignUpHome() {
               {/* Add margin-top to avoid overlap */}
               <p className="text-[12px] mb-2 h-10">
                 Seeking top-quality candidates? Advertise your opportunities and
-                find the best talent with Jobberman.{" "}
+                find the best talent with Jobkonnecta.{" "}
               </p>
               <CustomButton
                 onClick=""
@@ -58,7 +58,7 @@ export default function SignUpHome() {
               <h2 className="mt-6 font-bold">CV Writer</h2>{" "}
               {/* Add margin-top to avoid overlap */}
               <p className="text-[12px] mb-2 h-10">
-                Create a standout professional profile with Jobberman today.
+                Create a standout professional profile with Jobkonnecta today.
               </p>
               <CustomButton
                 link={"/signup/cvwriter"}
@@ -77,7 +77,7 @@ export default function SignUpHome() {
               <h2 className="mt-6 font-bold">LINKEDIN OPTIMIZER</h2>{" "}
               {/* Add margin-top to avoid overlap */}
               <p className="text-[12px] mb-2 h-10">
-                Create a standout professional profile with Jobberman today.
+                Create a standout professional profile with Jobkonnecta today.
               </p>
               <CustomButton
                 link={"/signup/linkedin"}
