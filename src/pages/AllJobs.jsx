@@ -41,14 +41,14 @@ export default function AllJobs() {
 
     if (allJobs && allJobs.length > 0) {
       filteredJobs = allJobs.filter((job) => {
-        const postedAt = new Date(job.postedAt);
+        const createdAt = new Date(job.createdAt);
 
         if (timeFrame === "24hrs") {
-          return now - postedAt <= 24 * 60 * 60 * 1000; // Last 24 hours
+          return now - createdAt <= 24 * 60 * 60 * 1000; // Last 24 hours
         } else if (timeFrame === "7days") {
-          return now - postedAt <= 7 * 24 * 60 * 60 * 1000; // Last 7 days
+          return now - createdAt <= 7 * 24 * 60 * 60 * 1000; // Last 7 days
         } else if (timeFrame === "2weeks") {
-          return now - postedAt <= 14 * 24 * 60 * 60 * 1000; // Last 2 weeks
+          return now - createdAt <= 14 * 24 * 60 * 60 * 1000; // Last 2 weeks
         } else {
           return true; // No filter, return all jobs
         }

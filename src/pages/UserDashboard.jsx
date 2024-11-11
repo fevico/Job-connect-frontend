@@ -25,7 +25,7 @@ export default function UserDashboard() {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     });
-console.log(allServices)
+// console.log(allServices)
   const { data: users } = useGetAllUsersQuery(undefined, {
     refetchOnMountOrArgChange: false,
     refetchOnWindowFocus: false,
@@ -58,7 +58,7 @@ console.log(allServices)
   //   );
   // }
 
-  console.log(allUsers);
+  // console.log('jj',allUsers);
 
   // console.log(userDetails.id)
 
@@ -213,9 +213,9 @@ console.log(allServices)
           <div className="bg-[#E2F0FF] p-5">
             {/* Header Row */}
             <div className="flex items-center w-full px-4 py-2 mb-4 border-b-2 border-primary">
-              <p className="text-xs font-normal w-[30%] pr-2">Name</p>
+              {/* <p className="text-xs font-normal w-[30%] pr-2">Name</p> */}
               {/* <p className="text-xs font-normal w-[20%] pr-2">Location</p> */}
-              <p className="text-xs font-normal w-[30%] pr-2">Email</p>
+              <p className="text-xs font-normal w-[60%] pr-2">Email</p>
               {/* <p className="text-xs font-normal w-[14%] pr-2">Role</p> */}
               <p className="text-xs font-normal w-[30%] pr-2">Status</p>
               {/* <p className="text-xs font-normal w-[15%]"></p> */}
@@ -232,17 +232,17 @@ console.log(allServices)
                   key={users?._id}
                   className="flex items-center w-full px-4 py-2 mb-4"
                 >
-                  <p className="text-sm font-normal w-[30%] pr-2">
+                  {/* <p className="text-sm font-normal w-[30%] pr-2">
                     {users?.name}
-                  </p>
+                  </p> */}
                   {/* <p className="text-sm font-normal w-[18%] pr-2">
                     {users?.location?.state
                       ? users?.location?.state
                       : users?.location}
                     , {users?.location?.country ? users?.location?.country : ""}
                   </p> */}
-                  <p className="text-sm font-normal w-[30%] pr-2">
-                    {users?.email}
+                  <p className="text-sm font-normal w-[60%] pr-2">
+                    {users?.referredEmail}
                   </p>
                   {/* <p className="text-sm font-normal w-[14%] pr-2">
                     {users?.role}

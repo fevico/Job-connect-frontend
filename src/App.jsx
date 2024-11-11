@@ -56,12 +56,15 @@ function App() {
           <Route path="/all-cvwriters" element={<AllCVWriters />} />
           <Route path="/all-linkedin" element={<AllLinkedIn />} />
           {/* <Route path="/settings" element={<CareerProfile />} /> */}
-          <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/job/:id" element={<JobDetails />} />
           <Route path="/cvwriter/:id" element={<CvWriterDetails />} />
           <Route path="/linkedin/:id" element={<LinkedInDetails />} />
         </Route>
 
+        <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
+          {" "}
+          <Route path="/user/dashboard" element={<UserDashboard />} />
+        </Route>
         {/* Protect these routes using PrivateRoute */}
         <Route
           path="/"
@@ -78,6 +81,7 @@ function App() {
             path="/applications-services"
             element={<ApplicationsServices />}
           />
+
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/earnings" element={<Earnings />} />
           <Route path="/subscription" element={<Subscription />} />
