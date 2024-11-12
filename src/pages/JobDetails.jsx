@@ -3,7 +3,7 @@ import CustomButton from "@/components/CustomButton";
 import { FaLink } from "react-icons/fa";
 import jobImage from "@/assets/images/job.png";
 import mark from "@/assets/images/mark.png";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { PiArrowBendUpLeftBold } from "react-icons/pi";
 import { Helmet } from "react-helmet";
 import DOMPurify from "dompurify";
@@ -150,8 +150,10 @@ export default function JobDetails() {
         const response = await axios.get(
           `https://jobkonnecta.com/api/job/job/${jobId}`
         );
-        // const response = await axios.get(`http://localhost:5000/job/job/${jobId}`);
-        // console.log("this is the response", response.data);
+        // const response = await axios.get(
+        //   `http://localhost:5000/job/job/${jobId}`
+        // );
+        console.log("this is the response", response.data);
         setJob(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -259,7 +261,7 @@ export default function JobDetails() {
   //   txt.innerHTML = html;
   //   return txt.value;
   // };
-  console.log(job)
+  console.log(job);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -297,7 +299,7 @@ export default function JobDetails() {
               </h2>
               <p className=" text-primary text-left"> {job.companyName}</p>
               <p className="flex items-center gap-2  text-primary text-left">
-              {job.categoryName || ""}
+                {job.categoryName || ""}
               </p>
               <p className="flex items-center gap-2  text-primary text-left">
                 {job.location.state}, {job.location.country}
@@ -321,7 +323,10 @@ export default function JobDetails() {
               {job && job.referral === "yes" && (
                 <>
                   <p className="text-left text-sm text-[#001F3F80]/50">
-                    click to refer this job:
+                    click to refer this job and earn{" "}
+                    <span className="font-semibold">
+                      ₦ {new Intl.NumberFormat().format(job.referralAmount)}:
+                    </span>
                   </p>
                   <div className="grid grid-cols-3 lg:grid-cols-5 items-center gap-3 justify-around ">
                     <div
